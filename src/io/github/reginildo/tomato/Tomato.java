@@ -21,7 +21,40 @@ package io.github.reginildo.tomato;
  * @author reginildo
  */
 public class Tomato{
-    public static final int LONG_BREAK = 15;
-    public static final int POMODORO = 14400; // 1440 segundos = 24 min
-    public static final int SHORT_BREAK = 5;
+
+    private int longBreak;
+    private int pomodoro;
+    private int shortBreak;
+
+    public Tomato(int pomodo, int longBreak, int shortBreak){
+        this.longBreak = longBreak;
+        this.pomodoro = pomodo;
+        this.shortBreak = shortBreak;
+    }
+
+    public int getLongBreak() {
+        return longBreak;
+    }
+
+    public void setLongBreak(int longBreak) {
+        this.longBreak = longBreak;
+    }
+
+    public int getPomodoro() {
+        return pomodoro;
+    }
+
+    public void setPomodoro(int pomodoro) {
+        this.pomodoro = pomodoro;
+    }
+
+    public int getShortBreak() {
+        return shortBreak;
+    }
+
+    public void setShortBreak(int shortBreak) {
+        this.shortBreak = shortBreak;
+    }
+
+
 }

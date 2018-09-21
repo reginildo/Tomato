@@ -20,6 +20,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -87,30 +89,19 @@ public class Gui {
         this.jFrameMain.setJMenuBar(jMenuBar);
         this.jPanelTimer = new JPanel();
         this.jButtonStart = new JButton("Start");
+        // actionlistener de jbuttonstart
         this.jButtonStart.addActionListener(actionEvent -> {
+
+            /*
+            * */
             Thread thread;
             thread = new Thread(() -> {
-                int count = 0;
-                while (count < Tomato.POMODORO) {
-
-                    // quando ainda é menor que 60 segundos
-                    if (count < 60) {
-                        if (count < 10) {
-                            stringCount = "0" + String.valueOf(count);
-                            jLabelSettings.setText(String.valueOf("00:" + stringCount));
-                        } else {
-                            jLabelSettings.setText(String.valueOf("00:" + count));
-                        }
-                    } else {
-                        jLabelSettings.setText(String.valueOf("0" + count / 60 + ":" +String.valueOf(count - 60)));
-                    }
-
-                    // quando passa dos 60 segundos
-
-                    count++;
-
-
+                Date dateNow = new Date();
+                Date dateFinal = new Date();
+                dateFinal.setTime(new Date().getTime() - 1500000);
+                while (dateFinal.compareTo(dateNow) < -1) {
                     try {
+
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -157,10 +148,25 @@ public class Gui {
 
         this.jPanelSettings.add(jLabelSettingsLongBreak);
         this.jPanelSettings.add(jLabelSettingsShortBreak);
+
+        // JSlider para configuração do tempo de Pomodoro
         this.jSliderTomato = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
         this.jSliderTomato.setMajorTickSpacing(10);
         this.jSliderTomato.setPaintTicks(true);
+
+        // JSlider para configuração do tempo de long break
+        this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
+        this.jSliderLongBreak.setMajorTickSpacing(10);
+        this.jSliderLongBreak.setPaintTicks(true);
+
+        // JSlider para configuração do tempo de short break
+        this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
+        this.jSliderShortBreak.setMajorTickSpacing(10);
+        this.jSliderShortBreak.setPaintTicks(true);
+
         this.jPanelSettings.add(jSliderTomato);
+        this.jPanelSettings.add(jSliderLongBreak);
+        this.jPanelSettings.add(jSliderShortBreak);
 
         this.jFrameSettings.setContentPane(jPanelSettings);
         this.jFrameSettings.setSize(300, 300);
