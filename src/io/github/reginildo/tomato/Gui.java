@@ -18,9 +18,6 @@ package io.github.reginildo.tomato;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -43,6 +40,7 @@ public class Gui {
     private String stringTempoPomodoro = "Tempo de pomodoro: ";
     private String stringIntervaloCurto = "Intervalo Curto: ";
     private String stringIntervaloLongo = "Intervalo Longo: ";
+    private Font fontInfoSettings = new Font("Arial", Font.BOLD, 26);
 
     private final JFrame jFrameMain = new JFrame("Tomato");
     private JSpinner.NumberEditor numberEditorSettings;
@@ -61,6 +59,7 @@ public class Gui {
     private JPanel jPanelSettings;
     private JLabel jLabelSettingsTomato, jLabelSettingsLongBreak,
             jLabelSettingsShortBreak;
+    private JLabel jLabelInfo;
     private JButton jButtonSettingSave, jButtonSettingsCancel;
     private JSlider jSliderTomato;
     private JSlider jSliderLongBreak;
@@ -148,6 +147,8 @@ public class Gui {
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
         this.jButtonSettingSave = new JButton();
         this.jButtonSettingsCancel = new JButton();
+        this.jLabelInfo = new JLabel("Ajuste os tempos:");
+        this.jLabelInfo.setFont(fontInfoSettings);
 
 
         // JSlider para configuração do tempo de Pomodoro
@@ -168,7 +169,7 @@ public class Gui {
         });
 
         // JSlider para configuração do tempo de short break
-        this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
+        this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 5);
         this.jSliderShortBreak.setMajorTickSpacing(10);
         this.jSliderShortBreak.setMinorTickSpacing(1);
         this.jSliderShortBreak.setPaintLabels(true);
@@ -184,7 +185,7 @@ public class Gui {
         });
 
         // JSlider para configuração do tempo de long break
-        this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
+        this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 15);
         this.jSliderLongBreak.setMajorTickSpacing(10);
         this.jSliderLongBreak.setMinorTickSpacing(1);
         this.jSliderLongBreak.setPaintTicks(true);
@@ -199,12 +200,15 @@ public class Gui {
             }
         });
 
+        this.jPanelSettings.add(jLabelInfo);
         this.jPanelSettings.add(jLabelSettingsTomato);
         this.jPanelSettings.add(jSliderTomato);
         this.jPanelSettings.add(jLabelSettingsShortBreak);
         this.jPanelSettings.add(jSliderShortBreak);
         this.jPanelSettings.add(jLabelSettingsLongBreak);
         this.jPanelSettings.add(jSliderLongBreak);
+
+
 
         this.jFrameSettings.setContentPane(jPanelSettings);
         this.jFrameSettings.setSize(300, 300);
