@@ -28,21 +28,19 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 /**
  * @author reginildo
  */
-public class Gui {
+class Gui {
+    private final JFrame jFrameMain = new JFrame("Tomato");
+    private Tomato tomato = new Tomato(25, 5, 15);
     private String stringTempoPomodoro = "Tempo de pomodoro: ";
     private String stringIntervaloCurto = "Intervalo Curto: ";
     private String stringIntervaloLongo = "Intervalo Longo: ";
     private Font fontInfoSettings = new Font("Arial", Font.BOLD, 26);
-
-    private final JFrame jFrameMain = new JFrame("Tomato");
     private JSpinner.NumberEditor numberEditorSettings;
 
     private Font font;
@@ -53,7 +51,7 @@ public class Gui {
     private JButton jButtonStart;
     private JButton jButtonPause;
     private JButton jButtonReset;
-    private JLabel jLabelSettings;
+    private JLabel jLabelTimeCounter;
 
     private JFrame jFrameSettings;
     private JPanel jPanelSettings;
@@ -66,8 +64,11 @@ public class Gui {
     private JSlider jSliderShortBreak;
     private String stringCount;
 
+    private Date dateNow;
+    private Date dateFinal;
 
-    public void createGui() {
+
+    void createGui() {
 
         this.font = new Font("Arial", Font.BOLD, 85);
         this.jMenuBar = new JMenuBar();
@@ -97,31 +98,34 @@ public class Gui {
         this.jButtonStart.addActionListener(actionEvent -> {
 
             /*
-            * */
-            Thread thread;
-            thread = new Thread(() -> {
-                Date dateNow = new Date();
-                Date dateFinal = new Date();
-                dateFinal.setTime(new Date().getTime() - 1500000);
-                while (dateFinal.compareTo(dateNow) < -1) {
-                    try {
+             * */
 
+            dateNow = new Date();
+            dateFinal = new Date();
+            Thread thread;
+            Runnable runnable = () -> {
+                dateFinal.setTime(new Date().getTime() - tomato.getPomodoro());
+                while (dateNow.compareTo(dateFinal) > -1) {
+                    jLabelTimeCounter.setText(String.valueOf(dateNow.getMinutes() + ":" + dateNow.getSeconds()));
+                    try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
                 }
-            });
+            };
+
+            thread = new Thread(runnable);
             thread.start();
         });
         this.jButtonPause = new JButton("Pause");
         this.jButtonReset = new JButton("Reset");
 
-        this.jLabelSettings = new JLabel("00:00");
-        this.jLabelSettings.setFont(font);
+        this.jLabelTimeCounter = new JLabel("00:00");
+        this.jLabelTimeCounter.setFont(font);
         this.jPanelTimer.setLayout(new FlowLayout());
-        this.jPanelTimer.add(jLabelSettings);
+        this.jPanelTimer.add(jLabelTimeCounter);
 
         this.jPanelButtons = new JPanel();
         this.jPanelButtons.add(jButtonStart);
@@ -159,13 +163,11 @@ public class Gui {
         this.jSliderTomato.setPaintLabels(true);
         this.jSliderTomato.setValueIsAdjusting(true);
 
-        this.jSliderTomato.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                String valorTomato = stringTempoPomodoro
-                        + String.valueOf(jSliderTomato.getValue() + " minuto(s)");
-                jLabelSettingsTomato.setText(valorTomato);
-            }
+        this.jSliderTomato.addChangeListener(changeEvent -> {
+            String valorTomato = stringTempoPomodoro
+                    + String.valueOf(jSliderTomato.getValue() + " minuto(s)");
+            tomato.setPomodoro(jSliderTomato.getValue() * 60 * 1000);
+            jLabelSettingsTomato.setText(valorTomato);
         });
 
         // JSlider para configuração do tempo de short break
@@ -175,13 +177,11 @@ public class Gui {
         this.jSliderShortBreak.setPaintLabels(true);
         this.jSliderShortBreak.setPaintTicks(true);
 
-        this.jSliderShortBreak.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                String stringValorShortBreak = stringIntervaloCurto
-                        + String.valueOf(jSliderShortBreak.getValue() + " minuto(s)");
-                jLabelSettingsShortBreak.setText(stringValorShortBreak);
-            }
+        this.jSliderShortBreak.addChangeListener(changeEvent -> {
+            String stringValorShortBreak = stringIntervaloCurto
+                    + String.valueOf(jSliderShortBreak.getValue() + " minuto(s)");
+            tomato.setShortBreak(jSliderShortBreak.getValue() * 60 * 1000);
+            jLabelSettingsShortBreak.setText(stringValorShortBreak);
         });
 
         // JSlider para configuração do tempo de long break
@@ -191,13 +191,11 @@ public class Gui {
         this.jSliderLongBreak.setPaintTicks(true);
         this.jSliderLongBreak.setPaintLabels(true);
 
-        this.jSliderLongBreak.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                String stringValorLongBreak = stringIntervaloLongo
-                        + String.valueOf(jSliderLongBreak.getValue() + " minuto(s)");
-                jLabelSettingsLongBreak.setText(stringValorLongBreak);
-            }
+        this.jSliderLongBreak.addChangeListener(changeEvent -> {
+            String stringValorLongBreak = stringIntervaloLongo
+                    + String.valueOf(jSliderLongBreak.getValue() + " minuto(s)");
+            tomato.setLongBreak(jSliderLongBreak.getValue() * 60 * 1000);
+            jLabelSettingsLongBreak.setText(stringValorLongBreak);
         });
 
         this.jPanelSettings.add(jLabelInfo);
@@ -207,7 +205,6 @@ public class Gui {
         this.jPanelSettings.add(jSliderShortBreak);
         this.jPanelSettings.add(jLabelSettingsLongBreak);
         this.jPanelSettings.add(jSliderLongBreak);
-
 
 
         this.jFrameSettings.setContentPane(jPanelSettings);
