@@ -16,18 +16,12 @@
  */
 package io.github.reginildo.tomato;
 
-import java.awt.FlowLayout;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Date;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -51,6 +45,7 @@ class Gui {
     private JButton jButtonStart;
     private JButton jButtonPause;
     private JButton jButtonReset;
+    private JButton jButtonSairSettings;
     private JLabel jLabelTimeCounter;
 
     private JFrame jFrameSettings;
@@ -64,9 +59,10 @@ class Gui {
     private JSlider jSliderShortBreak;
     private String stringCount;
 
-    private Date dateNow;
+    private Date dateStart;
     private Date dateFinal;
-
+    private Calendar calendarStart;
+    private Calendar calendarEnd;
 
     void createGui() {
 
@@ -96,28 +92,7 @@ class Gui {
         this.jButtonStart = new JButton("Start");
         // actionlistener de jbuttonstart
         this.jButtonStart.addActionListener(actionEvent -> {
-
-            /*
-             * */
-
-            dateNow = new Date();
-            dateFinal = new Date();
-            Thread thread;
-            Runnable runnable = () -> {
-                dateFinal.setTime(new Date().getTime() - tomato.getPomodoro());
-                while (dateNow.compareTo(dateFinal) > -1) {
-                    jLabelTimeCounter.setText(String.valueOf(dateNow.getMinutes() + ":" + dateNow.getSeconds()));
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            };
-
-            thread = new Thread(runnable);
-            thread.start();
+            iniciarPomodoro();
         });
         this.jButtonPause = new JButton("Pause");
         this.jButtonReset = new JButton("Reset");
@@ -138,14 +113,44 @@ class Gui {
         this.jFrameMain.setSize(300, 300);
         this.jFrameMain.setResizable(false);
         this.jFrameMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.jFrameMain.setLocationRelativeTo(null);
-
         this.jFrameMain.setVisible(true);
+    }
+
+    private void iniciarPomodoro() {
+        dateStart = new Date();
+        dateStart.setHours(0);
+        dateStart.setMinutes(0);
+        calendarStart = Calendar.getInstance();
+        calendarStart.setTime(dateStart);
+
+        dateFinal = new Date();
+        dateFinal = dateStart;
+        dateFinal.setTime(dateFinal.getTime() + tomato.getPomodoroTime());
+
+        calendarEnd = Calendar.getInstance();
+        calendarEnd.setTime(dateFinal);
+
+        Thread thread;
+        Runnable runnable = () -> {
+
+            while (calendarStart.before(dateFinal)) {
+                jLabelTimeCounter.setText(String.valueOf(dateStart.getMinutes() + ":" + dateStart.getSeconds()));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread = new Thread(runnable);
+        thread.start();
     }
 
     private void createFrameSettings() {
         this.jFrameSettings = new JFrame();
         this.jPanelSettings = new JPanel();
+        this.jPanelSettings.setLayout(new BoxLayout(this.jPanelSettings, BoxLayout.Y_AXIS ));
+
         this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
         this.jLabelSettingsLongBreak = new JLabel(stringIntervaloLongo);
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
@@ -153,50 +158,19 @@ class Gui {
         this.jButtonSettingsCancel = new JButton();
         this.jLabelInfo = new JLabel("Ajuste os tempos:");
         this.jLabelInfo.setFont(fontInfoSettings);
-
-
-        // JSlider para configuração do tempo de Pomodoro
-        this.jSliderTomato = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
-        this.jSliderTomato.setMajorTickSpacing(10);
-        this.jSliderTomato.setMinorTickSpacing(1);
-        this.jSliderTomato.setPaintTicks(true);
-        this.jSliderTomato.setPaintLabels(true);
-        this.jSliderTomato.setValueIsAdjusting(true);
-
-        this.jSliderTomato.addChangeListener(changeEvent -> {
-            String valorTomato = stringTempoPomodoro
-                    + String.valueOf(jSliderTomato.getValue() + " minuto(s)");
-            tomato.setPomodoro(jSliderTomato.getValue() * 60 * 1000);
-            jLabelSettingsTomato.setText(valorTomato);
+        this.jButtonSairSettings = new JButton("Sair");
+        this.jButtonSairSettings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                tomato.setPomodoroTime(jSliderTomato.getValue() * 60 * 1000);
+                tomato.setShortBreakTime(jSliderShortBreak.getValue() * 60 * 1000);
+                tomato.setLongBreakTime(jSliderLongBreak.getValue() * 60 * 1000);
+                jFrameSettings.setVisible(false);
+                jFrameSettings.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            }
         });
 
-        // JSlider para configuração do tempo de short break
-        this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 5);
-        this.jSliderShortBreak.setMajorTickSpacing(10);
-        this.jSliderShortBreak.setMinorTickSpacing(1);
-        this.jSliderShortBreak.setPaintLabels(true);
-        this.jSliderShortBreak.setPaintTicks(true);
-
-        this.jSliderShortBreak.addChangeListener(changeEvent -> {
-            String stringValorShortBreak = stringIntervaloCurto
-                    + String.valueOf(jSliderShortBreak.getValue() + " minuto(s)");
-            tomato.setShortBreak(jSliderShortBreak.getValue() * 60 * 1000);
-            jLabelSettingsShortBreak.setText(stringValorShortBreak);
-        });
-
-        // JSlider para configuração do tempo de long break
-        this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 15);
-        this.jSliderLongBreak.setMajorTickSpacing(10);
-        this.jSliderLongBreak.setMinorTickSpacing(1);
-        this.jSliderLongBreak.setPaintTicks(true);
-        this.jSliderLongBreak.setPaintLabels(true);
-
-        this.jSliderLongBreak.addChangeListener(changeEvent -> {
-            String stringValorLongBreak = stringIntervaloLongo
-                    + String.valueOf(jSliderLongBreak.getValue() + " minuto(s)");
-            tomato.setLongBreak(jSliderLongBreak.getValue() * 60 * 1000);
-            jLabelSettingsLongBreak.setText(stringValorLongBreak);
-        });
+        configurarJSliders();
 
         this.jPanelSettings.add(jLabelInfo);
         this.jPanelSettings.add(jLabelSettingsTomato);
@@ -205,17 +179,66 @@ class Gui {
         this.jPanelSettings.add(jSliderShortBreak);
         this.jPanelSettings.add(jLabelSettingsLongBreak);
         this.jPanelSettings.add(jSliderLongBreak);
-
+        this.jPanelSettings.add(jButtonSairSettings);
 
         this.jFrameSettings.setContentPane(jPanelSettings);
         this.jFrameSettings.setSize(300, 300);
+        this.jFrameSettings.setLocation(600,300);
         this.jFrameSettings.setResizable(false);
         this.jFrameSettings.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.jFrameSettings.setLocationRelativeTo(null);
         this.jFrameSettings.setTitle("Tomato - Settings");
         this.jFrameSettings.setVisible(true);
-
     }
 
+    private void configurarJSliders() {
 
+        // JSlider para configuração do tempo de Pomodoro
+        this.jSliderTomato = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
+        this.jSliderTomato.setMajorTickSpacing(10);
+        this.jSliderTomato.setMinorTickSpacing(1);
+        this.jSliderTomato.setPaintTicks(true);
+        this.jSliderTomato.setPaintLabels(true);
+        this.jSliderTomato.setValue(tomato.getPomodoroTime() / 60 / 1000);
+        this.jSliderTomato.setValueIsAdjusting(true);
+
+        // JSlider para configuração do tempo de short break
+        this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 5);
+        this.jSliderShortBreak.setMajorTickSpacing(10);
+        this.jSliderShortBreak.setMinorTickSpacing(1);
+        this.jSliderShortBreak.setPaintLabels(true);
+        this.jSliderShortBreak.setPaintTicks(true);
+        this.jSliderShortBreak.setValue(tomato.getShortBreakTime() / 60 / 1000);
+
+        // JSlider para configuração do tempo de long break
+        this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 15);
+        this.jSliderLongBreak.setMajorTickSpacing(10);
+        this.jSliderLongBreak.setMinorTickSpacing(1);
+        this.jSliderLongBreak.setPaintTicks(true);
+        this.jSliderLongBreak.setPaintLabels(true);
+        this.jSliderLongBreak.setValue(tomato.getLongBreakTime() / 60 / 1000);
+
+        configurarListenersDeJSliders();
+    }
+
+    private void configurarListenersDeJSliders() {
+        this.jSliderTomato.addChangeListener(changeEvent -> {
+            String valorTomato = stringTempoPomodoro
+                    + String.valueOf(jSliderTomato.getValue() + " minuto(s)");
+            tomato.setPomodoroTime(jSliderTomato.getValue() * 60 * 1000);
+            jLabelSettingsTomato.setText(valorTomato);
+        });
+
+        this.jSliderShortBreak.addChangeListener(changeEvent -> {
+            String stringValorShortBreak = stringIntervaloCurto
+                    + String.valueOf(jSliderShortBreak.getValue() + " minuto(s)");
+            tomato.setShortBreakTime(jSliderShortBreak.getValue() * 60 * 1000);
+            jLabelSettingsShortBreak.setText(stringValorShortBreak);
+        });
+        this.jSliderLongBreak.addChangeListener(changeEvent -> {
+            String stringValorLongBreak = stringIntervaloLongo
+                    + String.valueOf(jSliderLongBreak.getValue() + " minuto(s)");
+            tomato.setLongBreakTime(jSliderLongBreak.getValue() * 60 * 1000);
+            jLabelSettingsLongBreak.setText(stringValorLongBreak);
+        });
+    }
 }

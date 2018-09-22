@@ -22,38 +22,38 @@ package io.github.reginildo.tomato;
  */
 class Tomato{
 
-    private int longBreak;
-    private int pomodoro;
-    private int shortBreak;
+    private int longBreakTime;
+    private int pomodoroTime;
+    private int shortBreakTime;
 
-    Tomato(int pomodo, int shortBreak, int longBreak){
-        this.longBreak = longBreak;
-        this.pomodoro = pomodo;
-        this.shortBreak = shortBreak;
+    Tomato(int pomodo, int shortBreakTime, int longBreak){
+        this.longBreakTime = longBreak;
+        this.pomodoroTime = pomodo;
+        this.shortBreakTime = shortBreakTime;
     }
 
-    int getLongBreak() {
-        return longBreak;
+    int getLongBreakTime() {
+        return longBreakTime;
     }
 
-    void setLongBreak(int longBreak) {
-        this.longBreak = longBreak;
+    void setLongBreakTime(int longBreakTime) {
+        this.longBreakTime = longBreakTime;
     }
 
-    int getPomodoro() {
-        return pomodoro;
+    int getPomodoroTime() {
+        return pomodoroTime;
     }
 
-    void setPomodoro(int pomodoro) {
-        this.pomodoro = pomodoro;
+    void setPomodoroTime(int pomodoroTime) {
+        this.pomodoroTime = pomodoroTime;
     }
 
-    int getShortBreak() {
-        return shortBreak;
+    int getShortBreakTime() {
+        return shortBreakTime;
     }
 
-    void setShortBreak(int shortBreak) {
-        this.shortBreak = shortBreak;
+    void setShortBreakTime(int shortBreakTime) {
+        this.shortBreakTime = shortBreakTime;
     }
 
 
