@@ -37,23 +37,11 @@ class Gui {
     private Font fontInfoSettings = new Font("Arial", Font.BOLD, 26);
     private JSpinner.NumberEditor numberEditorSettings;
 
-    private Font font;
-    private JMenuBar jMenuBar;
-    private JMenu jMenuSettings;
-    private JPanel jPanelTimer;
-    private JPanel jPanelButtons;
-    private JButton jButtonStart;
-    private JButton jButtonPause;
-    private JButton jButtonReset;
-    private JButton jButtonSairSettings;
     private JLabel jLabelTimeCounter;
 
     private JFrame jFrameSettings;
-    private JPanel jPanelSettings;
     private JLabel jLabelSettingsTomato, jLabelSettingsLongBreak,
             jLabelSettingsShortBreak;
-    private JLabel jLabelInfo;
-    private JButton jButtonSettingSave, jButtonSettingsCancel;
     private JSlider jSliderTomato;
     private JSlider jSliderLongBreak;
     private JSlider jSliderShortBreak;
@@ -66,11 +54,11 @@ class Gui {
 
     void createGui() {
 
-        this.font = new Font("Arial", Font.BOLD, 85);
-        this.jMenuBar = new JMenuBar();
-        this.jMenuSettings = new JMenu("Settings");
+        Font font = new Font("Arial", Font.BOLD, 85);
+        JMenuBar jMenuBar = new JMenuBar();
+        JMenu jMenuSettings = new JMenu("Settings");
 
-        this.jMenuSettings.addMenuListener(new MenuListener() {
+        jMenuSettings.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
                 createFrameSettings();
@@ -85,27 +73,27 @@ class Gui {
             }
         });
 
-        this.jMenuBar.add(jMenuSettings);
+        jMenuBar.add(jMenuSettings);
         this.jFrameMain.setLayout(new FlowLayout());
         this.jFrameMain.setJMenuBar(jMenuBar);
-        this.jPanelTimer = new JPanel();
-        this.jButtonStart = new JButton("Start");
+        JPanel jPanelTimer = new JPanel();
+        JButton jButtonStart = new JButton("Start");
         // actionlistener de jbuttonstart
-        this.jButtonStart.addActionListener(actionEvent -> {
+        jButtonStart.addActionListener(actionEvent -> {
             iniciarPomodoro();
         });
-        this.jButtonPause = new JButton("Pause");
-        this.jButtonReset = new JButton("Reset");
+        JButton jButtonPause = new JButton("Pause");
+        JButton jButtonReset = new JButton("Reset");
 
         this.jLabelTimeCounter = new JLabel("00:00");
         this.jLabelTimeCounter.setFont(font);
-        this.jPanelTimer.setLayout(new FlowLayout());
-        this.jPanelTimer.add(jLabelTimeCounter);
+        jPanelTimer.setLayout(new FlowLayout());
+        jPanelTimer.add(jLabelTimeCounter);
 
-        this.jPanelButtons = new JPanel();
-        this.jPanelButtons.add(jButtonStart);
-        this.jPanelButtons.add(jButtonPause);
-        this.jPanelButtons.add(jButtonReset);
+        JPanel jPanelButtons = new JPanel();
+        jPanelButtons.add(jButtonStart);
+        jPanelButtons.add(jButtonPause);
+        jPanelButtons.add(jButtonReset);
 
         this.jFrameMain.setContentPane(jPanelTimer);
         this.jFrameMain.add(jPanelButtons);
@@ -148,23 +136,23 @@ class Gui {
 
     private void createFrameSettings() {
         this.jFrameSettings = new JFrame();
-        this.jPanelSettings = new JPanel();
-        this.jPanelSettings.setLayout(new BoxLayout(this.jPanelSettings, BoxLayout.Y_AXIS ));
+        JPanel jPanelSettings = new JPanel();
+        jPanelSettings.setLayout(new BoxLayout(jPanelSettings, BoxLayout.Y_AXIS ));
 
         this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
         this.jLabelSettingsLongBreak = new JLabel(stringIntervaloLongo);
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
-        this.jButtonSettingSave = new JButton();
-        this.jButtonSettingsCancel = new JButton();
-        this.jLabelInfo = new JLabel("Ajuste os tempos:");
-        this.jLabelInfo.setFont(fontInfoSettings);
-        this.jButtonSairSettings = new JButton("Sair");
-        this.jButtonSairSettings.addActionListener(new ActionListener() {
+        JButton jButtonSettingSave = new JButton();
+        JButton jButtonSettingsCancel = new JButton();
+        JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
+        jLabelInfo.setFont(fontInfoSettings);
+        JButton jButtonSairSettings = new JButton("Sair");
+        jButtonSairSettings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                tomato.setPomodoroTime(jSliderTomato.getValue() * 60 * 1000);
-                tomato.setShortBreakTime(jSliderShortBreak.getValue() * 60 * 1000);
-                tomato.setLongBreakTime(jSliderLongBreak.getValue() * 60 * 1000);
+                tomato.setPomodoroTime(jSliderTomato.getValue());
+                tomato.setShortBreakTime(jSliderShortBreak.getValue());
+                tomato.setLongBreakTime(jSliderLongBreak.getValue());
                 jFrameSettings.setVisible(false);
                 jFrameSettings.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             }
@@ -172,14 +160,14 @@ class Gui {
 
         configurarJSliders();
 
-        this.jPanelSettings.add(jLabelInfo);
-        this.jPanelSettings.add(jLabelSettingsTomato);
-        this.jPanelSettings.add(jSliderTomato);
-        this.jPanelSettings.add(jLabelSettingsShortBreak);
-        this.jPanelSettings.add(jSliderShortBreak);
-        this.jPanelSettings.add(jLabelSettingsLongBreak);
-        this.jPanelSettings.add(jSliderLongBreak);
-        this.jPanelSettings.add(jButtonSairSettings);
+        jPanelSettings.add(jLabelInfo);
+        jPanelSettings.add(jLabelSettingsTomato);
+        jPanelSettings.add(jSliderTomato);
+        jPanelSettings.add(jLabelSettingsShortBreak);
+        jPanelSettings.add(jSliderShortBreak);
+        jPanelSettings.add(jLabelSettingsLongBreak);
+        jPanelSettings.add(jSliderLongBreak);
+        jPanelSettings.add(jButtonSairSettings);
 
         this.jFrameSettings.setContentPane(jPanelSettings);
         this.jFrameSettings.setSize(300, 300);
@@ -198,7 +186,7 @@ class Gui {
         this.jSliderTomato.setMinorTickSpacing(1);
         this.jSliderTomato.setPaintTicks(true);
         this.jSliderTomato.setPaintLabels(true);
-        this.jSliderTomato.setValue(tomato.getPomodoroTime() / 60 / 1000);
+        this.jSliderTomato.setValue(tomato.getPomodoroTime());
         this.jSliderTomato.setValueIsAdjusting(true);
 
         // JSlider para configuração do tempo de short break
@@ -207,7 +195,7 @@ class Gui {
         this.jSliderShortBreak.setMinorTickSpacing(1);
         this.jSliderShortBreak.setPaintLabels(true);
         this.jSliderShortBreak.setPaintTicks(true);
-        this.jSliderShortBreak.setValue(tomato.getShortBreakTime() / 60 / 1000);
+        this.jSliderShortBreak.setValue(tomato.getShortBreakTime());
 
         // JSlider para configuração do tempo de long break
         this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 15);
@@ -215,7 +203,7 @@ class Gui {
         this.jSliderLongBreak.setMinorTickSpacing(1);
         this.jSliderLongBreak.setPaintTicks(true);
         this.jSliderLongBreak.setPaintLabels(true);
-        this.jSliderLongBreak.setValue(tomato.getLongBreakTime() / 60 / 1000);
+        this.jSliderLongBreak.setValue(tomato.getLongBreakTime());
 
         configurarListenersDeJSliders();
     }
@@ -224,20 +212,20 @@ class Gui {
         this.jSliderTomato.addChangeListener(changeEvent -> {
             String valorTomato = stringTempoPomodoro
                     + String.valueOf(jSliderTomato.getValue() + " minuto(s)");
-            tomato.setPomodoroTime(jSliderTomato.getValue() * 60 * 1000);
+            tomato.setPomodoroTime(jSliderTomato.getValue());
             jLabelSettingsTomato.setText(valorTomato);
         });
 
         this.jSliderShortBreak.addChangeListener(changeEvent -> {
             String stringValorShortBreak = stringIntervaloCurto
                     + String.valueOf(jSliderShortBreak.getValue() + " minuto(s)");
-            tomato.setShortBreakTime(jSliderShortBreak.getValue() * 60 * 1000);
+            tomato.setShortBreakTime(jSliderShortBreak.getValue());
             jLabelSettingsShortBreak.setText(stringValorShortBreak);
         });
         this.jSliderLongBreak.addChangeListener(changeEvent -> {
             String stringValorLongBreak = stringIntervaloLongo
                     + String.valueOf(jSliderLongBreak.getValue() + " minuto(s)");
-            tomato.setLongBreakTime(jSliderLongBreak.getValue() * 60 * 1000);
+            tomato.setLongBreakTime(jSliderLongBreak.getValue());
             jLabelSettingsLongBreak.setText(stringValorLongBreak);
         });
     }

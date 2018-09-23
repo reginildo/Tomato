@@ -18,7 +18,7 @@ package io.github.reginildo.tomato;
 
 /**
  *
- * @author Reginildo Sousa mailto: reginildosousa01@gmail.com
+ * @author Reginildo Sousa
  */
 public class Main {
     public static void main(String[] args) {

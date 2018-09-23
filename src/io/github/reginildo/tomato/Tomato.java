@@ -17,43 +17,49 @@
 package io.github.reginildo.tomato;
 
 /**
- *
  * @author reginildo
  */
-class Tomato{
+class Tomato {
 
     private int longBreakTime;
     private int pomodoroTime;
     private int shortBreakTime;
 
-    Tomato(int pomodo, int shortBreakTime, int longBreak){
-        this.longBreakTime = longBreak;
-        this.pomodoroTime = pomodo;
-        this.shortBreakTime = shortBreakTime;
+    Tomato(int pomodo, int shortBreakTime, int longBreak) {
+        setLongBreakTime(longBreak);
+        setPomodoroTime(pomodo);
+        setShortBreakTime(shortBreakTime);
     }
 
+    /* TODO rever classe */
+
     int getLongBreakTime() {
-        return longBreakTime;
+
+        return longBreakTime / 60 / 1000;
     }
 
     void setLongBreakTime(int longBreakTime) {
-        this.longBreakTime = longBreakTime;
+
+        this.longBreakTime = longBreakTime * 60 * 1000;
     }
 
     int getPomodoroTime() {
-        return pomodoroTime;
+
+        return pomodoroTime / 60 / 1000;
     }
 
     void setPomodoroTime(int pomodoroTime) {
-        this.pomodoroTime = pomodoroTime;
+        this.pomodoroTime = pomodoroTime * 60 * 1000;
     }
 
     int getShortBreakTime() {
-        return shortBreakTime;
+
+        return shortBreakTime / 60 / 1000;
     }
 
     void setShortBreakTime(int shortBreakTime) {
-        this.shortBreakTime = shortBreakTime;
+
+        this.shortBreakTime = shortBreakTime * 60 * 1000;
     }
 
 
