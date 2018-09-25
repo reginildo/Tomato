@@ -16,9 +16,6 @@
  */
 package io.github.reginildo.tomato;
 
-/**
- * @author reginildo
- */
 class Tomato {
 
     private int longBreakTime;
@@ -31,34 +28,33 @@ class Tomato {
         setShortBreakTime(shortBreakTime);
     }
 
-    /* TODO rever classe */
-
     int getLongBreakTime() {
-
+        // return long break time in milliseconds
         return longBreakTime / 60 / 1000;
     }
 
     void setLongBreakTime(int longBreakTime) {
-
+        // set long break time in milliseconds
         this.longBreakTime = longBreakTime * 60 * 1000;
     }
 
     int getPomodoroTime() {
-
+        // return pomodoro time in milliseconds
         return pomodoroTime / 60 / 1000;
     }
 
     void setPomodoroTime(int pomodoroTime) {
+        // set pomodoro time in milliseconds
         this.pomodoroTime = pomodoroTime * 60 * 1000;
     }
 
     int getShortBreakTime() {
-
+        // return short break time in milliseconds
         return shortBreakTime / 60 / 1000;
     }
 
     void setShortBreakTime(int shortBreakTime) {
-
+        // set short break time in milliseconds
         this.shortBreakTime = shortBreakTime * 60 * 1000;
     }
 
