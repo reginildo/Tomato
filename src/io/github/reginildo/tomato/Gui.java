@@ -17,17 +17,13 @@
 package io.github.reginildo.tomato;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-/**
- * @author reginildo
- */
 class Gui {
     private final JFrame jFrameMain = new JFrame("Tomato");
     private Tomato tomato = new Tomato(25, 5, 15);
@@ -78,7 +74,8 @@ class Gui {
         this.jFrameMain.setJMenuBar(jMenuBar);
         JPanel jPanelTimer = new JPanel();
         JButton jButtonStart = new JButton("Start");
-        // actionlistener de jbuttonstart
+
+        // jbuttonstart action listerner
         jButtonStart.addActionListener(actionEvent -> {
             iniciarPomodoro();
         });
@@ -100,6 +97,8 @@ class Gui {
 
         this.jFrameMain.setSize(300, 300);
         this.jFrameMain.setResizable(false);
+        // TODO - configurar para abrir no centro da tela
+        this.jFrameMain.setLocationRelativeTo(null);
         this.jFrameMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.jFrameMain.setVisible(true);
     }
@@ -157,6 +156,18 @@ class Gui {
                 jFrameSettings.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             }
         });
+        jButtonSairSettings.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jButtonSairSettings.setToolTipText("Desejar sair das configurações?");
+
+            }
+        });
 
         configurarJSliders();
 
@@ -208,6 +219,7 @@ class Gui {
         configurarListenersDeJSliders();
     }
 
+    // TODO configurar listener de hover dos JSlides
     private void configurarListenersDeJSliders() {
         this.jSliderTomato.addChangeListener(changeEvent -> {
             String valorTomato = stringTempoPomodoro
@@ -216,17 +228,56 @@ class Gui {
             jLabelSettingsTomato.setText(valorTomato);
         });
 
+        this.jSliderTomato.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jSliderTomato.setToolTipText(String.valueOf(jSliderTomato.getValue() + " minutos"));
+
+            }
+        });
+
         this.jSliderShortBreak.addChangeListener(changeEvent -> {
             String stringValorShortBreak = stringIntervaloCurto
                     + String.valueOf(jSliderShortBreak.getValue() + " minuto(s)");
             tomato.setShortBreakTime(jSliderShortBreak.getValue());
             jLabelSettingsShortBreak.setText(stringValorShortBreak);
         });
+
+        this.jSliderShortBreak.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jSliderShortBreak.setToolTipText(String.valueOf(jSliderShortBreak.getValue() + " minutos"));
+
+            }
+        });
         this.jSliderLongBreak.addChangeListener(changeEvent -> {
             String stringValorLongBreak = stringIntervaloLongo
                     + String.valueOf(jSliderLongBreak.getValue() + " minuto(s)");
             tomato.setLongBreakTime(jSliderLongBreak.getValue());
             jLabelSettingsLongBreak.setText(stringValorLongBreak);
+        });
+
+        this.jSliderLongBreak.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jSliderLongBreak.setToolTipText(String.valueOf(jSliderLongBreak.getValue() + " minutos"));
+
+            }
         });
     }
 }
