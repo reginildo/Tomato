@@ -21,8 +21,6 @@ import java.awt.event.*;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 
 class Gui {
     private final JFrame jFrameMain = new JFrame("Tomato");
@@ -52,24 +50,30 @@ class Gui {
 
         Font font = new Font("Arial", Font.BOLD, 85);
         JMenuBar jMenuBar = new JMenuBar();
-        JMenu jMenuSettings = new JMenu("Settings");
+        JMenu jMenuFile = new JMenu("File");
+        JMenuItem jMenuItemSettings = new JMenuItem("Settings");
+        jMenuFile.setMnemonic(KeyEvent.VK_F);
 
-        jMenuSettings.addMenuListener(new MenuListener() {
+        jMenuItemSettings.addMouseMotionListener(new MouseMotionListener() {
             @Override
-            public void menuSelected(MenuEvent e) {
-                createFrameSettings();
+            public void mouseDragged(MouseEvent mouseEvent) {
             }
 
             @Override
-            public void menuDeselected(MenuEvent e) {
-            }
-
-            @Override
-            public void menuCanceled(MenuEvent e) {
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jMenuFile.setToolTipText("Configurar intervalos de tempo");
             }
         });
 
-        jMenuBar.add(jMenuSettings);
+        jMenuItemSettings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                createFrameSettings();
+            }
+        });
+
+        jMenuFile.add(jMenuItemSettings);
+        jMenuBar.add(jMenuFile);
         this.jFrameMain.setLayout(new FlowLayout());
         this.jFrameMain.setJMenuBar(jMenuBar);
         JPanel jPanelTimer = new JPanel();
@@ -79,8 +83,47 @@ class Gui {
         jButtonStart.addActionListener(actionEvent -> {
             iniciarPomodoro();
         });
+
+
+
+        jButtonStart.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jButtonStart.setToolTipText("Iniciar pomodoro");
+            }
+        });
+
         JButton jButtonPause = new JButton("Pause");
+        jButtonPause.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jButtonPause.setToolTipText("Pausa pomodoro");
+
+            }
+        });
+
         JButton jButtonReset = new JButton("Reset");
+        jButtonReset.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+                jButtonReset.setToolTipText("Reininiando");
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jButtonReset.setToolTipText("Reiniciar pomodoro");
+            }
+        });
 
         this.jLabelTimeCounter = new JLabel("00:00");
         this.jLabelTimeCounter.setFont(font);
@@ -146,6 +189,7 @@ class Gui {
         JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
         jLabelInfo.setFont(fontInfoSettings);
         JButton jButtonSairSettings = new JButton("Sair");
+        jButtonSairSettings.setMnemonic(KeyEvent.VK_S);
         jButtonSairSettings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
