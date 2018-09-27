@@ -53,7 +53,10 @@ class Gui {
         JMenuBar jMenuBar = new JMenuBar();
         JMenu jMenuFile = new JMenu("File");
         JMenuItem jMenuItemSettings = new JMenuItem("Settings");
+        JMenuItem jMenuItemQuit = new JMenuItem("Quit");
         jMenuFile.setMnemonic(KeyEvent.VK_F);
+        jMenuItemSettings.setMnemonic(KeyEvent.VK_E);
+        jMenuItemQuit.setMnemonic(KeyEvent.VK_Q);
 
         jMenuItemSettings.addMouseMotionListener(new MouseMotionListener() {
             @Override
@@ -73,7 +76,15 @@ class Gui {
             }
         });
 
+        jMenuItemQuit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0);
+            }
+        });
+
         jMenuFile.add(jMenuItemSettings);
+        jMenuFile.add(jMenuItemQuit);
         jMenuBar.add(jMenuFile);
         this.jFrameMain.setLayout(new FlowLayout());
         this.jFrameMain.setJMenuBar(jMenuBar);
