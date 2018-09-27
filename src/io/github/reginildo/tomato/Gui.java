@@ -18,6 +18,7 @@ package io.github.reginildo.tomato;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
@@ -78,6 +79,7 @@ class Gui {
         this.jFrameMain.setJMenuBar(jMenuBar);
         JPanel jPanelTimer = new JPanel();
         JButton jButtonStart = new JButton("Start");
+        jButtonStart.setMnemonic(KeyEvent.VK_S);
 
         // jbuttonstart action listerner
         jButtonStart.addActionListener(actionEvent -> {
@@ -99,6 +101,7 @@ class Gui {
         });
 
         JButton jButtonPause = new JButton("Pause");
+        jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
@@ -113,6 +116,7 @@ class Gui {
         });
 
         JButton jButtonReset = new JButton("Reset");
+        jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonReset.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
