@@ -93,11 +93,18 @@ class Gui {
         this.jFrameMain.setJMenuBar(jMenuBar);
         JPanel jPanelTimer = new JPanel();
         JButton jButtonStart = new JButton("Start");
+        JButton jButtonPause = new JButton("Pause");
         jButtonStart.setMnemonic(KeyEvent.VK_S);
 
         // jbuttonstart action listerner
         jButtonStart.addActionListener(actionEvent -> {
-            iniciarPomodoro();
+            if (jButtonStart.isEnabled()){
+                jButtonStart.setEnabled(false);
+                jButtonPause.setEnabled(true);
+                iniciarPomodoro();
+            }else {
+                //timer.schedule();
+            }
         });
 
 
@@ -113,8 +120,18 @@ class Gui {
             }
         });
 
-        JButton jButtonPause = new JButton("Pause");
+
         jButtonPause.setMnemonic(KeyEvent.VK_P);
+        jButtonPause.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (jButtonPause.isEnabled()){
+                    jButtonPause.setEnabled(false);
+                    jButtonStart.setEnabled(true);
+                    timer.cancel();
+                }
+            }
+        });
         jButtonPause.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
@@ -165,7 +182,7 @@ class Gui {
 
     private void iniciarPomodoro() {
 
-        java.util.Timer timer = null;
+        timer = null;
         final SimpleDateFormat format = new SimpleDateFormat("mm:ss");
         if (timer == null) {
             timer = new Timer();
@@ -174,13 +191,9 @@ class Gui {
                 int contSec = 0;
 
                 public void run() {
-
                     Date timeStart = new Date();
-
                     timeStart.setMinutes(0);
-
                     try {
-
                         timeStart.setSeconds(contSec++);
                         jLabelTimeCounter.setText(format.format(timeStart.getTime()));
                     } catch (Exception e) {
