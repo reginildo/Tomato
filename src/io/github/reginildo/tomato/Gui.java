@@ -18,12 +18,15 @@ package io.github.reginildo.tomato;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.security.Key;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.*;
 
 class Gui {
+    java.util.Timer timer = null;
     private final JFrame jFrameMain = new JFrame("Tomato");
     private Tomato tomato = new Tomato(25, 5, 15);
     private String stringTempoPomodoro = "Tempo de pomodoro: ";
@@ -98,7 +101,6 @@ class Gui {
         });
 
 
-
         jButtonStart.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
@@ -162,39 +164,38 @@ class Gui {
     }
 
     private void iniciarPomodoro() {
-        dateStart = new Date();
-        dateStart.setHours(0);
-        dateStart.setMinutes(0);
-        calendarStart = Calendar.getInstance();
-        calendarStart.setTime(dateStart);
 
-        dateFinal = new Date();
-        dateFinal = dateStart;
-        dateFinal.setTime(dateFinal.getTime() + tomato.getPomodoroTime());
+        java.util.Timer timer = null;
+        final SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+        if (timer == null) {
+            timer = new Timer();
 
-        calendarEnd = Calendar.getInstance();
-        calendarEnd.setTime(dateFinal);
+            TimerTask tarefa = new TimerTask() {
+                int contSec = 0;
 
-        Thread thread;
-        Runnable runnable = () -> {
+                public void run() {
 
-            while (calendarStart.before(dateFinal)) {
-                jLabelTimeCounter.setText(String.valueOf(dateStart.getMinutes() + ":" + dateStart.getSeconds()));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Date timeStart = new Date();
+
+                    timeStart.setMinutes(0);
+
+                    try {
+
+                        timeStart.setSeconds(contSec++);
+                        jLabelTimeCounter.setText(format.format(timeStart.getTime()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        };
-        thread = new Thread(runnable);
-        thread.start();
+            };
+            timer.scheduleAtFixedRate(tarefa, 0, 1000);
+        }
     }
 
     private void createFrameSettings() {
         this.jFrameSettings = new JFrame();
         JPanel jPanelSettings = new JPanel();
-        jPanelSettings.setLayout(new BoxLayout(jPanelSettings, BoxLayout.Y_AXIS ));
+        jPanelSettings.setLayout(new BoxLayout(jPanelSettings, BoxLayout.Y_AXIS));
 
         this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
         this.jLabelSettingsLongBreak = new JLabel(stringIntervaloLongo);
@@ -241,7 +242,7 @@ class Gui {
 
         this.jFrameSettings.setContentPane(jPanelSettings);
         this.jFrameSettings.setSize(300, 300);
-        this.jFrameSettings.setLocation(600,300);
+        this.jFrameSettings.setLocation(600, 300);
         this.jFrameSettings.setResizable(false);
         this.jFrameSettings.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.jFrameSettings.setTitle("Tomato - Settings");
