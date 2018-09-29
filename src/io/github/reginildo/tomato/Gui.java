@@ -94,7 +94,11 @@ class Gui {
         JPanel jPanelTimer = new JPanel();
         JButton jButtonStart = new JButton("Start");
         JButton jButtonPause = new JButton("Pause");
+        JButton jButtonReset = new JButton("Reset");
         jButtonStart.setMnemonic(KeyEvent.VK_S);
+        jButtonReset.setMnemonic(KeyEvent.VK_R);
+        jButtonPause.setMnemonic(KeyEvent.VK_P);
+
 
         // jbuttonstart action listerner
         jButtonStart.addActionListener(actionEvent -> {
@@ -121,13 +125,13 @@ class Gui {
         });
 
 
-        jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if (jButtonPause.isEnabled()){
                     jButtonPause.setEnabled(false);
                     jButtonStart.setEnabled(true);
+                    jButtonStart.setText("Resume");
                     timer.cancel();
                 }
             }
@@ -145,8 +149,16 @@ class Gui {
             }
         });
 
-        JButton jButtonReset = new JButton("Reset");
-        jButtonReset.setMnemonic(KeyEvent.VK_R);
+        jButtonReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                jButtonStart.setText("Start");
+                iniciarPomodoro();
+            }
+        });
+
+
+
         jButtonReset.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
