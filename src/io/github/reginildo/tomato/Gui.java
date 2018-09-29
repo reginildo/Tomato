@@ -108,6 +108,7 @@ class Gui {
                 iniciarPomodoro();
             }else {
                 //timer.schedule();
+                //
             }
         });
 
