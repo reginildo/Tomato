@@ -98,6 +98,7 @@ class Gui {
         jButtonStart.setMnemonic(KeyEvent.VK_S);
         jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonPause.setMnemonic(KeyEvent.VK_P);
+        jButtonPause.setEnabled(false);
 
 
         // jbuttonstart action listerner
@@ -107,8 +108,6 @@ class Gui {
                 jButtonPause.setEnabled(true);
                 iniciarPomodoro();
             }else {
-                //timer.schedule();
-                //
             }
         });
 
@@ -130,10 +129,12 @@ class Gui {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if (jButtonPause.isEnabled()){
+                    timer.cancel();
                     jButtonPause.setEnabled(false);
                     jButtonStart.setEnabled(true);
                     jButtonStart.setText("Resume");
-                    timer.cancel();
+
+
                 }
             }
         });
@@ -153,7 +154,9 @@ class Gui {
         jButtonReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                timer.cancel();
                 jButtonStart.setText("Start");
+                jButtonPause.setEnabled(true);
                 iniciarPomodoro();
             }
         });
