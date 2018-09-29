@@ -200,6 +200,7 @@ class Gui {
             timer = new Timer();
 
             TimerTask tarefa = new TimerTask() {
+                /**/
                 int contSec = 0;
 
                 public void run() {
