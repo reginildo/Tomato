@@ -36,6 +36,7 @@ class Gui {
     private JSpinner.NumberEditor numberEditorSettings;
     private JButton jButtonStart, jButtonPause,jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit;
+    private Color colorRoxo = new Color(102,0,80);
 
     private JLabel jLabelTimeCounter;
 
@@ -61,6 +62,7 @@ class Gui {
         Font font = new Font("Arial", Font.BOLD, 85);
         JMenuBar jMenuBar = new JMenuBar();
         JPanel jPanelButtons = new JPanel();
+        jPanelButtons.setBackground(colorRoxo);
         JMenu jMenuFile = new JMenu("File");
         jMenuItemSettings = new JMenuItem("Settings");
         jMenuItemQuit = new JMenuItem("Quit");
@@ -88,21 +90,28 @@ class Gui {
         jMenuBar.add(jMenuFile);
         this.jFrameMain.setLayout(new FlowLayout());
         this.jFrameMain.setJMenuBar(jMenuBar);
+        jFrameMain.setBackground(colorRoxo);
+
         JPanel jPanelTimer = new JPanel();
+        jPanelTimer.setBackground(colorRoxo);
         jButtonStart = new JButton("Start");
         jButtonPause = new JButton("Pause");
         jButtonReset = new JButton("Reset");
         jButtonStart.setMnemonic(KeyEvent.VK_S);
+        jButtonStart.setBackground(new Color(12,109,115));
+        jButtonPause.setBackground(new Color(145,73,35));
         jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.setEnabled(false);
         jButtonReset.setEnabled(false);
+        jButtonReset.setBackground(new Color(129,123,99));
 
         setButtonsActionListeners();
         setAllMotionListeners();
 
         this.jLabelTimeCounter = new JLabel("00:00");
         this.jLabelTimeCounter.setFont(font);
+        this.jLabelTimeCounter.setForeground(Color.WHITE);
         jPanelTimer.setLayout(new FlowLayout());
         jPanelTimer.add(jLabelTimeCounter);
 
@@ -217,10 +226,13 @@ class Gui {
     private void createFrameSettings() {
         this.jFrameSettings = new JFrame();
         JPanel jPanelSettings = new JPanel();
+        jPanelSettings.setBackground(colorRoxo);
         jPanelSettings.setLayout(new BoxLayout(jPanelSettings, BoxLayout.Y_AXIS));
 
         this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
+        this.jLabelSettingsTomato.setForeground(Color.WHITE);
         this.jLabelSettingsLongBreak = new JLabel(stringIntervaloLongo);
+        
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
         JButton jButtonSettingSave = new JButton();
         JButton jButtonSettingsCancel = new JButton();
@@ -301,7 +313,7 @@ class Gui {
         configurarListenersDeJSliders();
     }
 
-    // TODO configurar listener de hover dos JSlides
+    // TODO configurar listener de hover dos JSlides..
     private void configurarListenersDeJSliders() {
         this.jSliderTomato.addChangeListener(changeEvent -> {
             String valorTomato = stringTempoPomodoro
@@ -393,8 +405,8 @@ class Gui {
             public void actionPerformed(ActionEvent actionEvent) {
                 timer.cancel();
                 jButtonStart.setText("Start");
-
                 jButtonPause.setEnabled(true);
+                jButtonReset.setBackground(Color.GRAY);
                 iniciarPomodoro();
             }
         });
