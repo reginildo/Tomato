@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicBorders;
 
 class Gui {
     java.util.Timer timer = null;
@@ -37,6 +39,10 @@ class Gui {
     private JButton jButtonStart, jButtonPause,jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit;
     private Color colorRoxo = new Color(102,0,80);
+    private Color colorMarronClaro = new Color(129,123,99);
+    private Color colorVerdeClaro = new Color(12,109,115);
+    private Color colorLaranjaClaro = new Color(145,73,35);
+    private Color colorButtonBackground = new Color(31,13,13);
 
     private JLabel jLabelTimeCounter;
 
@@ -98,13 +104,17 @@ class Gui {
         jButtonPause = new JButton("Pause");
         jButtonReset = new JButton("Reset");
         jButtonStart.setMnemonic(KeyEvent.VK_S);
-        jButtonStart.setBackground(new Color(12,109,115));
-        jButtonPause.setBackground(new Color(145,73,35));
+        jButtonStart.setBackground(colorVerdeClaro);
+        jButtonStart.setForeground(Color.WHITE);
+        jButtonPause.setBackground(colorLaranjaClaro);
+        jButtonPause.setForeground(Color.WHITE);
+
+        jButtonReset.setBackground(colorMarronClaro);
         jButtonReset.setMnemonic(KeyEvent.VK_R);
+        jButtonReset.setForeground(Color.WHITE);
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.setEnabled(false);
         jButtonReset.setEnabled(false);
-        jButtonReset.setBackground(new Color(129,123,99));
 
         setButtonsActionListeners();
         setAllMotionListeners();
@@ -232,12 +242,16 @@ class Gui {
         this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
         this.jLabelSettingsTomato.setForeground(Color.WHITE);
         this.jLabelSettingsLongBreak = new JLabel(stringIntervaloLongo);
+        this.jLabelSettingsLongBreak.setForeground(Color.WHITE);
+
         
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
+        this.jLabelSettingsShortBreak.setForeground(Color.WHITE);
         JButton jButtonSettingSave = new JButton();
         JButton jButtonSettingsCancel = new JButton();
         JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
         jLabelInfo.setFont(fontInfoSettings);
+        jLabelInfo.setForeground(Color.WHITE);
         JButton jButtonSairSettings = new JButton("Sair");
         jButtonSairSettings.setMnemonic(KeyEvent.VK_S);
         jButtonSairSettings.addActionListener(new ActionListener() {
@@ -287,6 +301,8 @@ class Gui {
 
         // JSlider para configuração do tempo de Pomodoro
         this.jSliderTomato = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
+        this.jSliderTomato.setBackground(colorRoxo);
+        this.jSliderTomato.setForeground(Color.WHITE);
         this.jSliderTomato.setMajorTickSpacing(10);
         this.jSliderTomato.setMinorTickSpacing(1);
         this.jSliderTomato.setPaintTicks(true);
@@ -296,6 +312,8 @@ class Gui {
 
         // JSlider para configuração do tempo de short break
         this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 5);
+        this.jSliderShortBreak.setBackground(colorRoxo);
+        this.jSliderShortBreak.setForeground(Color.WHITE);
         this.jSliderShortBreak.setMajorTickSpacing(10);
         this.jSliderShortBreak.setMinorTickSpacing(1);
         this.jSliderShortBreak.setPaintLabels(true);
@@ -304,6 +322,8 @@ class Gui {
 
         // JSlider para configuração do tempo de long break
         this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 15);
+        this.jSliderLongBreak.setBackground(colorRoxo);
+        this.jSliderLongBreak.setForeground(Color.WHITE);
         this.jSliderLongBreak.setMajorTickSpacing(10);
         this.jSliderLongBreak.setMinorTickSpacing(1);
         this.jSliderLongBreak.setPaintTicks(true);
@@ -379,7 +399,9 @@ class Gui {
         jButtonStart.addActionListener(actionEvent -> {
             if (jButtonStart.isEnabled()){
                 jButtonStart.setEnabled(false);
+                jButtonStart.setBackground(colorButtonBackground);
                 jButtonPause.setEnabled(true);
+                jButtonPause.setBackground(colorMarronClaro);
                 iniciarPomodoro();
             }else {
             }
@@ -391,8 +413,11 @@ class Gui {
                 if (jButtonPause.isEnabled()){
                     timer.cancel();
                     jButtonPause.setEnabled(false);
+                    jButtonPause.setBackground(colorButtonBackground);
                     jButtonReset.setEnabled(true);
+                    jButtonReset.setBackground(colorLaranjaClaro);
                     jButtonStart.setEnabled(true);
+                    jButtonStart.setBackground(colorVerdeClaro);
                     jButtonStart.setText("Resume");
 
 
@@ -406,7 +431,9 @@ class Gui {
                 timer.cancel();
                 jButtonStart.setText("Start");
                 jButtonPause.setEnabled(true);
-                jButtonReset.setBackground(Color.GRAY);
+
+                jButtonReset.setBackground(colorButtonBackground);
+                jButtonPause.setBackground(colorMarronClaro);
                 iniciarPomodoro();
             }
         });
