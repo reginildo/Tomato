@@ -34,6 +34,8 @@ class Gui {
     private String stringIntervaloLongo = "Intervalo Longo: ";
     private Font fontInfoSettings = new Font("Arial", Font.BOLD, 26);
     private JSpinner.NumberEditor numberEditorSettings;
+    private JButton jButtonStart, jButtonPause,jButtonReset;
+    private JMenuItem jMenuItemSettings, jMenuItemQuit;
 
     private JLabel jLabelTimeCounter;
 
@@ -45,18 +47,23 @@ class Gui {
     private JSlider jSliderShortBreak;
     private String stringCount;
 
-    private Date dateStart;
+    /*private Date dateStart;
     private Date dateFinal;
     private Calendar calendarStart;
-    private Calendar calendarEnd;
+    private Calendar calendarEnd;*/
+
+    /**
+    * Método responsavel pela criação da GUI principal
+    * */
 
     void createGui() {
 
         Font font = new Font("Arial", Font.BOLD, 85);
         JMenuBar jMenuBar = new JMenuBar();
+        JPanel jPanelButtons = new JPanel();
         JMenu jMenuFile = new JMenu("File");
-        JMenuItem jMenuItemSettings = new JMenuItem("Settings");
-        JMenuItem jMenuItemQuit = new JMenuItem("Quit");
+        jMenuItemSettings = new JMenuItem("Settings");
+        jMenuItemQuit = new JMenuItem("Quit");
         jMenuFile.setMnemonic(KeyEvent.VK_F);
         jMenuItemSettings.setMnemonic(KeyEvent.VK_E);
         jMenuItemQuit.setMnemonic(KeyEvent.VK_Q);
@@ -72,19 +79,9 @@ class Gui {
             }
         });
 
-        jMenuItemSettings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                createFrameSettings();
-            }
-        });
+        setAllMenuComponentsActionListeners();
 
-        jMenuItemQuit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.exit(0);
-            }
-        });
+
 
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
@@ -92,78 +89,59 @@ class Gui {
         this.jFrameMain.setLayout(new FlowLayout());
         this.jFrameMain.setJMenuBar(jMenuBar);
         JPanel jPanelTimer = new JPanel();
-        JButton jButtonStart = new JButton("Start");
-        JButton jButtonPause = new JButton("Pause");
-        JButton jButtonReset = new JButton("Reset");
+        jButtonStart = new JButton("Start");
+        jButtonPause = new JButton("Pause");
+        jButtonReset = new JButton("Reset");
         jButtonStart.setMnemonic(KeyEvent.VK_S);
         jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.setEnabled(false);
+        jButtonReset.setEnabled(false);
 
+        setButtonsActionListeners();
+        setAllMotionListeners();
 
-        // jbuttonstart action listerner
-        jButtonStart.addActionListener(actionEvent -> {
-            if (jButtonStart.isEnabled()){
-                jButtonStart.setEnabled(false);
-                jButtonPause.setEnabled(true);
-                iniciarPomodoro();
-            }else {
-            }
-        });
+        this.jLabelTimeCounter = new JLabel("00:00");
+        this.jLabelTimeCounter.setFont(font);
+        jPanelTimer.setLayout(new FlowLayout());
+        jPanelTimer.add(jLabelTimeCounter);
 
+        jPanelButtons.add(jButtonStart);
+        jPanelButtons.add(jButtonPause);
+        jPanelButtons.add(jButtonReset);
 
+        this.jFrameMain.setContentPane(jPanelTimer);
+        this.jFrameMain.add(jPanelButtons);
+
+        this.jFrameMain.setSize(300, 300);
+        this.jFrameMain.setResizable(false);
+        this.jFrameMain.setLocationRelativeTo(null);
+        this.jFrameMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.jFrameMain.setVisible(true);
+    }
+
+    private void setAllMotionListeners() {
         jButtonStart.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-                jButtonStart.setToolTipText("Não faça isso");
-                jButtonStart.setBackground(Color.RED);
 
             }
-
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jButtonStart.setToolTipText("Iniciar pomodoro");
             }
         });
 
-
-        jButtonPause.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (jButtonPause.isEnabled()){
-                    timer.cancel();
-                    jButtonPause.setEnabled(false);
-                    jButtonStart.setEnabled(true);
-                    jButtonStart.setText("Resume");
-
-
-                }
-            }
-        });
         jButtonPause.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
 
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jButtonPause.setToolTipText("Pausa pomodoro");
-
             }
         });
-
-        jButtonReset.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                timer.cancel();
-                jButtonStart.setText("Start");
-                jButtonPause.setEnabled(true);
-                iniciarPomodoro();
-            }
-        });
-
-
 
         jButtonReset.addMouseMotionListener(new MouseMotionListener() {
             @Override
@@ -177,27 +155,35 @@ class Gui {
             }
         });
 
-        this.jLabelTimeCounter = new JLabel("00:00");
-        this.jLabelTimeCounter.setFont(font);
-        jPanelTimer.setLayout(new FlowLayout());
-        jPanelTimer.add(jLabelTimeCounter);
+        jMenuItemSettings.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
 
-        JPanel jPanelButtons = new JPanel();
-        jPanelButtons.add(jButtonStart);
-        jPanelButtons.add(jButtonPause);
-        jPanelButtons.add(jButtonReset);
+            }
 
-        this.jFrameMain.setContentPane(jPanelTimer);
-        this.jFrameMain.add(jPanelButtons);
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jMenuItemSettings.setToolTipText("Enter the pomodoro settings");
 
-        this.jFrameMain.setSize(300, 300);
-        this.jFrameMain.setResizable(false);
-        // TODO - configurar para abrir no centro da tela
-        this.jFrameMain.setLocationRelativeTo(null);
-        this.jFrameMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.jFrameMain.setVisible(true);
+            }
+        });
+
+        jMenuItemQuit.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jMenuItemQuit.setToolTipText("Quit the application");
+            }
+        });
     }
 
+    /**
+     * método que inicia o contador pomodoro
+     * */
     private void iniciarPomodoro() {
 
         timer = null;
@@ -224,6 +210,10 @@ class Gui {
         }
     }
 
+
+    /**
+     * metodo para criar a tela de configurações do pomodoro
+     * */
     private void createFrameSettings() {
         this.jFrameSettings = new JFrame();
         JPanel jPanelSettings = new JPanel();
@@ -369,6 +359,62 @@ class Gui {
             public void mouseMoved(MouseEvent mouseEvent) {
                 jSliderLongBreak.setToolTipText(String.valueOf(jSliderLongBreak.getValue() + " minutos"));
 
+            }
+        });
+    }
+
+    void setButtonsActionListeners(){
+        jButtonStart.addActionListener(actionEvent -> {
+            if (jButtonStart.isEnabled()){
+                jButtonStart.setEnabled(false);
+                jButtonPause.setEnabled(true);
+                iniciarPomodoro();
+            }else {
+            }
+        });
+
+        jButtonPause.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (jButtonPause.isEnabled()){
+                    timer.cancel();
+                    jButtonPause.setEnabled(false);
+                    jButtonReset.setEnabled(true);
+                    jButtonStart.setEnabled(true);
+                    jButtonStart.setText("Resume");
+
+
+                }
+            }
+        });
+
+        jButtonReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                timer.cancel();
+                jButtonStart.setText("Start");
+
+                jButtonPause.setEnabled(true);
+                iniciarPomodoro();
+            }
+        });
+
+
+    }
+
+
+    private void setAllMenuComponentsActionListeners() {
+        jMenuItemSettings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                createFrameSettings();
+            }
+        });
+
+        jMenuItemQuit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0);
             }
         });
     }
