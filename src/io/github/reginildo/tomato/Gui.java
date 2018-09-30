@@ -115,6 +115,8 @@ class Gui {
         jButtonStart.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
+                jButtonStart.setToolTipText("Não faça isso");
+                jButtonStart.setBackground(Color.RED);
 
             }
 
