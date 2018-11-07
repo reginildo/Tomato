@@ -31,8 +31,8 @@ class Gui {
     private String stringTempoPomodoro = "Tempo de pomodoro: ";
     private String stringIntervaloCurto = "Intervalo Curto: ";
     private String stringIntervaloLongo = "Intervalo Longo: ";
-    private Font fontInfoSettings = new Font("Arial", Font.BOLD, 26);
-    //private JSpinner.NumberEditor numberEditorSettings;
+    private Font fontInfoSettings = new Font("Arial",
+            Font.BOLD, 26);
     private JButton jButtonStart, jButtonPause,jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit;
 
@@ -44,20 +44,14 @@ class Gui {
     private JSlider jSliderTomato;
     private JSlider jSliderLongBreak;
     private JSlider jSliderShortBreak;
-    //private String stringCount;
-
-    /*private Date dateStart;
-    private Date dateFinal;
-    private Calendar calendarStart;
-    private Calendar calendarEnd;*/
 
     /**
     * Método responsavel pela criação da GUI principal
     * */
-
     void createGui() {
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info :
+                    UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
                     break;
@@ -78,11 +72,11 @@ class Gui {
         jMenuItemSettings.setMnemonic(KeyEvent.VK_E);
         jMenuItemQuit.setMnemonic(KeyEvent.VK_Q);
 
-        jMenuItemSettings.addMouseMotionListener(new MouseMotionListener() {
+        jMenuItemSettings.addMouseMotionListener(
+                new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
             }
-
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jMenuFile.setToolTipText("Configurar intervalos de tempo");
@@ -90,9 +84,6 @@ class Gui {
         });
 
         setAllMenuComponentsActionListeners();
-
-
-
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
         jMenuBar.add(jMenuFile);
@@ -136,7 +127,6 @@ class Gui {
         jButtonStart.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
@@ -148,7 +138,6 @@ class Gui {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
             }
-
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jButtonPause.setToolTipText("Pausa pomodoro");
@@ -167,23 +156,22 @@ class Gui {
             }
         });
 
-        jMenuItemSettings.addMouseMotionListener(new MouseMotionListener() {
+        jMenuItemSettings.addMouseMotionListener(
+                new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
 
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
-                jMenuItemSettings.setToolTipText("Enter the pomodoro settings");
-
+                jMenuItemSettings.setToolTipText("Enter the " +
+                        "pomodoro settings");
             }
         });
 
         jMenuItemQuit.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
 
             @Override
@@ -197,22 +185,21 @@ class Gui {
      * método que inicia o contador pomodoro
      * */
     private void iniciarPomodoro() {
-
         timer = null;
-        final SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+        final SimpleDateFormat format = new SimpleDateFormat(
+                "mm:ss");
         if (timer == null) {
             timer = new Timer();
-
             TimerTask tarefa = new TimerTask() {
                 /**/
                 int contSec = 0;
-
                 public void run() {
                     Date timeStart = new Date();
                     timeStart.setMinutes(0);
                     try {
                         timeStart.setSeconds(contSec++);
-                        jLabelTimeCounter.setText(format.format(timeStart.getTime()));
+                        jLabelTimeCounter.setText(format.format(
+                                timeStart.getTime()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -229,12 +216,11 @@ class Gui {
     private void createFrameSettings() {
         this.jFrameSettings = new JFrame();
         JPanel jPanelSettings = new JPanel();
-        jPanelSettings.setLayout(new BoxLayout(jPanelSettings, BoxLayout.Y_AXIS));
-
+        jPanelSettings.setLayout(new BoxLayout(jPanelSettings,
+                BoxLayout.Y_AXIS));
         this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
-        this.jLabelSettingsLongBreak = new JLabel(stringIntervaloLongo);
-
-        
+        this.jLabelSettingsLongBreak = new JLabel(
+                stringIntervaloLongo);
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
         //JButton jButtonSettingSave = new JButton();
         //JButton jButtonSettingsCancel = new JButton();
@@ -252,13 +238,11 @@ class Gui {
         jButtonSairSettings.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
-
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
-                jButtonSairSettings.setToolTipText("Desejar sair das configurações?");
-
+                jButtonSairSettings.setToolTipText(
+                        "Desejar sair das configurações?");
             }
         });
 
@@ -321,16 +305,15 @@ class Gui {
             jLabelSettingsTomato.setText(valorTomato);
         });
 
-        this.jSliderTomato.addMouseMotionListener(new MouseMotionListener() {
+        this.jSliderTomato.addMouseMotionListener(
+                new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
-
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
-                jSliderTomato.setToolTipText(String.valueOf(jSliderTomato.getValue() + " minutos"));
-
+                jSliderTomato.setToolTipText(String.valueOf(
+                        jSliderTomato.getValue() + " minutos"));
             }
         });
 
@@ -344,13 +327,11 @@ class Gui {
         this.jSliderShortBreak.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
-
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
-                jSliderShortBreak.setToolTipText(String.valueOf(jSliderShortBreak.getValue() + " minutos"));
-
+                jSliderShortBreak.setToolTipText(
+                        String.valueOf(jSliderShortBreak.getValue() + " minutos"));
             }
         });
         this.jSliderLongBreak.addChangeListener(changeEvent -> {
@@ -363,13 +344,11 @@ class Gui {
         this.jSliderLongBreak.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-
             }
-
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
-                jSliderLongBreak.setToolTipText(String.valueOf(jSliderLongBreak.getValue() + " minutos"));
-
+                jSliderLongBreak.setToolTipText(
+                        String.valueOf(jSliderLongBreak.getValue() + " minutos"));
             }
         });
     }
@@ -382,7 +361,6 @@ class Gui {
                 iniciarPomodoro();
             }
         });
-
         jButtonPause.addActionListener(actionEvent -> {
             if (jButtonPause.isEnabled()){
                 timer.cancel();
@@ -390,26 +368,18 @@ class Gui {
                 jButtonReset.setEnabled(true);
                 jButtonStart.setEnabled(true);
                 jButtonStart.setText("Resume");
-
-
             }
         });
-
         jButtonReset.addActionListener(actionEvent -> {
             timer.cancel();
             jButtonStart.setText("Start");
             jButtonPause.setEnabled(true);
-
             iniciarPomodoro();
         });
-
-
     }
-
 
     private void setAllMenuComponentsActionListeners() {
         jMenuItemSettings.addActionListener(actionEvent -> createFrameSettings());
-
         jMenuItemQuit.addActionListener(actionEvent -> System.exit(0));
     }
 }
