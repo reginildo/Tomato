@@ -19,30 +19,22 @@ package io.github.reginildo.tomato;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.basic.BasicBorders;
 
 class Gui {
-    java.util.Timer timer = null;
+    private java.util.Timer timer = null;
     private final JFrame jFrameMain = new JFrame("Tomato");
     private Tomato tomato = new Tomato(25, 5, 15);
     private String stringTempoPomodoro = "Tempo de pomodoro: ";
     private String stringIntervaloCurto = "Intervalo Curto: ";
     private String stringIntervaloLongo = "Intervalo Longo: ";
     private Font fontInfoSettings = new Font("Arial", Font.BOLD, 26);
-    private JSpinner.NumberEditor numberEditorSettings;
+    //private JSpinner.NumberEditor numberEditorSettings;
     private JButton jButtonStart, jButtonPause,jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit;
-    private Color colorRoxo = new Color(102,0,80);
-    private Color colorMarronClaro = new Color(129,123,99);
-    private Color colorVerdeClaro = new Color(12,109,115);
-    private Color colorLaranjaClaro = new Color(145,73,35);
-    private Color colorButtonBackground = new Color(31,13,13);
 
     private JLabel jLabelTimeCounter;
 
@@ -52,7 +44,7 @@ class Gui {
     private JSlider jSliderTomato;
     private JSlider jSliderLongBreak;
     private JSlider jSliderShortBreak;
-    private String stringCount;
+    //private String stringCount;
 
     /*private Date dateStart;
     private Date dateFinal;
@@ -64,11 +56,21 @@ class Gui {
     * */
 
     void createGui() {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // If Nimbus is not available, you can set the GUI to another look and feel.
+            e.printStackTrace();
+        }
 
         Font font = new Font("Arial", Font.BOLD, 85);
         JMenuBar jMenuBar = new JMenuBar();
         JPanel jPanelButtons = new JPanel();
-        jPanelButtons.setBackground(colorRoxo);
         JMenu jMenuFile = new JMenu("File");
         jMenuItemSettings = new JMenuItem("Settings");
         jMenuItemQuit = new JMenuItem("Quit");
@@ -96,22 +98,14 @@ class Gui {
         jMenuBar.add(jMenuFile);
         this.jFrameMain.setLayout(new FlowLayout());
         this.jFrameMain.setJMenuBar(jMenuBar);
-        jFrameMain.setBackground(colorRoxo);
 
         JPanel jPanelTimer = new JPanel();
-        jPanelTimer.setBackground(colorRoxo);
         jButtonStart = new JButton("Start");
         jButtonPause = new JButton("Pause");
         jButtonReset = new JButton("Reset");
         jButtonStart.setMnemonic(KeyEvent.VK_S);
-        jButtonStart.setBackground(colorVerdeClaro);
-        jButtonStart.setForeground(Color.WHITE);
-        jButtonPause.setBackground(colorLaranjaClaro);
-        jButtonPause.setForeground(Color.WHITE);
 
-        jButtonReset.setBackground(colorMarronClaro);
         jButtonReset.setMnemonic(KeyEvent.VK_R);
-        jButtonReset.setForeground(Color.WHITE);
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.setEnabled(false);
         jButtonReset.setEnabled(false);
@@ -121,7 +115,6 @@ class Gui {
 
         this.jLabelTimeCounter = new JLabel("00:00");
         this.jLabelTimeCounter.setFont(font);
-        this.jLabelTimeCounter.setForeground(Color.WHITE);
         jPanelTimer.setLayout(new FlowLayout());
         jPanelTimer.add(jLabelTimeCounter);
 
@@ -236,33 +229,25 @@ class Gui {
     private void createFrameSettings() {
         this.jFrameSettings = new JFrame();
         JPanel jPanelSettings = new JPanel();
-        jPanelSettings.setBackground(colorRoxo);
         jPanelSettings.setLayout(new BoxLayout(jPanelSettings, BoxLayout.Y_AXIS));
 
         this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
-        this.jLabelSettingsTomato.setForeground(Color.WHITE);
         this.jLabelSettingsLongBreak = new JLabel(stringIntervaloLongo);
-        this.jLabelSettingsLongBreak.setForeground(Color.WHITE);
 
         
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
-        this.jLabelSettingsShortBreak.setForeground(Color.WHITE);
-        JButton jButtonSettingSave = new JButton();
-        JButton jButtonSettingsCancel = new JButton();
+        //JButton jButtonSettingSave = new JButton();
+        //JButton jButtonSettingsCancel = new JButton();
         JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
         jLabelInfo.setFont(fontInfoSettings);
-        jLabelInfo.setForeground(Color.WHITE);
         JButton jButtonSairSettings = new JButton("Sair");
         jButtonSairSettings.setMnemonic(KeyEvent.VK_S);
-        jButtonSairSettings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                tomato.setPomodoroTime(jSliderTomato.getValue());
-                tomato.setShortBreakTime(jSliderShortBreak.getValue());
-                tomato.setLongBreakTime(jSliderLongBreak.getValue());
-                jFrameSettings.setVisible(false);
-                jFrameSettings.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            }
+        jButtonSairSettings.addActionListener(actionEvent -> {
+            tomato.setPomodoroTime(jSliderTomato.getValue());
+            tomato.setShortBreakTime(jSliderShortBreak.getValue());
+            tomato.setLongBreakTime(jSliderLongBreak.getValue());
+            jFrameSettings.setVisible(false);
+            jFrameSettings.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         });
         jButtonSairSettings.addMouseMotionListener(new MouseMotionListener() {
             @Override
@@ -301,8 +286,6 @@ class Gui {
 
         // JSlider para configuração do tempo de Pomodoro
         this.jSliderTomato = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
-        this.jSliderTomato.setBackground(colorRoxo);
-        this.jSliderTomato.setForeground(Color.WHITE);
         this.jSliderTomato.setMajorTickSpacing(10);
         this.jSliderTomato.setMinorTickSpacing(1);
         this.jSliderTomato.setPaintTicks(true);
@@ -312,8 +295,6 @@ class Gui {
 
         // JSlider para configuração do tempo de short break
         this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 5);
-        this.jSliderShortBreak.setBackground(colorRoxo);
-        this.jSliderShortBreak.setForeground(Color.WHITE);
         this.jSliderShortBreak.setMajorTickSpacing(10);
         this.jSliderShortBreak.setMinorTickSpacing(1);
         this.jSliderShortBreak.setPaintLabels(true);
@@ -322,8 +303,6 @@ class Gui {
 
         // JSlider para configuração do tempo de long break
         this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 15);
-        this.jSliderLongBreak.setBackground(colorRoxo);
-        this.jSliderLongBreak.setForeground(Color.WHITE);
         this.jSliderLongBreak.setMajorTickSpacing(10);
         this.jSliderLongBreak.setMinorTickSpacing(1);
         this.jSliderLongBreak.setPaintTicks(true);
@@ -395,47 +374,33 @@ class Gui {
         });
     }
 
-    void setButtonsActionListeners(){
+    private void setButtonsActionListeners(){
         jButtonStart.addActionListener(actionEvent -> {
             if (jButtonStart.isEnabled()){
                 jButtonStart.setEnabled(false);
-                jButtonStart.setBackground(colorButtonBackground);
                 jButtonPause.setEnabled(true);
-                jButtonPause.setBackground(colorMarronClaro);
                 iniciarPomodoro();
-            }else {
             }
         });
 
-        jButtonPause.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (jButtonPause.isEnabled()){
-                    timer.cancel();
-                    jButtonPause.setEnabled(false);
-                    jButtonPause.setBackground(colorButtonBackground);
-                    jButtonReset.setEnabled(true);
-                    jButtonReset.setBackground(colorLaranjaClaro);
-                    jButtonStart.setEnabled(true);
-                    jButtonStart.setBackground(colorVerdeClaro);
-                    jButtonStart.setText("Resume");
-
-
-                }
-            }
-        });
-
-        jButtonReset.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
+        jButtonPause.addActionListener(actionEvent -> {
+            if (jButtonPause.isEnabled()){
                 timer.cancel();
-                jButtonStart.setText("Start");
-                jButtonPause.setEnabled(true);
+                jButtonPause.setEnabled(false);
+                jButtonReset.setEnabled(true);
+                jButtonStart.setEnabled(true);
+                jButtonStart.setText("Resume");
 
-                jButtonReset.setBackground(colorButtonBackground);
-                jButtonPause.setBackground(colorMarronClaro);
-                iniciarPomodoro();
+
             }
+        });
+
+        jButtonReset.addActionListener(actionEvent -> {
+            timer.cancel();
+            jButtonStart.setText("Start");
+            jButtonPause.setEnabled(true);
+
+            iniciarPomodoro();
         });
 
 
@@ -443,18 +408,8 @@ class Gui {
 
 
     private void setAllMenuComponentsActionListeners() {
-        jMenuItemSettings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                createFrameSettings();
-            }
-        });
+        jMenuItemSettings.addActionListener(actionEvent -> createFrameSettings());
 
-        jMenuItemQuit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                System.exit(0);
-            }
-        });
+        jMenuItemQuit.addActionListener(actionEvent -> System.exit(0));
     }
 }
