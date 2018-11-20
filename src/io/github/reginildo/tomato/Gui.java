@@ -19,7 +19,7 @@ package io.github.reginildo.tomato;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
@@ -194,10 +194,15 @@ class Gui {
                 /**/
                 int contSec = 0;
                 public void run() {
-                    Date timeStart = new Date();
-                    timeStart.setMinutes(0);
+                    Calendar timeStart = Calendar.getInstance();
+                    //Date timeStart = calendar.getTime();
+                    //timeStart.setMinutes(0);
+                    timeStart.set(Calendar.MINUTE,0);
+                    timeStart.set(Calendar.SECOND,0);
                     try {
-                        timeStart.setSeconds(contSec++);
+                        //timeStart.setSeconds(contSec++);
+                        timeStart.set(Calendar.SECOND,
+                                timeStart.get(Calendar.SECOND) + contSec++);
                         jLabelTimeCounter.setText(format.format(
                                 timeStart.getTime()));
                     } catch (Exception e) {
