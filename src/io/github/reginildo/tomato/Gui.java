@@ -19,31 +19,35 @@ package io.github.reginildo.tomato;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.*;
 
 class Gui {
+
+
+    private Locale localeDefault = Locale.getDefault();
+    private Locale localeBR = new Locale("pt");
+    private Locale localeUS = new Locale("en","US");
+    private Locale localeKingon = new Locale("tlh");
+
+
+    private ResourceBundle resourceBundle = ResourceBundle.getBundle("io.github.reginildo.tomato/Labels",localeBR);
     private java.util.Timer timer = null;
     private final JFrame jFrameMain = new JFrame("Tomato");
     private Tomato tomato = new Tomato(25, 5, 15);
-    private String stringTempoPomodoro = "Tempo de pomodoro: ";
+    //private String stringTempoPomodoro = "Tempo de pomodoro: ";
     private String stringIntervaloCurto = "Intervalo Curto: ";
     private String stringIntervaloLongo = "Intervalo Longo: ";
     private Font fontInfoSettings = new Font("Arial",
             Font.BOLD, 26);
     private JButton jButtonStart, jButtonPause,jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit;
-
-    private JLabel jLabelTimeCounter;
+    private JLabel jLabelTimeCounter, jLabelSettingsTomato,
+            jLabelSettingsLongBreak, jLabelSettingsShortBreak;
 
     private JFrame jFrameSettings;
-    private JLabel jLabelSettingsTomato, jLabelSettingsLongBreak,
-            jLabelSettingsShortBreak;
-    private JSlider jSliderTomato;
-    private JSlider jSliderLongBreak;
-    private JSlider jSliderShortBreak;
+    private JSlider jSliderTomato, jSliderLongBreak, jSliderShortBreak;
 
     /**
     * Método responsavel pela criação da GUI principal
@@ -223,7 +227,7 @@ class Gui {
         JPanel jPanelSettings = new JPanel();
         jPanelSettings.setLayout(new BoxLayout(jPanelSettings,
                 BoxLayout.Y_AXIS));
-        this.jLabelSettingsTomato = new JLabel(stringTempoPomodoro);
+        this.jLabelSettingsTomato = new JLabel(resourceBundle.getString("stringTempoPomodoro"));
         this.jLabelSettingsLongBreak = new JLabel(
                 stringIntervaloLongo);
         this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
@@ -304,8 +308,9 @@ class Gui {
     // TODO configurar listener de hover dos JSlides..
     private void configurarListenersDeJSliders() {
         this.jSliderTomato.addChangeListener(changeEvent -> {
-            String valorTomato = stringTempoPomodoro
-                    + String.valueOf(jSliderTomato.getValue() + " minuto(s)");
+            String valorTomato = /*stringTempoPomodoro*/ resourceBundle.getString("stringTempoPomodoro")
+                    + String.valueOf(jSliderTomato.getValue()
+                    + " minuto(s)");
             tomato.setPomodoroTime(jSliderTomato.getValue());
             jLabelSettingsTomato.setText(valorTomato);
         });
