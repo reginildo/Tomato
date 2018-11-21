@@ -26,6 +26,10 @@ import javax.swing.*;
 class Gui {
 
 
+
+    // TODO darktheme
+    // TODO change lookandfell
+    // TODO change button for imagebutton
     private Locale localeDefault = Locale.getDefault();
     private Locale locale_pt_BR = new Locale("pt", "BR");
     private Locale locale_en_US = new Locale("en","US");
@@ -74,21 +78,32 @@ class Gui {
         Font font = new Font("Arial", Font.BOLD, 85);
         JMenuBar jMenuBar = new JMenuBar();
         JPanel jPanelButtons = new JPanel();
-        JMenu jMenuFile = new JMenu("File");
-        JMenu jMenuLanguage = new JMenu("Language");
+        JMenu jMenuFile = new JMenu(resourceBundle
+                .getString("menuFile"));
+        JMenu jMenuLanguage = new JMenu(resourceBundle
+                .getString("menuLanguage"));
         ButtonGroup buttonGroupLanguages = new ButtonGroup();
         JRadioButtonMenuItem radioButtonMenuItemPT_BR =
-                new JRadioButtonMenuItem("Português BR");
+                new JRadioButtonMenuItem(resourceBundle
+                        .getString("radioButtonMenuItemPT_BR"));
         radioButtonMenuItemPT_BR.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 resourceBundle = ResourceBundle.
                         getBundle("io.github.reginildo.tomato/Labels",
                                 locale_pt_BR);
+                resourceBundle.keySet();
+
+                //Gui.this.jFrameMain.dispose();
+                Gui.this.jFrameMain.setVisible(false);
+                jFrameMain.repaint();
+
+                Gui.this.jFrameMain.setVisible(true);
             }
         });
         JRadioButtonMenuItem radioButtonMenuItemEN_US =
-                new JRadioButtonMenuItem("English US");
+                new JRadioButtonMenuItem(resourceBundle
+                        .getString("radioButtonMenuItemEN_US"));
         radioButtonMenuItemEN_US.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,7 +113,8 @@ class Gui {
             }
         });
         JRadioButtonMenuItem radioButtonMenuItemKlingon =
-                new JRadioButtonMenuItem("Klingon");
+                new JRadioButtonMenuItem(resourceBundle
+                        .getString("radioButtonMenuItemKlingon"));
         radioButtonMenuItemKlingon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +132,8 @@ class Gui {
 
 
 
-        jMenuItemSettings = new JMenuItem("Settings");
+        jMenuItemSettings = new JMenuItem(resourceBundle
+                .getString("menuItemSetting"));
         jMenuItemQuit = new JMenuItem("Quit");
         jMenuFile.setMnemonic(KeyEvent.VK_F);
         jMenuItemSettings.setMnemonic(KeyEvent.VK_E);
@@ -319,7 +336,8 @@ class Gui {
         this.jFrameSettings.setLocation(600, 300);
         this.jFrameSettings.setResizable(false);
         this.jFrameSettings.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.jFrameSettings.setTitle("Tomato - Settings");
+        this.jFrameSettings.setTitle(resourceBundle
+                .getString("stringTomatoSettingTitle"));
         this.jFrameSettings.setVisible(true);
     }
 
