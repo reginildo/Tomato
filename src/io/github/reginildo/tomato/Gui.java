@@ -27,18 +27,22 @@ class Gui {
 
 
     private Locale localeDefault = Locale.getDefault();
-    private Locale localeBR = new Locale("pt");
-    private Locale localeUS = new Locale("en","US");
-    private Locale localeKingon = new Locale("tlh");
+    private Locale locale_pt_BR = new Locale("pt", "BR");
+    private Locale locale_en_US = new Locale("en","US");
+    private Locale locale_tlh = new Locale("tlh");
 
 
-    private ResourceBundle resourceBundle = ResourceBundle.getBundle("io.github.reginildo.tomato/Labels",localeBR);
+    private ResourceBundle
+    resourceBundle = ResourceBundle.getBundle("io.github.reginildo.tomato/Labels",localeDefault);
+
     private java.util.Timer timer = null;
-    private final JFrame jFrameMain = new JFrame("Tomato");
+    private final JFrame jFrameMain = new JFrame(resourceBundle.getString("stringTomatoTitle"));
     private Tomato tomato = new Tomato(25, 5, 15);
     //private String stringTempoPomodoro = "Tempo de pomodoro: ";
-    private String stringIntervaloCurto = "Intervalo Curto: ";
-    private String stringIntervaloLongo = "Intervalo Longo: ";
+    private String stringIntervaloCurto =
+            resourceBundle.getString("intervaloCurto");
+    private String stringIntervaloLongo = resourceBundle.getString("intervaloLongo");
+    private String stringValorShortBreak;
     private Font fontInfoSettings = new Font("Arial",
             Font.BOLD, 26);
     private JButton jButtonStart, jButtonPause,jButtonReset;
@@ -48,6 +52,7 @@ class Gui {
 
     private JFrame jFrameSettings;
     private JSlider jSliderTomato, jSliderLongBreak, jSliderShortBreak;
+    private String stringValorLongBreak;
 
     /**
     * Método responsavel pela criação da GUI principal
@@ -70,6 +75,47 @@ class Gui {
         JMenuBar jMenuBar = new JMenuBar();
         JPanel jPanelButtons = new JPanel();
         JMenu jMenuFile = new JMenu("File");
+        JMenu jMenuLanguage = new JMenu("Language");
+        ButtonGroup buttonGroupLanguages = new ButtonGroup();
+        JRadioButtonMenuItem radioButtonMenuItemPT_BR =
+                new JRadioButtonMenuItem("Português BR");
+        radioButtonMenuItemPT_BR.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resourceBundle = ResourceBundle.
+                        getBundle("io.github.reginildo.tomato/Labels",
+                                locale_pt_BR);
+            }
+        });
+        JRadioButtonMenuItem radioButtonMenuItemEN_US =
+                new JRadioButtonMenuItem("English US");
+        radioButtonMenuItemEN_US.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resourceBundle = ResourceBundle.
+                        getBundle("io.github.reginildo.tomato/Labels",
+                                locale_en_US);
+            }
+        });
+        JRadioButtonMenuItem radioButtonMenuItemKlingon =
+                new JRadioButtonMenuItem("Klingon");
+        radioButtonMenuItemKlingon.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resourceBundle = ResourceBundle.
+                        getBundle("io.github.reginildo.tomato/Labels",
+                                locale_tlh);
+            }
+        });
+        buttonGroupLanguages.add(radioButtonMenuItemPT_BR);
+        buttonGroupLanguages.add(radioButtonMenuItemEN_US);
+        buttonGroupLanguages.add(radioButtonMenuItemKlingon);
+        jMenuLanguage.add(radioButtonMenuItemPT_BR);
+        jMenuLanguage.add(radioButtonMenuItemEN_US);
+        jMenuLanguage.add(radioButtonMenuItemKlingon);
+
+
+
         jMenuItemSettings = new JMenuItem("Settings");
         jMenuItemQuit = new JMenuItem("Quit");
         jMenuFile.setMnemonic(KeyEvent.VK_F);
@@ -91,13 +137,14 @@ class Gui {
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
         jMenuBar.add(jMenuFile);
+        jMenuBar.add(jMenuLanguage);
         this.jFrameMain.setLayout(new FlowLayout());
         this.jFrameMain.setJMenuBar(jMenuBar);
 
         JPanel jPanelTimer = new JPanel();
-        jButtonStart = new JButton("Start");
-        jButtonPause = new JButton("Pause");
-        jButtonReset = new JButton("Reset");
+        jButtonStart = new JButton(resourceBundle.getString("buttonStart"));
+        jButtonPause = new JButton(resourceBundle.getString("buttonPause"));
+        jButtonReset = new JButton(resourceBundle.getString("buttonReset"));
         jButtonStart.setMnemonic(KeyEvent.VK_S);
 
         jButtonReset.setMnemonic(KeyEvent.VK_R);
@@ -229,13 +276,14 @@ class Gui {
                 BoxLayout.Y_AXIS));
         this.jLabelSettingsTomato = new JLabel(resourceBundle.getString("stringTempoPomodoro"));
         this.jLabelSettingsLongBreak = new JLabel(
-                stringIntervaloLongo);
-        this.jLabelSettingsShortBreak = new JLabel(stringIntervaloCurto);
+                resourceBundle.getString("intervaloLongo"));
+        this.jLabelSettingsShortBreak = new JLabel(
+                resourceBundle.getString("intervaloCurto"));
         //JButton jButtonSettingSave = new JButton();
         //JButton jButtonSettingsCancel = new JButton();
         JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
         jLabelInfo.setFont(fontInfoSettings);
-        JButton jButtonSairSettings = new JButton("Sair");
+        JButton jButtonSairSettings = new JButton(resourceBundle.getString("buttonExit"));
         jButtonSairSettings.setMnemonic(KeyEvent.VK_S);
         jButtonSairSettings.addActionListener(actionEvent -> {
             tomato.setPomodoroTime(jSliderTomato.getValue());
@@ -278,7 +326,8 @@ class Gui {
     private void configurarJSliders() {
 
         // JSlider para configuração do tempo de Pomodoro
-        this.jSliderTomato = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 25);
+        this.jSliderTomato = new JSlider(
+                SwingConstants.HORIZONTAL, 0, 50, 25);
         this.jSliderTomato.setMajorTickSpacing(10);
         this.jSliderTomato.setMinorTickSpacing(1);
         this.jSliderTomato.setPaintTicks(true);
@@ -287,7 +336,8 @@ class Gui {
         this.jSliderTomato.setValueIsAdjusting(true);
 
         // JSlider para configuração do tempo de short break
-        this.jSliderShortBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 5);
+        this.jSliderShortBreak = new JSlider(
+                SwingConstants.HORIZONTAL, 0, 50, 5);
         this.jSliderShortBreak.setMajorTickSpacing(10);
         this.jSliderShortBreak.setMinorTickSpacing(1);
         this.jSliderShortBreak.setPaintLabels(true);
@@ -295,7 +345,8 @@ class Gui {
         this.jSliderShortBreak.setValue(tomato.getShortBreakTime());
 
         // JSlider para configuração do tempo de long break
-        this.jSliderLongBreak = new JSlider(SwingConstants.HORIZONTAL, 0, 50, 15);
+        this.jSliderLongBreak = new JSlider(
+                SwingConstants.HORIZONTAL, 0, 50, 15);
         this.jSliderLongBreak.setMajorTickSpacing(10);
         this.jSliderLongBreak.setMinorTickSpacing(1);
         this.jSliderLongBreak.setPaintTicks(true);
@@ -308,9 +359,9 @@ class Gui {
     // TODO configurar listener de hover dos JSlides..
     private void configurarListenersDeJSliders() {
         this.jSliderTomato.addChangeListener(changeEvent -> {
-            String valorTomato = /*stringTempoPomodoro*/ resourceBundle.getString("stringTempoPomodoro")
-                    + String.valueOf(jSliderTomato.getValue()
-                    + " minuto(s)");
+            String valorTomato = resourceBundle.getString("stringTempoPomodoro")
+                    + String.valueOf(jSliderTomato.getValue()+ " " +
+                    resourceBundle.getString("minutos"));
             tomato.setPomodoroTime(jSliderTomato.getValue());
             jLabelSettingsTomato.setText(valorTomato);
         });
@@ -323,13 +374,15 @@ class Gui {
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jSliderTomato.setToolTipText(String.valueOf(
-                        jSliderTomato.getValue() + " minutos"));
+                        jSliderTomato.getValue() + " " +
+                                resourceBundle.getString("minutos")));
             }
         });
 
         this.jSliderShortBreak.addChangeListener(changeEvent -> {
-            String stringValorShortBreak = stringIntervaloCurto
-                    + String.valueOf(jSliderShortBreak.getValue() + " minuto(s)");
+            stringValorShortBreak = stringIntervaloCurto
+                    + String.valueOf(jSliderShortBreak.getValue() + " " +
+                    resourceBundle.getString("minutos"));
             tomato.setShortBreakTime(jSliderShortBreak.getValue());
             jLabelSettingsShortBreak.setText(stringValorShortBreak);
         });
@@ -341,12 +394,14 @@ class Gui {
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jSliderShortBreak.setToolTipText(
-                        String.valueOf(jSliderShortBreak.getValue() + " minutos"));
+                        String.valueOf(jSliderShortBreak.getValue() +" " +
+                                resourceBundle.getString("minutos")));
             }
         });
         this.jSliderLongBreak.addChangeListener(changeEvent -> {
-            String stringValorLongBreak = stringIntervaloLongo
-                    + String.valueOf(jSliderLongBreak.getValue() + " minuto(s)");
+            stringValorLongBreak = stringIntervaloLongo
+                    + String.valueOf(jSliderLongBreak.getValue()
+                    + " " + resourceBundle.getString("minutos"));
             tomato.setLongBreakTime(jSliderLongBreak.getValue());
             jLabelSettingsLongBreak.setText(stringValorLongBreak);
         });
@@ -358,7 +413,8 @@ class Gui {
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jSliderLongBreak.setToolTipText(
-                        String.valueOf(jSliderLongBreak.getValue() + " minutos"));
+                        String.valueOf(jSliderLongBreak.getValue()
+                                + " " + resourceBundle.getString("minutos")));
             }
         });
     }
@@ -377,12 +433,12 @@ class Gui {
                 jButtonPause.setEnabled(false);
                 jButtonReset.setEnabled(true);
                 jButtonStart.setEnabled(true);
-                jButtonStart.setText("Resume");
+                jButtonStart.setText(resourceBundle.getString("buttonPause"));
             }
         });
         jButtonReset.addActionListener(actionEvent -> {
             timer.cancel();
-            jButtonStart.setText("Start");
+            jButtonStart.setText(resourceBundle.getString("buttonStart"));
             jButtonPause.setEnabled(true);
             iniciarPomodoro();
         });
