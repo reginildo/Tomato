@@ -2,7 +2,7 @@
 
 ### Free and multi-platform Software to use with the Pomodoro technique.
 
-####Platforms:
+#### Platforms:
 - Windows XP or higher
 - GNU/Linux.
 - MacOS
