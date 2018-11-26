@@ -23,14 +23,19 @@ import java.util.*;
 import java.util.Timer;
 import javax.swing.*;
 
-class Gui extends JFrame {
-    JRadioButtonMenuItem radioButtonMenuItemPT_BR,radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
+class JFrameGui extends JFrame {
     private Locale localeDefault = Locale.getDefault();
     private Locale locale_pt_BR = new Locale("pt", "BR");
     private Locale locale_en_US = new Locale("en", "US");
     private Locale locale_tlh = new Locale("tlh");
     private ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", localeDefault);
+    JRadioButtonMenuItem radioButtonMenuItemPT_BR,radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
+    JPanel jPanelSettings;
+    JButton jButtonSairSettings = new JButton(resourceBundle.getString("buttonExit"));
+    JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
+
+
     private java.util.Timer timer = null;
     private final JFrame jFrameMain = new JFrame(resourceBundle.
             getString("stringTomatoTitle"));
@@ -63,9 +68,10 @@ class Gui extends JFrame {
     /**
      * Método responsavel pela criação da GUI principal
      */
-    Gui() {
+    JFrameGui() {
         setLookAndFeel();
         setJSliders();
+        createJPanelSettings();
         createJMenuItens();
         createJMenus();
         createRadioButtonMenus();
@@ -73,6 +79,7 @@ class Gui extends JFrame {
         createLabelsForJFrameMain();
         createLabelsForJFrameSettings();
         createPanels();
+        createJFrameSettings();
         addComponentsToJMenuLanguague();
         setActionListenersToRadioButtonMenuItens();
         setAllMenus();
@@ -83,13 +90,24 @@ class Gui extends JFrame {
         addComponentsToMenuBar();
         setJFrameMain();
         setAllButtons();
-        setButtonsActionListeners();
+
         setAllMotionListeners();
         setJLabelTimerCounter();
         setJPanelTimer();
         addComponentsToJPanelTimer();
         addComponentsToJPanelButton();
         addComponentsToJFrameMain();
+        setButtonsActionListeners();
+    }
+
+    private void createJFrameSettings() {
+        jFrameSettings = new JFrame();
+    }
+
+    private void createJPanelSettings() {
+        jPanelSettings = new JPanel();
+        jPanelSettings.setLayout(new BoxLayout(jPanelSettings,
+                BoxLayout.Y_AXIS));
     }
 
     private void setJLabelTimerCounter() {
@@ -202,7 +220,7 @@ class Gui extends JFrame {
                                 locale_pt_BR);
                 resourceBundle.keySet();
 
-                //Gui.this.jFrameMain.dispose();
+                //JFrameGui.this.jFrameMain.dispose();
                 setVisible(false);
                 repaint();
                 setVisible(true);
@@ -363,15 +381,13 @@ class Gui extends JFrame {
      * metodo para criar a tela de configurações do pomodoro
      */
     private void createFrameSettings() {
-        JPanel jPanelSettings = new JPanel();
-        jPanelSettings.setLayout(new BoxLayout(jPanelSettings,
-                BoxLayout.Y_AXIS));
+
 
         //JButton jButtonSettingSave = new JButton();
         //JButton jButtonSettingsCancel = new JButton();
-        JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
+
         jLabelInfo.setFont(fontInfoSettings);
-        JButton jButtonSairSettings = new JButton(resourceBundle.getString("buttonExit"));
+
         jButtonSairSettings.setMnemonic(KeyEvent.VK_S);
         jButtonSairSettings.addActionListener(actionEvent -> {
             tomato.setPomodoroTime(jSliderTomato.getValue());
@@ -403,14 +419,7 @@ class Gui extends JFrame {
 
 
 
-        jPanelSettings.add(jLabelInfo);
-        jPanelSettings.add(jLabelSettingsTomato);
-        jPanelSettings.add(jSliderTomato);
-        jPanelSettings.add(jLabelSettingsShortBreak);
-        jPanelSettings.add(jSliderShortBreak);
-        jPanelSettings.add(jLabelSettingsLongBreak);
-        jPanelSettings.add(jSliderLongBreak);
-        jPanelSettings.add(jButtonSairSettings);
+        addComponentsToJPanelSettings();
 
         this.jFrameSettings.setContentPane(jPanelSettings);
         this.jFrameSettings.setSize(300, 300);
@@ -420,6 +429,17 @@ class Gui extends JFrame {
         this.jFrameSettings.setTitle(resourceBundle
                 .getString("stringTomatoSettingTitle"));
         this.jFrameSettings.setVisible(true);
+    }
+
+    private void addComponentsToJPanelSettings() {
+        jPanelSettings.add(jLabelInfo);
+        jPanelSettings.add(jLabelSettingsTomato);
+        jPanelSettings.add(jSliderTomato);
+        jPanelSettings.add(jLabelSettingsShortBreak);
+        jPanelSettings.add(jSliderShortBreak);
+        jPanelSettings.add(jLabelSettingsLongBreak);
+        jPanelSettings.add(jSliderLongBreak);
+        jPanelSettings.add(jButtonSairSettings);
     }
 
     private void setJSliders() {
