@@ -34,11 +34,8 @@ class Gui {
     private Locale locale_pt_BR = new Locale("pt", "BR");
     private Locale locale_en_US = new Locale("en","US");
     private Locale locale_tlh = new Locale("tlh");
-
-
     private ResourceBundle
     resourceBundle = ResourceBundle.getBundle("io.github.reginildo.tomato/Labels",localeDefault);
-
     private java.util.Timer timer = null;
     private final JFrame jFrameMain = new JFrame(resourceBundle.getString("stringTomatoTitle"));
     private Tomato tomato = new Tomato(25, 5, 15);
@@ -57,6 +54,10 @@ class Gui {
     private JFrame jFrameSettings;
     private JSlider jSliderTomato, jSliderLongBreak, jSliderShortBreak;
     private String stringValorLongBreak;
+    private Calendar timerStart = Calendar.getInstance();
+    private Date timerPause;
+    final SimpleDateFormat format = new SimpleDateFormat(
+            "mm:ss");
 
     /**
     * Método responsavel pela criação da GUI principal
@@ -254,25 +255,28 @@ class Gui {
      * */
     private void iniciarPomodoro() {
         timer = null;
-        final SimpleDateFormat format = new SimpleDateFormat(
-                "mm:ss");
+
         if (timer == null) {
             timer = new Timer();
             TimerTask tarefa = new TimerTask() {
                 /**/
                 int contSec = 0;
                 public void run() {
-                    Calendar timeStart = Calendar.getInstance();
-                    //Date timeStart = calendar.getTime();
-                    //timeStart.setMinutes(0);
-                    timeStart.set(Calendar.MINUTE,0);
-                    timeStart.set(Calendar.SECOND,0);
+
+                    //Date timerStart = calendar.getTime();
+                    //timerStart.setMinutes(0);
+                    if(timerPause== null){
+                        timerStart.set(Calendar.MINUTE,0);
+                        timerStart.set(Calendar.SECOND,0);
+                    }else{
+                        timerStart.setTime(timerPause);
+                    }
                     try {
-                        //timeStart.setSeconds(contSec++);
-                        timeStart.set(Calendar.SECOND,
-                                timeStart.get(Calendar.SECOND) + contSec++);
+                        //timerStart.setSeconds(contSec++);
+                        timerStart.set(Calendar.SECOND,
+                                timerStart.get(Calendar.SECOND) + contSec++);
                         jLabelTimeCounter.setText(format.format(
-                                timeStart.getTime()));
+                                timerStart.getTime()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -447,18 +451,23 @@ class Gui {
         });
         jButtonPause.addActionListener(actionEvent -> {
             if (jButtonPause.isEnabled()){
+                timerPause = timerStart.getTime();
                 timer.cancel();
                 jButtonPause.setEnabled(false);
                 jButtonReset.setEnabled(true);
                 jButtonStart.setEnabled(true);
-                jButtonStart.setText(resourceBundle.getString("buttonPause"));
             }
         });
         jButtonReset.addActionListener(actionEvent -> {
+            timerStart.set(Calendar.MINUTE, 0);
+            timerStart.set(Calendar.SECOND,0);
+            timerPause = null;
             timer.cancel();
             jButtonStart.setText(resourceBundle.getString("buttonStart"));
             jButtonPause.setEnabled(true);
-            iniciarPomodoro();
+            jLabelTimeCounter.setText(format.format(
+                    timerStart.getTime()));
+            //iniciarPomodoro();
         });
     }
 
