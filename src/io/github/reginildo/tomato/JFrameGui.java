@@ -30,7 +30,7 @@ class JFrameGui extends JFrame {
     private Locale locale_tlh = new Locale("tlh");
     private ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", localeDefault);
-    JRadioButtonMenuItem radioButtonMenuItemPT_BR,radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
+    JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
     JPanel jPanelSettings;
     JButton jButtonSairSettings = new JButton(resourceBundle.getString("buttonExit"));
     JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
@@ -50,7 +50,8 @@ class JFrameGui extends JFrame {
     private JMenuItem jMenuItemSettings, jMenuItemQuit;
     private JLabel jLabelTimeCounter, jLabelSettingsTomato,
             jLabelSettingsLongBreak, jLabelSettingsShortBreak;
-    private JFrame jFrameSettings;
+    private JFrame jFrameSettings = new JFrame();
+    ;
     private JSlider jSliderTomato, jSliderLongBreak, jSliderShortBreak;
     private String stringValorLongBreak;
     private Calendar timerStart = Calendar.getInstance();
@@ -79,7 +80,6 @@ class JFrameGui extends JFrame {
         createLabelsForJFrameMain();
         createLabelsForJFrameSettings();
         createPanels();
-        createJFrameSettings();
         addComponentsToJMenuLanguague();
         setActionListenersToRadioButtonMenuItens();
         setAllMenus();
@@ -101,7 +101,7 @@ class JFrameGui extends JFrame {
     }
 
     private void createJFrameSettings() {
-        jFrameSettings = new JFrame();
+
     }
 
     private void createJPanelSettings() {
@@ -353,27 +353,26 @@ class JFrameGui extends JFrame {
      * método que inicia o contador pomodoro
      */
     private void iniciarPomodoro() {
-        timer = null;
+        //timer = null;
         if (timerPause == null) {
             timerStart.set(Calendar.MINUTE, jSliderTomato.getValue());
             timerStart.set(Calendar.SECOND, 0);
         } else {
             timerStart.setTime(timerPause);
         }
-        if (timer == null) {
-            timer = new Timer();
-            TimerTask tarefa = new TimerTask() {
-                public void run() {
-                    try {
-                        timerStart.set(Calendar.SECOND, (timerStart.get(Calendar.SECOND) - 1));
-                        jLabelTimeCounter.setText(format.format(timerStart.getTime()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        timer = new Timer();
+        TimerTask tarefa = new TimerTask() {
+            public void run() {
+                try {
+                    timerStart.set(Calendar.SECOND, (timerStart.get(Calendar.SECOND) - 1));
+                    jLabelTimeCounter.setText(format.format(timerStart.getTime()));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            };
-            timer.scheduleAtFixedRate(tarefa, 0, 1000);
-        }
+            }
+        };
+        timer.scheduleAtFixedRate(tarefa, 0, 1000);
+
     }
 
 
@@ -397,6 +396,7 @@ class JFrameGui extends JFrame {
             timerStart.set(Calendar.MINUTE, 0);
             timerStart.set(Calendar.SECOND, 0);
             timerPause = null;
+
             timer.cancel();
             jButtonStart.setText(resourceBundle.getString("buttonStart"));
             jButtonPause.setEnabled(false);
@@ -416,7 +416,6 @@ class JFrameGui extends JFrame {
                         "Desejar sair das configurações?");
             }
         });
-
 
 
         addComponentsToJPanelSettings();
@@ -574,6 +573,7 @@ class JFrameGui extends JFrame {
 
     private void setAllMenuComponentsActionListeners() {
         jMenuItemSettings.addActionListener(actionEvent -> {
+
             createFrameSettings();
         });
         jMenuItemQuit.addActionListener(actionEvent -> {
