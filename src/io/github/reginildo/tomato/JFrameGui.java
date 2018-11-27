@@ -24,19 +24,13 @@ import java.util.Timer;
 import javax.swing.*;
 
 class JFrameGui extends JFrame {
-    private static Locale localeDefault = Locale.getDefault();
-    private Locale locale_pt_BR = new Locale("pt", "BR");
-    private Locale locale_en_US = new Locale("en", "US");
-    private Locale locale_tlh = new Locale("tlh");
+
     static ResourceBundle resourceBundle = ResourceBundle
-            .getBundle("io.github.reginildo.tomato/Labels", localeDefault);
+            .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
     JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
 
 
     static java.util.Timer timer = null;
-    private final JFrame jFrameMain = new JFrame(resourceBundle.
-            getString("stringTomatoTitle"));
-
 
     static JButton jButtonStart, jButtonPause, jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit;
@@ -187,7 +181,7 @@ class JFrameGui extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 resourceBundle = ResourceBundle.
                         getBundle("io.github.reginildo.tomato/Labels",
-                                locale_pt_BR);
+                                Locales.locale_pt_BR);
                 resourceBundle.keySet();
                 setVisible(false);
                 repaint();
@@ -198,8 +192,7 @@ class JFrameGui extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 resourceBundle = ResourceBundle.
-                        getBundle("io.github.reginildo.tomato/Labels",
-                                locale_en_US);
+                        getBundle("io.github.reginildo.tomato/Labels", Locales.locale_en_US);
             }
         });
         radioButtonMenuItemKlingon.addActionListener(new ActionListener() {
@@ -207,7 +200,7 @@ class JFrameGui extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 resourceBundle = ResourceBundle.
                         getBundle("io.github.reginildo.tomato/Labels",
-                                locale_tlh);
+                                Locales.locale_tlh);
             }
         });
     }
@@ -319,10 +312,10 @@ class JFrameGui extends JFrame {
 
     private void startPomodoro() {
         if (timerPause == null) {
-            if (jFrameSettings != null){
+            if (jFrameSettings != null) {
                 timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderTomato.getValue());
                 timerStart.set(Calendar.SECOND, 0);
-            }else {
+            } else {
                 timerStart.set(Calendar.MINUTE, 25);
                 timerStart.set(Calendar.SECOND, 0);
             }
@@ -338,10 +331,28 @@ class JFrameGui extends JFrame {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                if(isTheEnd()){
+                    System.out.println("Fim do tempo");
+                    timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderShortBreak.getValue());
+                    timerStart.set(Calendar.SECOND, 0);
+                    JOptionPane.showConfirmDialog(null,"Iniciar o intervalo curto?");
+                    timer.cancel();
+                }
             }
         };
+
         timer.scheduleAtFixedRate(tarefa, 0, 1000);
 
+
+
+    }
+
+    private boolean isTheEnd() {
+        if ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void setButtonsActionListeners() {
@@ -377,9 +388,9 @@ class JFrameGui extends JFrame {
 
     private void setAllMenuComponentsActionListeners() {
         jMenuItemSettings.addActionListener(actionEvent -> {
-            if (jFrameSettings == null){
+            if (jFrameSettings == null) {
                 jFrameSettings = new JFrameSettings();
-            }else {
+            } else {
                 jFrameSettings.setVisible(true);
             }
         });
