@@ -28,12 +28,13 @@ class JFrameGui extends JFrame {
     static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
     JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
+    JFrameAbout jFrameAbout;
 
 
     static java.util.Timer timer = null;
 
     static JButton jButtonStart, jButtonPause, jButtonReset;
-    private JMenuItem jMenuItemSettings, jMenuItemQuit;
+    private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout;
     static JLabel jLabelTimeCounter;
     private JFrameSettings jFrameSettings;
 
@@ -42,7 +43,7 @@ class JFrameGui extends JFrame {
     static Date timerPause;
     static final SimpleDateFormat format = new SimpleDateFormat(
             "mm:ss");
-    private JMenu jMenuFile, jMenuLanguage;
+    private JMenu jMenuFile, jMenuLanguage, jMenuHelp;
     Font font = new Font("Arial", Font.BOLD, 85);
     ButtonGroup buttonGroupLanguages = new ButtonGroup();
 
@@ -63,6 +64,7 @@ class JFrameGui extends JFrame {
         createPanels();
         addComponentsToJMenuLanguague();
         setActionListenersToRadioButtonMenuItens();
+
         setAllMenus();
         setMouseMotionListenersToMenuItens();
         setAllMenuComponentsActionListeners();
@@ -70,6 +72,7 @@ class JFrameGui extends JFrame {
 
         addRadioButtonMenusToButtonGroupLanguages();
         addComponentsToMenuFile();
+        addComponentsToJMenuHelp();
         addComponentsToMenuBar();
         setJFrameMain();
         setAllButtons();
@@ -81,6 +84,10 @@ class JFrameGui extends JFrame {
         addComponentsToJPanelButton();
         addComponentsToJFrameMain();
         setButtonsActionListeners();
+    }
+
+    private void addComponentsToJMenuHelp() {
+        jMenuHelp.add(jMenuItemAbout);
     }
 
     private void setInitTimerStart() {
@@ -149,6 +156,7 @@ class JFrameGui extends JFrame {
     private void addComponentsToMenuBar() {
         jMenuBar.add(jMenuFile);
         jMenuBar.add(jMenuLanguage);
+        jMenuBar.add(jMenuHelp);
     }
 
     private void addComponentsToMenuFile() {
@@ -180,6 +188,7 @@ class JFrameGui extends JFrame {
         jMenuItemSettings = new JMenuItem(resourceBundle
                 .getString("menuItemSetting"));
         jMenuItemQuit = new JMenuItem("Quit");
+        jMenuItemAbout = new JMenuItem("About");
     }
 
     private void setActionListenersToRadioButtonMenuItens() {
@@ -256,6 +265,7 @@ class JFrameGui extends JFrame {
                 .getString("menuFile"));
         jMenuLanguage = new JMenu(resourceBundle
                 .getString("menuLanguage"));
+        jMenuHelp = new JMenu("Help");
     }
 
     private void setAllMotionListeners() {
@@ -405,5 +415,11 @@ class JFrameGui extends JFrame {
                     System.exit(0);
                 }
         );
+        jMenuItemAbout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jFrameAbout = new JFrameAbout();
+            }
+        });
     }
 }
