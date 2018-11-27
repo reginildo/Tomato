@@ -55,7 +55,6 @@ class JFrameGui extends JFrame {
      */
     JFrameGui() {
         setLookAndFeel();
-
         createJMenuItens();
         createJMenus();
         createRadioButtonMenus();
@@ -67,6 +66,8 @@ class JFrameGui extends JFrame {
         setAllMenus();
         setMouseMotionListenersToMenuItens();
         setAllMenuComponentsActionListeners();
+        setInitTimerStart();
+
         addRadioButtonMenusToButtonGroupLanguages();
         addComponentsToMenuFile();
         addComponentsToMenuBar();
@@ -82,8 +83,14 @@ class JFrameGui extends JFrame {
         setButtonsActionListeners();
     }
 
+    private void setInitTimerStart() {
+        timerStart.set(Calendar.MINUTE,25);
+        timerStart.set(Calendar.SECOND,0);
+    }
+
     private void setJLabelTimerCounter() {
         jLabelTimeCounter.setFont(font);
+        jLabelTimeCounter.setText(format.format(timerStart.getTime()));
     }
 
     private void addComponentsToJPanelTimer() {
