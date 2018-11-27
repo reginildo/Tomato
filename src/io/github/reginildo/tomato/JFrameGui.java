@@ -317,7 +317,7 @@ class JFrameGui extends JFrame {
         });
     }
 
-    private void iniciarPomodoro() {
+    private void startPomodoro() {
         if (timerPause == null) {
             if (jFrameSettings != null){
                 timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderTomato.getValue());
@@ -349,7 +349,7 @@ class JFrameGui extends JFrame {
             if (jButtonStart.isEnabled()) {
                 jButtonStart.setEnabled(false);
                 jButtonPause.setEnabled(true);
-                iniciarPomodoro();
+                startPomodoro();
             }
         });
         jButtonPause.addActionListener(actionEvent -> {
