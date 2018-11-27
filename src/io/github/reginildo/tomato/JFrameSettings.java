@@ -6,14 +6,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Calendar;
+import java.util.ResourceBundle;
 
 class JFrameSettings extends JFrame {
+    static ResourceBundle resourceBundle = ResourceBundle
+            .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
     private JPanel jPanelSettings;
-    private JButton jButtonSairSettings = new JButton(JFrameGui.resourceBundle.getString("buttonExit"));
+    private JButton jButtonSairSettings = new JButton(resourceBundle.getString("buttonExit"));
     private Tomato tomato = new Tomato(25, 5, 15);
     private String stringIntervaloCurto =
-            JFrameGui.resourceBundle.getString("intervaloCurto");
-    private String stringIntervaloLongo = JFrameGui.resourceBundle.getString("intervaloLongo");
+            resourceBundle.getString("intervaloCurto");
+    private String stringIntervaloLongo = resourceBundle.getString("intervaloLongo");
     private String stringValorShortBreak;
     private JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
     private JLabel jLabelSettingsTomato, jLabelSettingsLongBreak, jLabelSettingsShortBreak;
@@ -72,7 +75,9 @@ class JFrameSettings extends JFrame {
             JFrameGui.timerStart.set(Calendar.MINUTE, 0);
             JFrameGui.timerStart.set(Calendar.SECOND, 0);
             JFrameGui.timerPause = null;
-            JFrameGui.timer.cancel();
+            if(JFrameGui.timer != null){
+                JFrameGui.timer.cancel();
+            }
             JFrameGui.jButtonStart.setText(JFrameGui.resourceBundle.getString("buttonStart"));
             JFrameGui.jButtonPause.setEnabled(false);
             JFrameGui.jButtonStart.setEnabled(true);
@@ -164,7 +169,7 @@ class JFrameSettings extends JFrame {
                     public void mouseMoved(MouseEvent mouseEvent) {
                         jSliderTomato.setToolTipText(String.valueOf(
                                 jSliderTomato.getValue() + " " +
-                                        JFrameGui.resourceBundle.getString("minutos")));
+                                        resourceBundle.getString("minutos")));
                     }
                 });
         jSliderShortBreak.addMouseMotionListener(new MouseMotionListener() {
@@ -176,7 +181,7 @@ class JFrameSettings extends JFrame {
             public void mouseMoved(MouseEvent mouseEvent) {
                 jSliderShortBreak.setToolTipText(
                         String.valueOf(jSliderShortBreak.getValue() + " " +
-                                JFrameGui.resourceBundle.getString("minutos")));
+                                resourceBundle.getString("minutos")));
             }
         });
         jSliderLongBreak.addMouseMotionListener(new MouseMotionListener() {
@@ -188,40 +193,40 @@ class JFrameSettings extends JFrame {
             public void mouseMoved(MouseEvent mouseEvent) {
                 jSliderLongBreak.setToolTipText(
                         String.valueOf(jSliderLongBreak.getValue()
-                                + " " + JFrameGui.resourceBundle.getString("minutos")));
+                                + " " + resourceBundle.getString("minutos")));
             }
         });
     }
 
     private void setChangeListenersToJSliders() {
         jSliderTomato.addChangeListener(changeEvent -> {
-            String valorTomato = JFrameGui.resourceBundle.getString("stringTempoPomodoro")
+            String valorTomato = resourceBundle.getString("stringTempoPomodoro")
                     + String.valueOf(jSliderTomato.getValue() + " " +
-                    JFrameGui.resourceBundle.getString("minutos"));
+                    resourceBundle.getString("minutos"));
             tomato.setPomodoroTime(jSliderTomato.getValue());
             jLabelSettingsTomato.setText(valorTomato);
         });
         jSliderShortBreak.addChangeListener(changeEvent -> {
             stringValorShortBreak = stringIntervaloCurto
                     + String.valueOf(jSliderShortBreak.getValue() + " " +
-                    JFrameGui.resourceBundle.getString("minutos"));
+                    resourceBundle.getString("minutos"));
             tomato.setShortBreakTime(jSliderShortBreak.getValue());
             jLabelSettingsShortBreak.setText(stringValorShortBreak);
         });
         jSliderLongBreak.addChangeListener(changeEvent -> {
             JFrameGui.stringValorLongBreak = stringIntervaloLongo
                     + String.valueOf(jSliderLongBreak.getValue()
-                    + " " + JFrameGui.resourceBundle.getString("minutos"));
+                    + " " + resourceBundle.getString("minutos"));
             tomato.setLongBreakTime(jSliderLongBreak.getValue());
             jLabelSettingsLongBreak.setText(JFrameGui.stringValorLongBreak);
         });
     }
 
     private void createLabelsForJFrameSettings() {
-        jLabelSettingsTomato = new JLabel(JFrameGui.resourceBundle.getString("stringTempoPomodoro"));
+        jLabelSettingsTomato = new JLabel(resourceBundle.getString("stringTempoPomodoro"));
         jLabelSettingsLongBreak = new JLabel(
-                JFrameGui.resourceBundle.getString("intervaloLongo"));
+                resourceBundle.getString("intervaloLongo"));
         jLabelSettingsShortBreak = new JLabel(
-                JFrameGui.resourceBundle.getString("intervaloCurto"));
+                resourceBundle.getString("intervaloCurto"));
     }
 }
