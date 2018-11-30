@@ -36,7 +36,7 @@ class JFrameGui extends JFrame {
     static JButton jButtonStart, jButtonPause, jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout;
     static JLabel jLabelTimeCounter;
-    private JFrameSettings jFrameSettings;
+    private static JFrameSettings jFrameSettings;
 
     static String stringValorLongBreak;
     static Calendar timerStart = Calendar.getInstance();
@@ -50,6 +50,7 @@ class JFrameGui extends JFrame {
     JMenuBar jMenuBar = new JMenuBar();
     JPanel jPanelButtons;
     JPanel jPanelTimer;
+
 
     /**
      * Método responsavel pela criação da GUI principal

@@ -8,16 +8,26 @@ public class JFrameAbout extends JFrame{
     JLabel jLabelTitle, jLabelName,jLabelEmail,jLabelSite;
     Font fontLabelTitle = new Font("Arial", Font.BOLD, 18);
     Font fontLabelDetails = new Font("Arial", Font.PLAIN, 12);
+    ImageIcon icon;
+    JLabel labelIcon;
 
     JFrameAbout(){
-        createJPanelAboutMain();
-        createJLabels();
-        setJLabelTitle();
-        setJLabelDetails();
-        addComponentsToJPanelAboutMain();
+
+        setJPanelAboutMain();
         addComponentsToJFrameAbout();
         setJFrameAbout();
+    }
 
+    private void setJLabelIcon() {
+        createIcon();
+        labelIcon = new JLabel();
+        labelIcon.setIcon(icon);
+    }
+
+    private void createIcon() {
+        icon = new ImageIcon(getClass().getResource(
+                "/io/github/reginildo/" +
+                        "tomato/images/icon.png"));
     }
 
     private void addComponentsToJFrameAbout() {
@@ -25,7 +35,9 @@ public class JFrameAbout extends JFrame{
     }
 
     private void setJFrameAbout() {
+        setJLabelIcon();
         setContentPane(jPanelAboutMain);
+        add(labelIcon);
         setSize(300, 300);
         setLocation(600, 300);
         setResizable(false);
@@ -47,6 +59,7 @@ public class JFrameAbout extends JFrame{
     }
 
     private void setJLabelTitle() {
+        createJLabels();
         jLabelTitle.setText("Tomato - Pomodoro Timer");
         jLabelTitle.setFont(fontLabelTitle);
     }
@@ -58,8 +71,12 @@ public class JFrameAbout extends JFrame{
         jLabelSite = new JLabel("https://reginildo.github.io");
     }
 
-    private void createJPanelAboutMain() {
+    private void setJPanelAboutMain() {
+
+        setJLabelTitle();
+        setJLabelDetails();
         jPanelAboutMain = new JPanel();
+        addComponentsToJPanelAboutMain();
     }
 
 }

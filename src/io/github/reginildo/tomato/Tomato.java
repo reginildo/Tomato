@@ -18,9 +18,9 @@ package io.github.reginildo.tomato;
 
 class Tomato {
 
-    private int longBreakTime;
-    private int pomodoroTime;
-    private int shortBreakTime;
+    private static int longBreakTime;
+    private static int pomodoroTime;
+    private static int shortBreakTime;
 
     Tomato(int pomodo, int shortBreakTime, int longBreak) {
         setLongBreakTime(longBreak);
@@ -28,34 +28,28 @@ class Tomato {
         setShortBreakTime(shortBreakTime);
     }
 
-    int getLongBreakTime() {
-        // return long break time in milliseconds
-        return longBreakTime / 60 / 1000;
+    static int getLongBreakTime() {
+        return longBreakTime;
     }
 
-    void setLongBreakTime(int longBreakTime) {
-        // set long break time in milliseconds
-        this.longBreakTime = longBreakTime * 60 * 1000;
+    static void setLongBreakTime(int timeOfLongBreak) {
+        longBreakTime = timeOfLongBreak;
     }
 
-    int getPomodoroTime() {
-        // return pomodoro time in milliseconds
-        return pomodoroTime / 60 / 1000;
+    static int getPomodoroTime() {
+        return pomodoroTime;
     }
 
-    void setPomodoroTime(int pomodoroTime) {
-        // set pomodoro time in milliseconds
-        this.pomodoroTime = pomodoroTime * 60 * 1000;
+    static void setPomodoroTime(int timeOfPomodoro) {
+        pomodoroTime = timeOfPomodoro;
     }
 
-    int getShortBreakTime() {
-        // return short break time in milliseconds
-        return shortBreakTime / 60 / 1000;
+    static int getShortBreakTime() {
+        return shortBreakTime;
     }
 
-    void setShortBreakTime(int shortBreakTime) {
-        // set short break time in milliseconds
-        this.shortBreakTime = shortBreakTime * 60 * 1000;
+    static void setShortBreakTime(int timeOfShortBreak) {
+        shortBreakTime = timeOfShortBreak;
     }
 
 

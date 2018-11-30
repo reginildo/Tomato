@@ -72,7 +72,7 @@ class JFrameSettings extends JFrame {
             tomato.setShortBreakTime(jSliderShortBreak.getValue());
             tomato.setLongBreakTime(jSliderLongBreak.getValue());
             setVisible(false);
-            JFrameGui.timerStart.set(Calendar.MINUTE, 0);
+            JFrameGui.timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
             JFrameGui.timerStart.set(Calendar.SECOND, 0);
             JFrameGui.timerPause = null;
             if(JFrameGui.timer != null){
