@@ -27,8 +27,12 @@ class JFrameGui extends JFrame {
 
     static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
-    JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
-    JFrameAbout jFrameAbout;
+    private JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
+    private JFrameAbout jFrameAbout;
+
+    private int confirmDialog;
+    static int countInterations = 1;
+    private boolean timeToShortBreak, timeToLongBreak, timeToPomodoro;
 
 
     static java.util.Timer timer = null;
@@ -44,12 +48,12 @@ class JFrameGui extends JFrame {
     static final SimpleDateFormat format = new SimpleDateFormat(
             "mm:ss");
     private JMenu jMenuFile, jMenuLanguage, jMenuHelp;
-    Font font = new Font("Arial", Font.BOLD, 85);
-    ButtonGroup buttonGroupLanguages = new ButtonGroup();
+    private Font font = new Font("Arial", Font.BOLD, 85);
+    private ButtonGroup buttonGroupLanguages = new ButtonGroup();
 
-    JMenuBar jMenuBar = new JMenuBar();
-    JPanel jPanelButtons;
-    JPanel jPanelTimer;
+    private JMenuBar jMenuBar = new JMenuBar();
+    private JPanel jPanelButtons;
+    private JPanel jPanelTimer;
 
 
     /**
@@ -193,25 +197,17 @@ class JFrameGui extends JFrame {
     }
 
     private void setActionListenersToRadioButtonMenuItens() {
-        radioButtonMenuItemPT_BR.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resourceBundle = ResourceBundle.
-                        getBundle("io.github.reginildo.tomato/Labels",
-                                Locales.locale_pt_BR);
-                resourceBundle.keySet();
-                setVisible(false);
-                repaint();
-                setVisible(true);
-            }
+        radioButtonMenuItemPT_BR.addActionListener(e -> {
+            resourceBundle = ResourceBundle.
+                    getBundle("io.github.reginildo.tomato/Labels",
+                            Locales.locale_pt_BR);
+            resourceBundle.keySet();
+            setVisible(false);
+            repaint();
+            setVisible(true);
         });
-        radioButtonMenuItemEN_US.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resourceBundle = ResourceBundle.
-                        getBundle("io.github.reginildo.tomato/Labels", Locales.locale_en_US);
-            }
-        });
+        radioButtonMenuItemEN_US.addActionListener(e -> resourceBundle = ResourceBundle.
+                getBundle("io.github.reginildo.tomato/Labels", Locales.locale_en_US));
         radioButtonMenuItemKlingon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -328,10 +324,8 @@ class JFrameGui extends JFrame {
         });
     }
 
-    private void startShortBreakTimer(){
-
-    }
     private void startPomodoroTimer() {
+
         if (timerPause == null) {
             if (jFrameSettings != null) {
                 timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
@@ -352,29 +346,136 @@ class JFrameGui extends JFrame {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 if(isTheEnd()){
                     System.out.println("Fim do tempo");
+                    // rever esse codigo abaixo
+                    /*
+                    timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderShortBreak.getValue());
+                    timerStart.set(Calendar.SECOND, 0);*/
+                    timer.cancel();
+                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar o intervalo curto?");
+                    // Testar esse codigo abaixo
+                    if (confirmDialog == JOptionPane.YES_OPTION){
+                        startShortBreakTimer();
+
+                    }
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(tarefa, 0, 1000);
+        countInterations++;
+    }
+
+    private boolean isTimeToShortBreak(){
+        if (countInterations == 2 ||
+                countInterations == 4 ||
+                countInterations == 6){
+            timeToShortBreak = true;
+        }
+        return timeToShortBreak;
+    }
+
+    private boolean isTimeToLongBreak(){
+        if (countInterations >= 8){
+            timeToLongBreak = true;
+        }
+        return  timeToLongBreak;
+
+    }
+    private boolean isTimeToPomodoro(){
+        if (countInterations == 1 ||
+                countInterations == 3 ||
+                countInterations == 5){
+            timeToPomodoro = true;
+        }
+        return timeToPomodoro;
+    }
+    private void startShortBreakTimer(){
+        if (timerPause == null) {
+            if (jFrameSettings != null) {
+                timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
+                timerStart.set(Calendar.SECOND, 0);
+            } else {
+                timerStart.set(Calendar.MINUTE, 5);
+                timerStart.set(Calendar.SECOND, 0);
+            }
+        } else {
+            timerStart.setTime(timerPause);
+        }
+        timer = new Timer();
+        TimerTask tarefa = new TimerTask() {
+            public void run() {
+                try {
+                    timerStart.set(Calendar.SECOND, (
+                            timerStart.get(Calendar.SECOND) - 1));
+                    jLabelTimeCounter.setText(format.format(timerStart.getTime()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if(isTheEnd()){
+                    System.out.println("Fim do tempo");
+                    // rever esse codigo abaixo
+                    timerStart.set(Calendar.MINUTE, JFrameSettings
+                            .jSliderShortBreak.getValue());
+                    timerStart.set(Calendar.SECOND, 0);
+                    timer.cancel();
+                    //switch ()
+                    confirmDialog = JOptionPane.showConfirmDialog
+                            (null,"Iniciar o novo pomodoro?");               }
+            }
+        };
+
+        timer.scheduleAtFixedRate(tarefa, 0, 1000);
+
+    }
+
+    // depois rever este metodo
+    private void startLongBreakTimer(){
+        if (timerPause == null) {
+            if (jFrameSettings != null) {
+                timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
+                timerStart.set(Calendar.SECOND, 0);
+            } else {
+                timerStart.set(Calendar.MINUTE, 25);
+                timerStart.set(Calendar.SECOND, 0);
+            }
+        } else {
+            timerStart.setTime(timerPause);
+        }
+        timer = new Timer();
+        TimerTask tarefa = new TimerTask() {
+            public void run() {
+                try {
+                    timerStart.set(Calendar.SECOND, (timerStart.get(Calendar.SECOND) - 1));
+                    jLabelTimeCounter.setText(format.format(timerStart.getTime()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if(isTheEnd()){
+                    System.out.println("Fim do tempo");
+                    // rever esse codigo abaixo
                     timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderShortBreak.getValue());
                     timerStart.set(Calendar.SECOND, 0);
-                    JOptionPane.showConfirmDialog(null,"Iniciar o intervalo curto?");
                     timer.cancel();
+                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar o intervalo curto?");
+                    //switch ()
                 }
             }
         };
 
         timer.scheduleAtFixedRate(tarefa, 0, 1000);
 
+    }
 
+    private boolean isTheEnd(){
+            return ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0));
 
     }
 
-    private boolean isTheEnd() {
-        if ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 
     private void setButtonsActionListeners() {
         jButtonStart.addActionListener(actionEvent -> {
@@ -397,7 +498,13 @@ class JFrameGui extends JFrame {
             }
         });
         jButtonReset.addActionListener(actionEvent -> {
-            timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
+            if(isTimeToShortBreak()){
+                timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
+            }else if(isTimeToLongBreak()){
+                timerStart.set(Calendar.MINUTE, Tomato.getLongBreakTime());
+            }else {
+                timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
+            }
             timerStart.set(Calendar.SECOND, 0);
             timerPause = null;
             timer.cancel();
@@ -418,15 +525,8 @@ class JFrameGui extends JFrame {
                 jFrameSettings.setVisible(true);
             }
         });
-        jMenuItemQuit.addActionListener(actionEvent -> {
-                    System.exit(0);
-                }
+        jMenuItemQuit.addActionListener(actionEvent -> System.exit(0)
         );
-        jMenuItemAbout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jFrameAbout = new JFrameAbout();
-            }
-        });
+        jMenuItemAbout.addActionListener(e -> jFrameAbout = new JFrameAbout());
     }
 }
