@@ -331,7 +331,7 @@ class JFrameGui extends JFrame {
                 timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
                 timerStart.set(Calendar.SECOND, 0);
             } else {
-                timerStart.set(Calendar.MINUTE, 25);
+                timerStart.set(Calendar.MINUTE, Tomato.getDefaultPomodoroTime());
                 timerStart.set(Calendar.SECOND, 0);
             }
         } else {
@@ -348,7 +348,8 @@ class JFrameGui extends JFrame {
                 }
 
                 if(isTheEnd()){
-                    System.out.println("Fim do tempo");
+                    countInterations++;
+                    System.out.println("Fim do tempo pomodoro");
                     // rever esse codigo abaixo
                     /*
                     timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderShortBreak.getValue());
@@ -356,15 +357,20 @@ class JFrameGui extends JFrame {
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar o intervalo curto?");
                     // Testar esse codigo abaixo
-                    if (confirmDialog == JOptionPane.YES_OPTION){
+                    if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToShortBreak())){
+                        timeToLongBreak = false;
+                        timeToPomodoro = false;
                         startShortBreakTimer();
-
+                    }else if(confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())){
+                        timeToShortBreak = false;
+                        timeToPomodoro = false;
+                            startLongBreakTimer();
                     }
                 }
             }
         };
         timer.scheduleAtFixedRate(tarefa, 0, 1000);
-        countInterations++;
+
     }
 
     private boolean isTimeToShortBreak(){
@@ -386,7 +392,8 @@ class JFrameGui extends JFrame {
     private boolean isTimeToPomodoro(){
         if (countInterations == 1 ||
                 countInterations == 3 ||
-                countInterations == 5){
+                countInterations == 5 ||
+                countInterations == 7){
             timeToPomodoro = true;
         }
         return timeToPomodoro;
@@ -397,7 +404,7 @@ class JFrameGui extends JFrame {
                 timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
                 timerStart.set(Calendar.SECOND, 0);
             } else {
-                timerStart.set(Calendar.MINUTE, 5);
+                timerStart.set(Calendar.MINUTE, Tomato.getDefaultShortBreakTime());
                 timerStart.set(Calendar.SECOND, 0);
             }
         } else {
@@ -415,15 +422,25 @@ class JFrameGui extends JFrame {
                 }
 
                 if(isTheEnd()){
-                    System.out.println("Fim do tempo");
+                    countInterations++;
+                    System.out.println("Fim do tempo curto");
                     // rever esse codigo abaixo
-                    timerStart.set(Calendar.MINUTE, JFrameSettings
+                    /*timerStart.set(Calendar.MINUTE, JFrameSettings
                             .jSliderShortBreak.getValue());
-                    timerStart.set(Calendar.SECOND, 0);
+                    timerStart.set(Calendar.SECOND, 0);*/
                     timer.cancel();
-                    //switch ()
-                    confirmDialog = JOptionPane.showConfirmDialog
-                            (null,"Iniciar o novo pomodoro?");               }
+                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar o onovo pomodoro?");
+                    // Testar esse codigo abaixo
+                    if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())){
+                        timeToShortBreak =false;
+                        timeToLongBreak = false;
+                        startPomodoroTimer();
+                    }else if(confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())){
+                        timeToShortBreak = false;
+                        timeToPomodoro = false;
+                        startLongBreakTimer();
+                    }
+                }
             }
         };
 
@@ -435,10 +452,10 @@ class JFrameGui extends JFrame {
     private void startLongBreakTimer(){
         if (timerPause == null) {
             if (jFrameSettings != null) {
-                timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
+                timerStart.set(Calendar.MINUTE, Tomato.getLongBreakTime());
                 timerStart.set(Calendar.SECOND, 0);
             } else {
-                timerStart.set(Calendar.MINUTE, 25);
+                timerStart.set(Calendar.MINUTE, Tomato.getDefaultLongBreakTime());
                 timerStart.set(Calendar.SECOND, 0);
             }
         } else {
@@ -455,13 +472,19 @@ class JFrameGui extends JFrame {
                 }
 
                 if(isTheEnd()){
-                    System.out.println("Fim do tempo");
+                    countInterations++;
+                    System.out.println("Fim do intervalo longo");
                     // rever esse codigo abaixo
-                    timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderShortBreak.getValue());
-                    timerStart.set(Calendar.SECOND, 0);
+                    /*timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderShortBreak.getValue());
+                    timerStart.set(Calendar.SECOND, 0);*/
                     timer.cancel();
-                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar o intervalo curto?");
-                    //switch ()
+                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar um novo ciclo?");
+                    if(confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())){
+                        countInterations = 1;
+                        timeToLongBreak = false;
+                        timeToShortBreak = false;
+                        startPomodoroTimer();
+                    }
                 }
             }
         };

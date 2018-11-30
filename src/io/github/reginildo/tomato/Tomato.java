@@ -18,9 +18,33 @@ package io.github.reginildo.tomato;
 
 class Tomato {
 
-    private static int defaultLongBreakTime;
-    private static int defaultPomodoroTime;
-    private static int defaultShortBreakTime;
+    public static int getDefaultLongBreakTime() {
+        return defaultLongBreakTime;
+    }
+
+    public static void setDefaultLongBreakTime(int defaultLongBreakTime) {
+        Tomato.defaultLongBreakTime = defaultLongBreakTime;
+    }
+
+    public static int getDefaultPomodoroTime() {
+        return defaultPomodoroTime;
+    }
+
+    public static void setDefaultPomodoroTime(int defaultPomodoroTime) {
+        Tomato.defaultPomodoroTime = defaultPomodoroTime;
+    }
+
+    public static int getDefaultShortBreakTime() {
+        return defaultShortBreakTime;
+    }
+
+    public static void setDefaultShortBreakTime(int defaultShortBreakTime) {
+        Tomato.defaultShortBreakTime = defaultShortBreakTime;
+    }
+
+    private static int defaultLongBreakTime = 15;
+    private static int defaultPomodoroTime = 25;
+    private static int defaultShortBreakTime = 5;
 
     private static int longBreakTime;
     private static int pomodoroTime;
