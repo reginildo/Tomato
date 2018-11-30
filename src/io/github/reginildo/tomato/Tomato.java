@@ -18,6 +18,10 @@ package io.github.reginildo.tomato;
 
 class Tomato {
 
+    private static int defaultLongBreakTime;
+    private static int defaultPomodoroTime;
+    private static int defaultShortBreakTime;
+
     private static int longBreakTime;
     private static int pomodoroTime;
     private static int shortBreakTime;

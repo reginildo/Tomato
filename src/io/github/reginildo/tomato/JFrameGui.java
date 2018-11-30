@@ -328,10 +328,13 @@ class JFrameGui extends JFrame {
         });
     }
 
-    private void startPomodoro() {
+    private void startShortBreakTimer(){
+
+    }
+    private void startPomodoroTimer() {
         if (timerPause == null) {
             if (jFrameSettings != null) {
-                timerStart.set(Calendar.MINUTE, JFrameSettings.jSliderTomato.getValue());
+                timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
                 timerStart.set(Calendar.SECOND, 0);
             } else {
                 timerStart.set(Calendar.MINUTE, 25);
@@ -376,14 +379,17 @@ class JFrameGui extends JFrame {
     private void setButtonsActionListeners() {
         jButtonStart.addActionListener(actionEvent -> {
             if (jButtonStart.isEnabled()) {
+                Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
                 jButtonStart.setEnabled(false);
                 jButtonPause.setEnabled(true);
-                startPomodoro();
+                startPomodoroTimer();
             }
         });
         jButtonPause.addActionListener(actionEvent -> {
             if (jButtonPause.isEnabled()) {
                 timerPause = timerStart.getTime();
+                // ñao tenho certeza desta linha
+                //Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
                 timer.cancel();
                 jButtonPause.setEnabled(false);
                 jButtonReset.setEnabled(true);
@@ -391,7 +397,7 @@ class JFrameGui extends JFrame {
             }
         });
         jButtonReset.addActionListener(actionEvent -> {
-            timerStart.set(Calendar.MINUTE, 0);
+            timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
             timerStart.set(Calendar.SECOND, 0);
             timerPause = null;
             timer.cancel();

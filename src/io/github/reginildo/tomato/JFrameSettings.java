@@ -68,9 +68,9 @@ class JFrameSettings extends JFrame {
 
     private void setActionListenerTojButtonSairSettings() {
         jButtonSairSettings.addActionListener(actionEvent -> {
-            tomato.setPomodoroTime(jSliderTomato.getValue());
-            tomato.setShortBreakTime(jSliderShortBreak.getValue());
-            tomato.setLongBreakTime(jSliderLongBreak.getValue());
+            Tomato.setPomodoroTime(jSliderTomato.getValue());
+            Tomato.setShortBreakTime(jSliderShortBreak.getValue());
+            Tomato.setLongBreakTime(jSliderLongBreak.getValue());
             setVisible(false);
             JFrameGui.timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
             JFrameGui.timerStart.set(Calendar.SECOND, 0);
@@ -124,7 +124,7 @@ class JFrameSettings extends JFrame {
         jSliderLongBreak.setMinorTickSpacing(1);
         jSliderLongBreak.setPaintTicks(true);
         jSliderLongBreak.setPaintLabels(true);
-        jSliderLongBreak.setValue(tomato.getLongBreakTime());
+        jSliderLongBreak.setValue(Tomato.getLongBreakTime());
     }
 
     private void setJSliderShortBreak() {
@@ -132,7 +132,7 @@ class JFrameSettings extends JFrame {
         jSliderShortBreak.setMinorTickSpacing(1);
         jSliderShortBreak.setPaintLabels(true);
         jSliderShortBreak.setPaintTicks(true);
-        jSliderShortBreak.setValue(tomato.getShortBreakTime());
+        jSliderShortBreak.setValue(Tomato.getShortBreakTime());
     }
 
     private void setJSliderTomato() {
@@ -140,7 +140,7 @@ class JFrameSettings extends JFrame {
         jSliderTomato.setMinorTickSpacing(1);
         jSliderTomato.setPaintTicks(true);
         jSliderTomato.setPaintLabels(true);
-        jSliderTomato.setValue(tomato.getPomodoroTime());
+        jSliderTomato.setValue(Tomato.getPomodoroTime());
         jSliderTomato.setValueIsAdjusting(true);
     }
 
