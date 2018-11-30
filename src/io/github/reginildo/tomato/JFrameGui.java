@@ -479,7 +479,7 @@ class JFrameGui extends JFrame {
                     timerStart.set(Calendar.SECOND, 0);*/
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar um novo ciclo?");
-                    if(confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())){
+                    if(confirmDialog == JOptionPane.YES_OPTION){
                         countInterations = 1;
                         timeToLongBreak = false;
                         timeToShortBreak = false;
