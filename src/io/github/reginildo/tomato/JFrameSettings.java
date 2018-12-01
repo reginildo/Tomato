@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.ResourceBundle;
 
 class JFrameSettings extends JFrame {
-    static ResourceBundle resourceBundle = ResourceBundle
+    private static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
     private JPanel jPanelSettings;
     private JButton jButtonSairSettings = new JButton(resourceBundle.getString("buttonExit"));
@@ -20,7 +20,7 @@ class JFrameSettings extends JFrame {
     private String stringValorShortBreak;
     private JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
     private JLabel jLabelSettingsTomato, jLabelSettingsLongBreak, jLabelSettingsShortBreak;
-    static JSlider jSliderTomato, jSliderLongBreak, jSliderShortBreak;
+    private static JSlider jSliderTomato, jSliderLongBreak, jSliderShortBreak;
     private Font fontInfoSettings = new Font("Arial",
             Font.BOLD, 26);
 
@@ -68,23 +68,35 @@ class JFrameSettings extends JFrame {
 
     private void setActionListenerTojButtonSairSettings() {
         jButtonSairSettings.addActionListener(actionEvent -> {
-            Tomato.setPomodoroTime(jSliderTomato.getValue());
-            Tomato.setShortBreakTime(jSliderShortBreak.getValue());
-            Tomato.setLongBreakTime(jSliderLongBreak.getValue());
+            setTomatoTimeValues();
             setVisible(false);
-            JFrameGui.timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
-            JFrameGui.timerStart.set(Calendar.SECOND, 0);
+            setTimeStartValue();
             JFrameGui.timerPause = null;
             if(JFrameGui.timer != null){
                 JFrameGui.timer.cancel();
             }
-            JFrameGui.jButtonStart.setText(JFrameGui.resourceBundle.getString("buttonStart"));
-            JFrameGui.jButtonPause.setEnabled(false);
-            JFrameGui.jButtonStart.setEnabled(true);
-            JFrameGui.jButtonReset.setEnabled(false);
+            setButtonsOnExit();
             JFrameGui.jLabelTimeCounter.setText(JFrameGui.format.format(JFrameGui.timerStart.getTime()));
             setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         });
+    }
+
+    private void setButtonsOnExit() {
+        JFrameGui.jButtonStart.setText(JFrameGui.resourceBundle.getString("buttonStart"));
+        JFrameGui.jButtonPause.setEnabled(false);
+        JFrameGui.jButtonStart.setEnabled(true);
+        JFrameGui.jButtonReset.setEnabled(false);
+    }
+
+    private void setTimeStartValue() {
+        JFrameGui.timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
+        JFrameGui.timerStart.set(Calendar.SECOND, 0);
+    }
+
+    private void setTomatoTimeValues() {
+        Tomato.setPomodoroTime(jSliderTomato.getValue());
+        Tomato.setShortBreakTime(jSliderShortBreak.getValue());
+        Tomato.setLongBreakTime(jSliderLongBreak.getValue());
     }
 
     private void setJButtonSairSetting() {
@@ -159,31 +171,12 @@ class JFrameSettings extends JFrame {
     }
 
     private void setMouseMotionListenerToJSliders() {
-        jSliderTomato.addMouseMotionListener(
-                new MouseMotionListener() {
-                    @Override
-                    public void mouseDragged(MouseEvent mouseEvent) {
-                    }
+        setJSliderTomatoMouseMotionListener();
+        setJSliderShortBreakMouseMotionListener();
+        setJSliderLongBreakMouseMotionListener();
+    }
 
-                    @Override
-                    public void mouseMoved(MouseEvent mouseEvent) {
-                        jSliderTomato.setToolTipText(String.valueOf(
-                                jSliderTomato.getValue() + " " +
-                                        resourceBundle.getString("minutos")));
-                    }
-                });
-        jSliderShortBreak.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {
-                jSliderShortBreak.setToolTipText(
-                        String.valueOf(jSliderShortBreak.getValue() + " " +
-                                resourceBundle.getString("minutos")));
-            }
-        });
+    private void setJSliderLongBreakMouseMotionListener() {
         jSliderLongBreak.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
@@ -198,27 +191,70 @@ class JFrameSettings extends JFrame {
         });
     }
 
+    private void setJSliderShortBreakMouseMotionListener() {
+        jSliderShortBreak.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                jSliderShortBreak.setToolTipText(
+                        String.valueOf(jSliderShortBreak.getValue() + " " +
+                                resourceBundle.getString("minutos")));
+            }
+        });
+    }
+
+    private void setJSliderTomatoMouseMotionListener() {
+        jSliderTomato.addMouseMotionListener(
+                new MouseMotionListener() {
+                    @Override
+                    public void mouseDragged(MouseEvent mouseEvent) {
+                    }
+
+                    @Override
+                    public void mouseMoved(MouseEvent mouseEvent) {
+                        jSliderTomato.setToolTipText(String.valueOf(
+                                jSliderTomato.getValue() + " " +
+                                        resourceBundle.getString("minutos")));
+                    }
+                });
+    }
+
     private void setChangeListenersToJSliders() {
-        jSliderTomato.addChangeListener(changeEvent -> {
-            String valorTomato = resourceBundle.getString("stringTempoPomodoro")
-                    + String.valueOf(jSliderTomato.getValue() + " " +
-                    resourceBundle.getString("minutos"));
-            tomato.setPomodoroTime(jSliderTomato.getValue());
-            jLabelSettingsTomato.setText(valorTomato);
-        });
-        jSliderShortBreak.addChangeListener(changeEvent -> {
-            stringValorShortBreak = stringIntervaloCurto
-                    + String.valueOf(jSliderShortBreak.getValue() + " " +
-                    resourceBundle.getString("minutos"));
-            tomato.setShortBreakTime(jSliderShortBreak.getValue());
-            jLabelSettingsShortBreak.setText(stringValorShortBreak);
-        });
+        setJSliderTomatoChangeListener();
+        setJSliderShortBreakChangeListener();
+        setJSliderLongBreakChangeListener();
+    }
+
+    private void setJSliderLongBreakChangeListener() {
         jSliderLongBreak.addChangeListener(changeEvent -> {
             JFrameGui.stringValorLongBreak = stringIntervaloLongo
                     + String.valueOf(jSliderLongBreak.getValue()
                     + " " + resourceBundle.getString("minutos"));
-            tomato.setLongBreakTime(jSliderLongBreak.getValue());
+            Tomato.setLongBreakTime(jSliderLongBreak.getValue());
             jLabelSettingsLongBreak.setText(JFrameGui.stringValorLongBreak);
+        });
+    }
+
+    private void setJSliderShortBreakChangeListener() {
+        jSliderShortBreak.addChangeListener(changeEvent -> {
+            stringValorShortBreak = stringIntervaloCurto
+                    + String.valueOf(jSliderShortBreak.getValue() + " " +
+                    resourceBundle.getString("minutos"));
+            Tomato.setShortBreakTime(jSliderShortBreak.getValue());
+            jLabelSettingsShortBreak.setText(stringValorShortBreak);
+        });
+    }
+
+    private void setJSliderTomatoChangeListener() {
+        jSliderTomato.addChangeListener(changeEvent -> {
+            String valorTomato = resourceBundle.getString("stringTempoPomodoro")
+                    + String.valueOf(jSliderTomato.getValue() + " " +
+                    resourceBundle.getString("minutos"));
+            Tomato.setPomodoroTime(jSliderTomato.getValue());
+            jLabelSettingsTomato.setText(valorTomato);
         });
     }
 

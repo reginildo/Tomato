@@ -30,7 +30,7 @@ class JFrameGui extends JFrame {
     private JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
     private JFrameAbout jFrameAbout;
     private int confirmDialog;
-    static int countInterations = 1;
+    private static int countInterations = 1;
     private boolean timeToShortBreak, timeToLongBreak, timeToPomodoro;
     static java.util.Timer timer = null;
     static JButton jButtonStart, jButtonPause, jButtonReset;
@@ -51,34 +51,25 @@ class JFrameGui extends JFrame {
 
     JFrameGui() {
         setLookAndFeel();
+        createComponents();
+        addRadioMenuButtonsToJMenuLanguague();
+        setActionListenersToRadioButtonMenuItens();
+        setMnemonicsMenus();
+        setMouseMotionListenersToMenuItens();
+        setMenusComponentsActionListeners();
+        setInitTimerStart();
+        setButtons();
+        setComponentsMotionListeners();
+        setJFrameMain();
+    }
+
+    private void createComponents() {
         createJMenuItens();
         createJMenus();
         createRadioButtonMenus();
         createJButtons();
         createLabelsForJFrameMain();
         createPanels();
-        addComponentsToJMenuLanguague();
-        setActionListenersToRadioButtonMenuItens();
-
-        setAllMenus();
-        setMouseMotionListenersToMenuItens();
-        setAllMenuComponentsActionListeners();
-        setInitTimerStart();
-
-        addRadioButtonMenusToButtonGroupLanguages();
-        addComponentsToMenuFile();
-        addComponentsToJMenuHelp();
-        addComponentsToMenuBar();
-        setJFrameMain();
-        setAllButtons();
-
-        setAllMotionListeners();
-        setJLabelTimerCounter();
-        setJPanelTimer();
-        addComponentsToJPanelTimer();
-        addComponentsToJPanelButton();
-        addComponentsToJFrameMain();
-        setButtonsActionListeners();
     }
 
     private void addComponentsToJMenuHelp() {
@@ -86,8 +77,8 @@ class JFrameGui extends JFrame {
     }
 
     private void setInitTimerStart() {
-        timerStart.set(Calendar.MINUTE,25);
-        timerStart.set(Calendar.SECOND,0);
+        timerStart.set(Calendar.MINUTE, 25);
+        timerStart.set(Calendar.SECOND, 0);
     }
 
     private void setJLabelTimerCounter() {
@@ -103,7 +94,7 @@ class JFrameGui extends JFrame {
         jPanelTimer.setLayout(new FlowLayout());
     }
 
-    private void addComponentsToJFrameMain() {
+    private void addJPanelButtonsToJFrameMain() {
         add(jPanelButtons);
     }
 
@@ -122,7 +113,8 @@ class JFrameGui extends JFrame {
         jPanelTimer = new JPanel();
     }
 
-    private void setAllButtons() {
+    private void setButtons() {
+        setButtonsActionListeners();
         jButtonStart.setMnemonic(KeyEvent.VK_S);
         jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonPause.setMnemonic(KeyEvent.VK_P);
@@ -137,9 +129,20 @@ class JFrameGui extends JFrame {
     }
 
     private void setJFrameMain() {
+        setJLabelTimerCounter();
+        setJPanelTimer();
+        addRadioButtonMenusToButtonGroupLanguages();
+        addComponentsToJMenuFile();
+        addComponentsToJMenuHelp();
+        addComponentsToMenuBar();
+
+        addComponentsToJPanelTimer();
+        addComponentsToJPanelButton();
         setTitle("Pomodoro tempo");
         setJMenuBar(jMenuBar);
         setContentPane(jPanelTimer);
+
+        addJPanelButtonsToJFrameMain();
         setSize(300, 300);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -154,7 +157,7 @@ class JFrameGui extends JFrame {
         jMenuBar.add(jMenuHelp);
     }
 
-    private void addComponentsToMenuFile() {
+    private void addComponentsToJMenuFile() {
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
     }
@@ -165,6 +168,7 @@ class JFrameGui extends JFrame {
                     @Override
                     public void mouseDragged(MouseEvent mouseEvent) {
                     }
+
                     @Override
                     public void mouseMoved(MouseEvent mouseEvent) {
                         jMenuFile.setToolTipText("Configurar intervalos de tempo");
@@ -172,7 +176,7 @@ class JFrameGui extends JFrame {
                 });
     }
 
-    private void setAllMenus() {
+    private void setMnemonicsMenus() {
         jMenuFile.setMnemonic(KeyEvent.VK_F);
         jMenuItemSettings.setMnemonic(KeyEvent.VK_E);
         jMenuItemQuit.setMnemonic(KeyEvent.VK_Q);
@@ -197,14 +201,9 @@ class JFrameGui extends JFrame {
         });
         radioButtonMenuItemEN_US.addActionListener(e -> resourceBundle = ResourceBundle.
                 getBundle("io.github.reginildo.tomato/Labels", Locales.locale_en_US));
-        radioButtonMenuItemKlingon.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resourceBundle = ResourceBundle.
-                        getBundle("io.github.reginildo.tomato/Labels",
-                                Locales.locale_tlh);
-            }
-        });
+        radioButtonMenuItemKlingon.addActionListener(e -> resourceBundle = ResourceBundle.
+                getBundle("io.github.reginildo.tomato/Labels",
+                        Locales.locale_tlh));
     }
 
     private void addRadioButtonMenusToButtonGroupLanguages() {
@@ -240,7 +239,7 @@ class JFrameGui extends JFrame {
                         .getString("radioButtonMenuItemKlingon"));
     }
 
-    private void addComponentsToJMenuLanguague() {
+    private void addRadioMenuButtonsToJMenuLanguague() {
         jMenuLanguage.add(radioButtonMenuItemPT_BR);
         jMenuLanguage.add(radioButtonMenuItemEN_US);
         jMenuLanguage.add(radioButtonMenuItemKlingon);
@@ -254,7 +253,7 @@ class JFrameGui extends JFrame {
         jMenuHelp = new JMenu("Help");
     }
 
-    private void setAllMotionListeners() {
+    private void setComponentsMotionListeners() {
         jButtonStart.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
@@ -269,6 +268,7 @@ class JFrameGui extends JFrame {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
             }
+
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jButtonPause.setToolTipText("Pausa pomodoro");
@@ -279,6 +279,7 @@ class JFrameGui extends JFrame {
             public void mouseDragged(MouseEvent mouseEvent) {
                 jButtonReset.setToolTipText("Reininiando");
             }
+
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 jButtonReset.setToolTipText("Reiniciar pomodoro");
@@ -323,19 +324,18 @@ class JFrameGui extends JFrame {
         TimerTask tarefa = new TimerTask() {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
-                if(isTheEnd()){
+                if (isTheEnd()) {
                     countInterations++;
-                    System.out.println("Fim do tempo pomodoro");
                     timer.cancel();
-                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar o intervalo curto?");
-                    if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToShortBreak())){
+                    confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do pomodoro.\nIniciar o intervalo curto?");
+                    if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToShortBreak())) {
                         timeToLongBreak = false;
                         timeToPomodoro = false;
                         startShortBreakTimer();
-                    }else if(confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())){
+                    } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
                         timeToShortBreak = false;
                         timeToPomodoro = false;
-                            startLongBreakTimer();
+                        startLongBreakTimer();
                     }
                 }
             }
@@ -353,31 +353,33 @@ class JFrameGui extends JFrame {
         }
     }
 
-    private boolean isTimeToShortBreak(){
+    private boolean isTimeToShortBreak() {
         if (countInterations == 2 ||
                 countInterations == 4 ||
-                countInterations == 6){
+                countInterations == 6) {
             timeToShortBreak = true;
         }
         return timeToShortBreak;
     }
 
-    private boolean isTimeToLongBreak(){
-        if (countInterations >= 8){
+    private boolean isTimeToLongBreak() {
+        if (countInterations >= 8) {
             timeToLongBreak = true;
         }
-        return  timeToLongBreak;
+        return timeToLongBreak;
     }
-    private boolean isTimeToPomodoro(){
+
+    private boolean isTimeToPomodoro() {
         if (countInterations == 1 ||
                 countInterations == 3 ||
                 countInterations == 5 ||
-                countInterations == 7){
+                countInterations == 7) {
             timeToPomodoro = true;
         }
         return timeToPomodoro;
     }
-    private void startShortBreakTimer(){
+
+    private void startShortBreakTimer() {
         if (timerPause == null) {
             if (jFrameSettings != null) {
                 timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
@@ -392,16 +394,15 @@ class JFrameGui extends JFrame {
         TimerTask tarefa = new TimerTask() {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
-                if(isTheEnd()){
+                if (isTheEnd()) {
                     countInterations++;
-                    System.out.println("Fim do tempo curto");
                     timer.cancel();
-                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar o onovo pomodoro?");
-                    if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())){
-                        timeToShortBreak =false;
+                    confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do short break.\nIniciar o novo pomodoro?");
+                    if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())) {
+                        timeToShortBreak = false;
                         timeToLongBreak = false;
                         startPomodoroTimer();
-                    }else if(confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())){
+                    } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
                         timeToShortBreak = false;
                         timeToPomodoro = false;
                         startLongBreakTimer();
@@ -412,7 +413,7 @@ class JFrameGui extends JFrame {
         timer.scheduleAtFixedRate(tarefa, 0, 1000);
     }
 
-    private void startLongBreakTimer(){
+    private void startLongBreakTimer() {
         if (timerPause == null) {
             if (jFrameSettings != null) {
                 timerStart.set(Calendar.MINUTE, Tomato.getLongBreakTime());
@@ -427,12 +428,11 @@ class JFrameGui extends JFrame {
         TimerTask tarefa = new TimerTask() {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
-                if(isTheEnd()){
+                if (isTheEnd()) {
                     countInterations++;
-                    System.out.println("Fim do intervalo longo");
                     timer.cancel();
-                    confirmDialog = JOptionPane.showConfirmDialog(null,"Iniciar um novo ciclo?");
-                    if(confirmDialog == JOptionPane.YES_OPTION){
+                    confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do Long Break.\nIniciar um novo ciclo?");
+                    if (confirmDialog == JOptionPane.YES_OPTION) {
                         countInterations = 1;
                         timeToLongBreak = false;
                         timeToShortBreak = false;
@@ -444,8 +444,8 @@ class JFrameGui extends JFrame {
         timer.scheduleAtFixedRate(tarefa, 0, 1000);
     }
 
-    private boolean isTheEnd(){
-            return ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0));
+    private boolean isTheEnd() {
+        return ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0));
     }
 
     private void setButtonsActionListeners() {
@@ -467,11 +467,11 @@ class JFrameGui extends JFrame {
             }
         });
         jButtonReset.addActionListener(actionEvent -> {
-            if(isTimeToShortBreak()){
+            if (isTimeToShortBreak()) {
                 timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
-            }else if(isTimeToLongBreak()){
+            } else if (isTimeToLongBreak()) {
                 timerStart.set(Calendar.MINUTE, Tomato.getLongBreakTime());
-            }else {
+            } else {
                 timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
             }
             timerStart.set(Calendar.SECOND, 0);
@@ -486,7 +486,7 @@ class JFrameGui extends JFrame {
         });
     }
 
-    private void setAllMenuComponentsActionListeners() {
+    private void setMenusComponentsActionListeners() {
         jMenuItemSettings.addActionListener(actionEvent -> {
             if (jFrameSettings == null) {
                 jFrameSettings = new JFrameSettings();
