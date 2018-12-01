@@ -68,7 +68,7 @@ public class JFrameAbout extends JFrame{
         jLabelTitle = new JLabel("Tomato - Pomodoro Timer");
         jLabelName = new JLabel("Developer: Reginildo Sousa");
         jLabelEmail = new JLabel("Email: reginildosousa01@gmail.com");
-        jLabelSite = new JLabel("https://reginildo.github.io");
+        jLabelSite = new JLabel("Website: https://reginildo.github.io");
     }
 
     private void setJPanelAboutMain() {
