@@ -18,37 +18,34 @@ package io.github.reginildo.tomato;
 
 class Tomato {
 
-    public static int getDefaultLongBreakTime() {
-        return defaultLongBreakTime;
-    }
-
-    public static void setDefaultLongBreakTime(int defaultLongBreakTime) {
-        Tomato.defaultLongBreakTime = defaultLongBreakTime;
-    }
-
-    public static int getDefaultPomodoroTime() {
-        return defaultPomodoroTime;
-    }
-
-    public static void setDefaultPomodoroTime(int defaultPomodoroTime) {
-        Tomato.defaultPomodoroTime = defaultPomodoroTime;
-    }
-
-    public static int getDefaultShortBreakTime() {
-        return defaultShortBreakTime;
-    }
-
-    public static void setDefaultShortBreakTime(int defaultShortBreakTime) {
-        Tomato.defaultShortBreakTime = defaultShortBreakTime;
-    }
-
     private static int defaultLongBreakTime = 15;
     private static int defaultPomodoroTime = 25;
     private static int defaultShortBreakTime = 5;
+    private static int longBreakTime, pomodoroTime, shortBreakTime;
 
-    private static int longBreakTime;
-    private static int pomodoroTime;
-    private static int shortBreakTime;
+    static int getDefaultLongBreakTime() {
+        return defaultLongBreakTime;
+    }
+
+    static void setDefaultLongBreakTime(int defaultLongBreakTime) {
+        Tomato.defaultLongBreakTime = defaultLongBreakTime;
+    }
+
+    static int getDefaultPomodoroTime() {
+        return defaultPomodoroTime;
+    }
+
+    static void setDefaultPomodoroTime(int defaultPomodoroTime) {
+        Tomato.defaultPomodoroTime = defaultPomodoroTime;
+    }
+
+    static int getDefaultShortBreakTime() {
+        return defaultShortBreakTime;
+    }
+
+    static void setDefaultShortBreakTime(int defaultShortBreakTime) {
+        Tomato.defaultShortBreakTime = defaultShortBreakTime;
+    }
 
     Tomato(int pomodo, int shortBreakTime, int longBreak) {
         setLongBreakTime(longBreak);
@@ -79,6 +76,4 @@ class Tomato {
     static void setShortBreakTime(int timeOfShortBreak) {
         shortBreakTime = timeOfShortBreak;
     }
-
-
 }

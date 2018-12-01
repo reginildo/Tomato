@@ -494,7 +494,11 @@ class JFrameGui extends JFrame {
                 jFrameSettings.setVisible(true);
             }
         });
-        jMenuItemQuit.addActionListener(actionEvent -> System.exit(0)
+        jMenuItemQuit.addActionListener(actionEvent -> {
+            //Tomato.setPomodoroTime(Tomato.getPomodoroTime());
+
+                    System.exit(0);
+                }
         );
         jMenuItemAbout.addActionListener(e -> jFrameAbout = new JFrameAbout());
     }

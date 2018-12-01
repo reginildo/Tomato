@@ -72,7 +72,7 @@ class JFrameSettings extends JFrame {
             setVisible(false);
             setTimeStartValue();
             JFrameGui.timerPause = null;
-            if(JFrameGui.timer != null){
+            if (JFrameGui.timer != null) {
                 JFrameGui.timer.cancel();
             }
             setButtonsOnExit();
