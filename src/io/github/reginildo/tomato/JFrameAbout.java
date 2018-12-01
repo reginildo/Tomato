@@ -4,15 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class JFrameAbout extends JFrame{
-    JPanel jPanelAboutMain;
-    JLabel jLabelTitle, jLabelName,jLabelEmail,jLabelSite;
-    Font fontLabelTitle = new Font("Arial", Font.BOLD, 18);
-    Font fontLabelDetails = new Font("Arial", Font.PLAIN, 12);
-    ImageIcon icon;
-    JLabel labelIcon;
+    private JPanel jPanelAboutMain;
+    private JLabel jLabelTitle, jLabelName,jLabelEmail,jLabelSite;
+    private Font fontLabelTitle = new Font("Arial", Font.BOLD, 18);
+    private Font fontLabelDetails = new Font("Arial", Font.PLAIN, 12);
+    private ImageIcon icon;
+    private JLabel labelIcon;
 
     JFrameAbout(){
-
         setJPanelAboutMain();
         addComponentsToJFrameAbout();
         setJFrameAbout();
@@ -72,11 +71,9 @@ public class JFrameAbout extends JFrame{
     }
 
     private void setJPanelAboutMain() {
-
         setJLabelTitle();
         setJLabelDetails();
         jPanelAboutMain = new JPanel();
         addComponentsToJPanelAboutMain();
     }
-
 }
