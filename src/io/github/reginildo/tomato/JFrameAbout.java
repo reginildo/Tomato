@@ -3,11 +3,11 @@ package io.github.reginildo.tomato;
 import javax.swing.*;
 import java.awt.*;
 
-public class JFrameAbout extends JFrame{
+class JFrameAbout extends JFrame{
     private JPanel jPanelAboutMain;
     private JLabel jLabelTitle, jLabelName,jLabelEmail,jLabelSite;
-    private Font fontLabelTitle = new Font("Arial", Font.BOLD, 18);
-    private Font fontLabelDetails = new Font("Arial", Font.PLAIN, 12);
+    private final Font fontLabelTitle = new Font("Arial", Font.BOLD, 18);
+    private final Font fontLabelDetails = new Font("Arial", Font.PLAIN, 12);
     private ImageIcon icon;
     private JLabel labelIcon;
 

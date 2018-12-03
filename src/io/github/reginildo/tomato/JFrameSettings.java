@@ -1,14 +1,20 @@
 package io.github.reginildo.tomato;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.SliderUI;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 class JFrameSettings extends JFrame {
+
     private static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
     private JPanel jPanelSettings;
@@ -41,7 +47,7 @@ class JFrameSettings extends JFrame {
         setContentPane(jPanelSettings);
         setSize(300, 300);
         setLocation(600, 300);
-        setResizable(false);
+        setResizable(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(JFrameGui.resourceBundle
                 .getString("stringTomatoSettingTitle"));
@@ -105,6 +111,8 @@ class JFrameSettings extends JFrame {
 
     private void createJPanelSettings() {
         jPanelSettings = new JPanel();
+        jPanelSettings.setBounds(20,20,300,300);
+
     }
 
     private void setJPanelSettings() {
@@ -265,4 +273,6 @@ class JFrameSettings extends JFrame {
         jLabelSettingsShortBreak = new JLabel(
                 resourceBundle.getString("intervaloCurto"));
     }
+
+
 }

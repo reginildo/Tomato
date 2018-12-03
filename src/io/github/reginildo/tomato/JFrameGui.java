@@ -18,19 +18,21 @@ package io.github.reginildo.tomato;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Timer;
 import javax.swing.*;
 
 class JFrameGui extends JFrame {
-
+    static JLabel jLabelHora = new JLabel();
     static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
     private JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
     private JFrameAbout jFrameAbout;
     private int confirmDialog;
     private static int countInterations = 1;
+    private static int countPomodoros = 1;
     private boolean timeToShortBreak, timeToLongBreak, timeToPomodoro;
     static java.util.Timer timer = null;
     static JButton jButtonStart, jButtonPause, jButtonReset;
@@ -48,8 +50,10 @@ class JFrameGui extends JFrame {
     private JMenuBar jMenuBar = new JMenuBar();
     private JPanel jPanelButtons;
     private JPanel jPanelTimer;
+    private JPanel jPanelMainInfo;
 
     JFrameGui() {
+        new HoraFormulario();
         setLookAndFeel();
         createComponents();
         addRadioMenuButtonsToJMenuLanguague();
@@ -84,6 +88,7 @@ class JFrameGui extends JFrame {
     private void setJLabelTimerCounter() {
         jLabelTimeCounter.setFont(font);
         jLabelTimeCounter.setText(format.format(timerStart.getTime()));
+        jLabelTimeCounter.setForeground(new Color(48,26,98));
     }
 
     private void addComponentsToJPanelTimer() {
@@ -111,6 +116,8 @@ class JFrameGui extends JFrame {
     private void createPanels() {
         jPanelButtons = new JPanel();
         jPanelTimer = new JPanel();
+        jPanelMainInfo = new JPanel();
+        jPanelMainInfo.setBackground(Color.orange);
     }
 
     private void setButtons() {
@@ -138,17 +145,22 @@ class JFrameGui extends JFrame {
 
         addComponentsToJPanelTimer();
         addComponentsToJPanelButton();
+        addComponentsToJPanelMainInfo();
         setTitle("Pomodoro tempo");
         setJMenuBar(jMenuBar);
         setContentPane(jPanelTimer);
-
         addJPanelButtonsToJFrameMain();
+        add(jPanelMainInfo);
         setSize(300, 300);
-        setResizable(false);
+        setResizable(true);
         setLocationRelativeTo(null);
         setLayout(new FlowLayout());
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void addComponentsToJPanelMainInfo() {
+        jPanelMainInfo.add(jLabelHora);
     }
 
     private void addComponentsToMenuBar() {
@@ -310,6 +322,7 @@ class JFrameGui extends JFrame {
     }
 
     private void startPomodoroTimer() {
+
         if (timerPause == null) {
             if (jFrameSettings != null) {
                 timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
@@ -454,6 +467,7 @@ class JFrameGui extends JFrame {
                 Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
                 jButtonStart.setEnabled(false);
                 jButtonPause.setEnabled(true);
+                countPomodoros++;
                 startPomodoroTimer();
             }
         });
@@ -501,5 +515,24 @@ class JFrameGui extends JFrame {
                 }
         );
         jMenuItemAbout.addActionListener(e -> jFrameAbout = new JFrameAbout());
+    }
+    class HoraFormulario {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.MEDIUM);
+        HoraFormulario(){
+            Thread thread = new Thread(new HoraFormulario.HoraThread());
+            thread.start();
+        }
+        class HoraThread implements Runnable{
+
+            @Override
+            public void run() {
+                while (true){
+                    jLabelHora.setLayout(new FlowLayout(FlowLayout.TRAILING));
+                    jLabelHora.setText(dateFormat.format(new Date()));
+                    jLabelHora.setForeground(Color.DARK_GRAY);
+                }
+
+            }
+        }
     }
 }
