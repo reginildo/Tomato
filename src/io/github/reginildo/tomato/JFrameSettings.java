@@ -1,16 +1,11 @@
 package io.github.reginildo.tomato;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.SliderUI;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 class JFrameSettings extends JFrame {
@@ -75,6 +70,7 @@ class JFrameSettings extends JFrame {
     private void setActionListenerTojButtonSairSettings() {
         jButtonSairSettings.addActionListener(actionEvent -> {
             setTomatoTimeValues();
+            JFrameGui.jLabel.setIcon(new JFrameGui().getImagePrepared());
             setVisible(false);
             setTimeStartValue();
             JFrameGui.timerPause = null;

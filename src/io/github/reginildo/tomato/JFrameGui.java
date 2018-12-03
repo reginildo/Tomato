@@ -25,6 +25,7 @@ import java.util.Timer;
 import javax.swing.*;
 
 class JFrameGui extends JFrame {
+    static JLabel jLabel;
     static JLabel jLabelHora = new JLabel();
     static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
@@ -51,6 +52,20 @@ class JFrameGui extends JFrame {
     private JPanel jPanelButtons;
     private JPanel jPanelTimer;
     private JPanel jPanelMainInfo;
+    private ImageIcon imageWork = new ImageIcon(getClass().getResource(
+            "/io/github/reginildo/" +
+                    "tomato/images/icon_smiley_work.png"));
+
+    private ImageIcon imageEnjoy = new ImageIcon(getClass().getResource(
+            "/io/github/reginildo/" +
+                    "tomato/images/icon_smiley_enjoy.png"));
+
+    private ImageIcon imageSuccess = new ImageIcon(getClass().getResource(
+            "/io/github/reginildo/" +
+                    "tomato/images/icon_smiley_sucess.png"));
+    private ImageIcon imagePrepared = new ImageIcon(getClass().getResource(
+            "/io/github/reginildo/" +
+                    "tomato/images/icon_smiley_prepared.png"));
 
     JFrameGui() {
         new HoraFormulario();
@@ -88,7 +103,7 @@ class JFrameGui extends JFrame {
     private void setJLabelTimerCounter() {
         jLabelTimeCounter.setFont(font);
         jLabelTimeCounter.setText(format.format(timerStart.getTime()));
-        jLabelTimeCounter.setForeground(new Color(48,26,98));
+        jLabelTimeCounter.setForeground(Color.RED);
     }
 
     private void addComponentsToJPanelTimer() {
@@ -97,6 +112,8 @@ class JFrameGui extends JFrame {
 
     private void setJPanelTimer() {
         jPanelTimer.setLayout(new FlowLayout());
+
+        jPanelTimer.setBackground(Color.YELLOW);
     }
 
     private void addJPanelButtonsToJFrameMain() {
@@ -104,6 +121,7 @@ class JFrameGui extends JFrame {
     }
 
     private void addComponentsToJPanelButton() {
+        jPanelButtons.setBackground(Color.YELLOW);
         jPanelButtons.add(jButtonStart);
         jPanelButtons.add(jButtonPause);
         jPanelButtons.add(jButtonReset);
@@ -117,7 +135,7 @@ class JFrameGui extends JFrame {
         jPanelButtons = new JPanel();
         jPanelTimer = new JPanel();
         jPanelMainInfo = new JPanel();
-        jPanelMainInfo.setBackground(Color.orange);
+        //jPanelMainInfo.setBackground(Color.orange);
     }
 
     private void setButtons() {
@@ -151,7 +169,8 @@ class JFrameGui extends JFrame {
         setContentPane(jPanelTimer);
         addJPanelButtonsToJFrameMain();
         add(jPanelMainInfo);
-        setSize(300, 300);
+        add(jLabelHora);
+        setSize(300, 400);
         setResizable(true);
         setLocationRelativeTo(null);
         setLayout(new FlowLayout());
@@ -160,10 +179,24 @@ class JFrameGui extends JFrame {
     }
 
     private void addComponentsToJPanelMainInfo() {
-        jPanelMainInfo.add(jLabelHora);
+
+        jLabel =new JLabel();
+        jLabel.setIcon(getImagePrepared());
+        jLabel.setVisible(true);
+
+        jPanelMainInfo.setBackground(Color.YELLOW);
+        jPanelMainInfo.add(jLabel);
+
+        //jPanelMainInfo.add(jLabelHora);
     }
 
     private void addComponentsToMenuBar() {
+        jMenuBar.setBackground(Color.orange);
+        jMenuBar.setBorderPainted(false);
+        //jMenuBar.setHelpMenu();
+        jMenuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+
         jMenuBar.add(jMenuFile);
         jMenuBar.add(jMenuLanguage);
         jMenuBar.add(jMenuHelp);
@@ -342,10 +375,12 @@ class JFrameGui extends JFrame {
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do pomodoro.\nIniciar o intervalo curto?");
                     if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToShortBreak())) {
+                        jLabel.setIcon(getImageEnjoy());
                         timeToLongBreak = false;
                         timeToPomodoro = false;
                         startShortBreakTimer();
                     } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                        jLabel.setIcon(getImageSuccess());
                         timeToShortBreak = false;
                         timeToPomodoro = false;
                         startLongBreakTimer();
@@ -389,6 +424,7 @@ class JFrameGui extends JFrame {
                 countInterations == 7) {
             timeToPomodoro = true;
         }
+
         return timeToPomodoro;
     }
 
@@ -412,10 +448,12 @@ class JFrameGui extends JFrame {
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do short break.\nIniciar o novo pomodoro?");
                     if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())) {
+                        jLabel.setIcon(getImageWork());
                         timeToShortBreak = false;
                         timeToLongBreak = false;
                         startPomodoroTimer();
                     } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                        jLabel.setIcon(getImageSuccess());
                         timeToShortBreak = false;
                         timeToPomodoro = false;
                         startLongBreakTimer();
@@ -446,6 +484,7 @@ class JFrameGui extends JFrame {
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do Long Break.\nIniciar um novo ciclo?");
                     if (confirmDialog == JOptionPane.YES_OPTION) {
+                        jLabel.setIcon(getImageWork());
                         countInterations = 1;
                         timeToLongBreak = false;
                         timeToShortBreak = false;
@@ -465,6 +504,7 @@ class JFrameGui extends JFrame {
         jButtonStart.addActionListener(actionEvent -> {
             if (jButtonStart.isEnabled()) {
                 Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
+                jLabel.setIcon(getImageWork());
                 jButtonStart.setEnabled(false);
                 jButtonPause.setEnabled(true);
                 countPomodoros++;
@@ -481,6 +521,7 @@ class JFrameGui extends JFrame {
             }
         });
         jButtonReset.addActionListener(actionEvent -> {
+            jLabel.setIcon(getImagePrepared());
             if (isTimeToShortBreak()) {
                 timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
             } else if (isTimeToLongBreak()) {
@@ -516,6 +557,23 @@ class JFrameGui extends JFrame {
         );
         jMenuItemAbout.addActionListener(e -> jFrameAbout = new JFrameAbout());
     }
+
+    public ImageIcon getImageWork() {
+        return imageWork;
+    }
+
+    public ImageIcon getImageEnjoy() {
+        return imageEnjoy;
+    }
+
+    public ImageIcon getImageSuccess() {
+        return imageSuccess;
+    }
+
+    public ImageIcon getImagePrepared() {
+        return imagePrepared;
+    }
+
     class HoraFormulario {
         DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.MEDIUM);
         HoraFormulario(){
