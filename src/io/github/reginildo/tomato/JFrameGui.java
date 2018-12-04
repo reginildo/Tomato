@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -399,13 +400,11 @@ class JFrameGui extends JFrame {
         timer.scheduleAtFixedRate(tarefa, 0, 1000);
     }
 
-    private void playAlarm() {
-        try {
-            AudioClip audioClip = Applet.newAudioClip(new File("navio3.wav").toURL());
+    private static void playAlarm() {
+        URL url = JFrameGui.class.getResource("navio3.wav");
+        AudioClip audioClip = Applet.newAudioClip(url);
+        for(int i = 0; i <3; i++){
             audioClip.play();
-
-        }catch (MalformedURLException ex){
-            ex.printStackTrace();
         }
     }
 
