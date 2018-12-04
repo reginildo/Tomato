@@ -16,8 +16,12 @@
  */
 package io.github.reginildo.tomato;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -25,6 +29,7 @@ import java.util.Timer;
 import javax.swing.*;
 
 class JFrameGui extends JFrame {
+
     static JLabel jLabel;
     static JLabel jLabelHora = new JLabel();
     static ResourceBundle resourceBundle = ResourceBundle
@@ -63,9 +68,11 @@ class JFrameGui extends JFrame {
     private ImageIcon imageSuccess = new ImageIcon(getClass().getResource(
             "/io/github/reginildo/" +
                     "tomato/images/icon_smiley_sucess.png"));
+
     private ImageIcon imagePrepared = new ImageIcon(getClass().getResource(
             "/io/github/reginildo/" +
                     "tomato/images/icon_smiley_prepared.png"));
+
 
     JFrameGui() {
         new HoraFormulario();
@@ -371,6 +378,7 @@ class JFrameGui extends JFrame {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
                 if (isTheEnd()) {
+                    playAlarm();
                     countInterations++;
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do pomodoro.\nIniciar o intervalo curto?");
@@ -389,6 +397,16 @@ class JFrameGui extends JFrame {
             }
         };
         timer.scheduleAtFixedRate(tarefa, 0, 1000);
+    }
+
+    private void playAlarm() {
+        try {
+            AudioClip audioClip = Applet.newAudioClip(new File("navio3.wav").toURL());
+            audioClip.play();
+
+        }catch (MalformedURLException ex){
+            ex.printStackTrace();
+        }
     }
 
     private void setTimerStartAndJlabelTimeCounter() {
@@ -444,6 +462,7 @@ class JFrameGui extends JFrame {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
                 if (isTheEnd()) {
+                    playAlarm();
                     countInterations++;
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do short break.\nIniciar o novo pomodoro?");
@@ -480,6 +499,7 @@ class JFrameGui extends JFrame {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
                 if (isTheEnd()) {
+                    playAlarm();
                     countInterations++;
                     timer.cancel();
                     confirmDialog = JOptionPane.showConfirmDialog(null, "Fim do Long Break.\nIniciar um novo ciclo?");
@@ -497,6 +517,7 @@ class JFrameGui extends JFrame {
     }
 
     private boolean isTheEnd() {
+
         return ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0));
     }
 

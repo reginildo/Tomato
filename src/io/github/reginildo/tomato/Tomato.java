@@ -22,6 +22,7 @@ class Tomato {
     private static int defaultPomodoroTime = 25;
     private static int defaultShortBreakTime = 5;
     private static int longBreakTime, pomodoroTime, shortBreakTime;
+    private static int ciclosTime = 4;
 
     static int getDefaultLongBreakTime() {
         return defaultLongBreakTime;
@@ -75,5 +76,13 @@ class Tomato {
 
     static void setShortBreakTime(int timeOfShortBreak) {
         shortBreakTime = timeOfShortBreak;
+    }
+
+    public static int getCiclosTime() {
+        return ciclosTime;
+    }
+
+    public static void setCiclosTime(int timeOfCiclos) {
+        ciclosTime = timeOfCiclos;
     }
 }

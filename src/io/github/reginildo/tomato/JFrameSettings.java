@@ -18,10 +18,10 @@ class JFrameSettings extends JFrame {
     private String stringIntervaloCurto =
             resourceBundle.getString("intervaloCurto");
     private String stringIntervaloLongo = resourceBundle.getString("intervaloLongo");
-    private String stringValorShortBreak;
+    private String stringValorShortBreak, stringValorCiclos;
     private JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
-    private JLabel jLabelSettingsTomato, jLabelSettingsLongBreak, jLabelSettingsShortBreak;
-    private static JSlider jSliderTomato, jSliderLongBreak, jSliderShortBreak;
+    private JLabel jLabelSettingsCiclos, jLabelSettingsTomato, jLabelSettingsLongBreak, jLabelSettingsShortBreak;
+    private static JSlider jSliderCiclos, jSliderTomato, jSliderLongBreak, jSliderShortBreak;
     private Font fontInfoSettings = new Font("Arial",
             Font.BOLD, 26);
 
@@ -40,7 +40,7 @@ class JFrameSettings extends JFrame {
 
     private void setJFrameSettings() {
         setContentPane(jPanelSettings);
-        setSize(300, 300);
+        setSize(300, 400);
         setLocation(600, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -70,7 +70,7 @@ class JFrameSettings extends JFrame {
     private void setActionListenerTojButtonSairSettings() {
         jButtonSairSettings.addActionListener(actionEvent -> {
             setTomatoTimeValues();
-            JFrameGui.jLabel.setIcon(new JFrameGui().getImagePrepared());
+            JFrameGui.jLabel.setIcon(Main.jFrameGui.getImagePrepared());
             setVisible(false);
             setTimeStartValue();
             JFrameGui.timerPause = null;
@@ -118,6 +118,8 @@ class JFrameSettings extends JFrame {
 
     private void addComponentsToJPanelSettings() {
         jPanelSettings.add(jLabelInfo);
+        jPanelSettings.add(jLabelSettingsCiclos);
+        jPanelSettings.add(jSliderCiclos);
         jPanelSettings.add(jLabelSettingsTomato);
         jPanelSettings.add(jSliderTomato);
         jPanelSettings.add(jLabelSettingsShortBreak);
@@ -129,10 +131,20 @@ class JFrameSettings extends JFrame {
 
     private void setJSliders() {
         createJSlidesToJFrameSettings();
+        setJSliderCiclos();
         setJSliderTomato();
         setJSliderShortBreak();
         setJSliderLongBreak();
         setListenersToJSliders();
+    }
+
+    private void setJSliderCiclos() {
+
+        jSliderCiclos.setMajorTickSpacing(1);
+        jSliderCiclos.setMinorTickSpacing(1);
+        jSliderCiclos.setPaintTicks(true);
+        jSliderCiclos.setPaintLabels(true);
+        jSliderCiclos.setValue(Tomato.getCiclosTime());
     }
 
     private void setJSliderLongBreak() {
@@ -161,6 +173,8 @@ class JFrameSettings extends JFrame {
     }
 
     private void createJSlidesToJFrameSettings() {
+        jSliderCiclos = new JSlider(
+                SwingConstants.HORIZONTAL,1,8,4);
         jSliderTomato = new JSlider(
                 SwingConstants.HORIZONTAL, 0, 50, 25);
         jSliderShortBreak = new JSlider(
@@ -227,10 +241,20 @@ class JFrameSettings extends JFrame {
     }
 
     private void setChangeListenersToJSliders() {
+        setJSliderCiclosChangeListener();
         setJSliderTomatoChangeListener();
         setJSliderShortBreakChangeListener();
         setJSliderLongBreakChangeListener();
     }
+
+    private void setJSliderCiclosChangeListener() {
+        jSliderCiclos.addChangeListener(changeEvent -> {
+            stringValorCiclos = String.valueOf("Quantidade de ciclos: "+jSliderCiclos.getValue() + " ciclos");
+            Tomato.setCiclosTime(jSliderTomato.getValue());
+            jLabelSettingsCiclos.setText(stringValorCiclos);
+        });
+    }
+
 
     private void setJSliderLongBreakChangeListener() {
         jSliderLongBreak.addChangeListener(changeEvent -> {
@@ -263,6 +287,7 @@ class JFrameSettings extends JFrame {
     }
 
     private void createLabelsForJFrameSettings() {
+        jLabelSettingsCiclos = new JLabel();
         jLabelSettingsTomato = new JLabel(resourceBundle.getString("stringTempoPomodoro"));
         jLabelSettingsLongBreak = new JLabel(
                 resourceBundle.getString("intervaloLongo"));
