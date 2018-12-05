@@ -401,11 +401,7 @@ class JFrameGui extends JFrame {
     }
 
     private static void playAlarm() {
-        URL url = JFrameGui.class.getResource("navio3.wav");
-        AudioClip audioClip = Applet.newAudioClip(url);
-        for(int i = 0; i <3; i++){
-            audioClip.play();
-        }
+        Toolkit.getDefaultToolkit().beep();
     }
 
     private void setTimerStartAndJlabelTimeCounter() {
