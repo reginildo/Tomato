@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Timer;
@@ -34,7 +35,7 @@ final class JFrameTomatoMain extends JFrame {
     private static TimerTask timerTaskPomodoro, timerTaskShortBreak, timerTaskLongBreak;
     static JLabel jLabelToImageIconSmileys;
     private static boolean showTimeView;
-    static JLabel jLabelHora;
+    private static JLabel jLabelHora;
     static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
     private JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
@@ -59,19 +60,41 @@ final class JFrameTomatoMain extends JFrame {
     private ImageIcon imageWork, imageEnjoy, imageSuccess, imagePrepared;
 
     JFrameTomatoMain() {
-        setAllImageIcons();
+        setImageIcons();
         setLookAndFeel();
-        createComponents();
-        addRadioMenuButtonsToJMenuLanguague();
-        setActionListenersToRadioButtonMenuItens();
+        setJMenuItens();
+        setJMenus();
+        setJRadioButtonMenus();
+        setJButtons();
+        setJLabelsForJFrameMain();
+        setJPanels();
         setMnemonicsMenus();
-        setMouseMotionListenersToMenuItens();
-        setMenusComponentsActionListeners();
         setInitTimerStart();
-        setButtons();
-        setComponentsMotionListeners();
-        createHourForm();
-        setJFrameMain();
+
+        initThreadHour();
+
+        setJLabelTimerCounter();
+        setJPanelTimer();
+        setButtonGroupLanguages();
+        setJMenuFile();
+        setJMenuHelp();
+        setMyJMenuBar();
+
+        setJPanelButtons();
+        setComponentsToJPanelMainInfo();
+        setTitle("Pomodoro tempo");
+        setJMenuBar(jMenuBar);
+        setContentPane(jPanelTimer);
+        add(jPanelButtons);
+        add(jPanelMainInfo);
+        add(jLabelHora);
+        setSize(300, 400);
+        setResizable(true);
+        setLocationRelativeTo(null);
+        setLayout(new FlowLayout());
+        setShowTimeView(true);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     @Contract(pure = true)
@@ -82,22 +105,21 @@ final class JFrameTomatoMain extends JFrame {
     /**
      * @param timeView For to see a label with the date and time now
      */
-    private static void setShowTimeView(boolean timeView) {
+    static void setShowTimeView(boolean timeView) {
         JFrameTomatoMain.showTimeView = timeView;
     }
 
-    private void createHourForm() {
+    private static void initThreadHour() {
         new Thread(new HoraThread()).start();
     }
 
-    private void setAllImageIcons() {
+    private void setImageIcons() {
         imageWork = new ImageIcon(getClass().getResource(
                 "/io/github/reginildo/" +
                         "tomato/images/icon_smiley_work.png"));
         imageEnjoy = new ImageIcon(getClass().getResource(
                 "/io/github/reginildo/" +
                         "tomato/images/icon_smiley_enjoy.png"));
-
         imageSuccess = new ImageIcon(getClass().getResource(
                 "/io/github/reginildo/" +
                         "tomato/images/icon_smiley_sucess.png"));
@@ -107,16 +129,8 @@ final class JFrameTomatoMain extends JFrame {
                         "tomato/images/icon_smiley_prepared.png"));
     }
 
-    private void createComponents() {
-        createJMenuItens();
-        createJMenus();
-        createRadioButtonMenus();
-        createJButtons();
-        createLabelsForJFrameMain();
-        createPanels();
-    }
 
-    private void addComponentsToJMenuHelp() {
+    private void setJMenuHelp() {
         jMenuHelp.add(jMenuItemAbout);
     }
 
@@ -131,76 +145,49 @@ final class JFrameTomatoMain extends JFrame {
         jLabelTimeCounter.setForeground(Color.RED);
     }
 
-    private void addComponentsToJPanelTimer() {
-        jPanelTimer.add(jLabelTimeCounter);
-    }
-
     private void setJPanelTimer() {
         jPanelTimer.setLayout(new FlowLayout());
         jPanelTimer.setBackground(Color.YELLOW);
+        jPanelTimer.add(jLabelTimeCounter);
     }
 
-    private void addJPanelButtonsToJFrameMain() {
-        add(jPanelButtons);
-    }
 
-    private void addComponentsToJPanelButton() {
+    private void setJPanelButtons() {
         jPanelButtons.setBackground(Color.YELLOW);
         jPanelButtons.add(jButtonStart);
         jPanelButtons.add(jButtonPause);
         jPanelButtons.add(jButtonReset);
     }
 
-    private void createLabelsForJFrameMain() {
+    private void setJLabelsForJFrameMain() {
         jLabelHora = new JLabel();
         jLabelTimeCounter = new JLabel("00:00");
     }
 
-    private void createPanels() {
+    private void setJPanels() {
         jPanelButtons = new JPanel();
         jPanelTimer = new JPanel();
         jPanelMainInfo = new JPanel();
     }
 
-    private void setButtons() {
-        setButtonsActionListeners();
+    private void setJButtons() {
+        jButtonStart = new JButton(resourceBundle.getString("buttonStart"));
+        jButtonPause = new JButton(resourceBundle.getString("buttonPause"));
+        jButtonReset = new JButton(resourceBundle.getString("buttonReset"));
+
+        jButtonStart.addActionListener(new JButtonStartListener());
+        jButtonPause.addActionListener(new JButtonPauseListener());
+        jButtonReset.addActionListener(new JButtonResetListener());
         jButtonStart.setMnemonic(KeyEvent.VK_S);
         jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.setEnabled(false);
         jButtonReset.setEnabled(false);
-    }
 
-    private void createJButtons() {
-        jButtonStart = new JButton(resourceBundle.getString("buttonStart"));
-        jButtonPause = new JButton(resourceBundle.getString("buttonPause"));
-        jButtonReset = new JButton(resourceBundle.getString("buttonReset"));
-    }
-
-    private void setJFrameMain() {
-        setShowTimeView(true);
-        setJLabelTimerCounter();
-        setJPanelTimer();
-        addRadioButtonMenusToButtonGroupLanguages();
-        addComponentsToJMenuFile();
-        addComponentsToJMenuHelp();
-        setComponentsToMenuBar();
-
-        addComponentsToJPanelTimer();
-        addComponentsToJPanelButton();
-        setComponentsToJPanelMainInfo();
-        setTitle("Pomodoro tempo");
-        setJMenuBar(jMenuBar);
-        setContentPane(jPanelTimer);
-        addJPanelButtonsToJFrameMain();
-        add(jPanelMainInfo);
-        add(jLabelHora);
-        setSize(300, 400);
-        setResizable(true);
-        setLocationRelativeTo(null);
-        setLayout(new FlowLayout());
-        setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jButtonStart.addMouseMotionListener(new JButtonStartMotionListener());
+        jButtonPause.addMouseMotionListener(new JButtonPauseMotionListener());
+        jButtonReset.addMouseMotionListener(new JButtonResetMotionListener());
+        jMenuItemQuit.addMouseMotionListener(new JMenuItemQuitMotionListener());
     }
 
     private void setComponentsToJPanelMainInfo() {
@@ -211,7 +198,7 @@ final class JFrameTomatoMain extends JFrame {
         jPanelMainInfo.add(jLabelToImageIconSmileys);
     }
 
-    private void setComponentsToMenuBar() {
+    private void setMyJMenuBar() {
         jMenuBar.setBackground(Color.orange);
         jMenuBar.setBorderPainted(false);
         jMenuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -220,23 +207,9 @@ final class JFrameTomatoMain extends JFrame {
         jMenuBar.add(jMenuHelp);
     }
 
-    private void addComponentsToJMenuFile() {
+    private void setJMenuFile() {
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
-    }
-
-    private void setMouseMotionListenersToMenuItens() {
-        jMenuItemSettings.addMouseMotionListener(
-                new MouseMotionListener() {
-                    @Override
-                    public void mouseDragged(MouseEvent mouseEvent) {
-                    }
-
-                    @Override
-                    public void mouseMoved(MouseEvent mouseEvent) {
-                        jMenuFile.setToolTipText("Configurar intervalos de tempo");
-                    }
-                });
     }
 
     private void setMnemonicsMenus() {
@@ -245,18 +218,15 @@ final class JFrameTomatoMain extends JFrame {
         jMenuItemQuit.setMnemonic(KeyEvent.VK_Q);
     }
 
-    private void createJMenuItens() {
+    private void setJMenuItens() {
         jMenuItemSettings = new JMenuItem(resourceBundle
                 .getString("menuItemSetting"));
         jMenuItemQuit = new JMenuItem("Quit");
         jMenuItemAbout = new JMenuItem("About");
-    }
-
-    private void setActionListenersToRadioButtonMenuItens() {
-        radioButtonMenuItemPT_BR.addActionListener(new RadioButtonMenuItemPT_BRListener());
-        radioButtonMenuItemEN_US.addActionListener(new RadioButtonMenuItemEN_USListener());
-
-        radioButtonMenuItemKlingon.addActionListener(new RadioButtonMenuItemKlingonListener());
+        jMenuItemSettings.addMouseMotionListener(new JMenuItemSettingsMotionListener());
+        jMenuItemSettings.addActionListener(new JMenuItemSettingsListener());
+        jMenuItemQuit.addActionListener(new JMenuItemQuitListener());
+        jMenuItemAbout.addActionListener(new JMenuItemAboutListener());
     }
 
     private void refreshLanguage() {
@@ -265,7 +235,7 @@ final class JFrameTomatoMain extends JFrame {
         setVisible(true);
     }
 
-    private void addRadioButtonMenusToButtonGroupLanguages() {
+    private void setButtonGroupLanguages() {
         buttonGroupLanguages.add(radioButtonMenuItemPT_BR);
         buttonGroupLanguages.add(radioButtonMenuItemEN_US);
         buttonGroupLanguages.add(radioButtonMenuItemKlingon);
@@ -286,7 +256,7 @@ final class JFrameTomatoMain extends JFrame {
         }
     }
 
-    private void createRadioButtonMenus() {
+    private void setJRadioButtonMenus() {
         radioButtonMenuItemPT_BR =
                 new JRadioButtonMenuItem(resourceBundle
                         .getString("radioButtonMenuItemPT_BR"));
@@ -296,76 +266,22 @@ final class JFrameTomatoMain extends JFrame {
         radioButtonMenuItemKlingon =
                 new JRadioButtonMenuItem(resourceBundle
                         .getString("radioButtonMenuItemKlingon"));
+        radioButtonMenuItemPT_BR.addActionListener(new RadioButtonMenuItemPT_BRListener());
+        radioButtonMenuItemEN_US.addActionListener(new RadioButtonMenuItemEN_USListener());
+        radioButtonMenuItemKlingon.addActionListener(new RadioButtonMenuItemKlingonListener());
     }
 
-    private void addRadioMenuButtonsToJMenuLanguague() {
-        jMenuLanguage.add(radioButtonMenuItemPT_BR);
-        jMenuLanguage.add(radioButtonMenuItemEN_US);
-        jMenuLanguage.add(radioButtonMenuItemKlingon);
-    }
 
-    private void createJMenus() {
+    private void setJMenus() {
         jMenuFile = new JMenu(resourceBundle
                 .getString("menuFile"));
         jMenuLanguage = new JMenu(resourceBundle
                 .getString("menuLanguage"));
+        jMenuLanguage.add(radioButtonMenuItemPT_BR);
+        jMenuLanguage.add(radioButtonMenuItemEN_US);
+        jMenuLanguage.add(radioButtonMenuItemKlingon);
+
         jMenuHelp = new JMenu("Help");
-    }
-
-    private void setComponentsMotionListeners() {
-        jButtonStart.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {
-                jButtonStart.setToolTipText("Iniciar pomodoro");
-            }
-        });
-        jButtonPause.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {
-                jButtonPause.setToolTipText("Pausa pomodoro");
-            }
-        });
-        jButtonReset.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-                jButtonReset.setToolTipText("Reininiando");
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {
-                jButtonReset.setToolTipText("Reiniciar pomodoro");
-            }
-        });
-        jMenuItemSettings.addMouseMotionListener(
-                new MouseMotionListener() {
-                    @Override
-                    public void mouseDragged(MouseEvent mouseEvent) {
-                    }
-
-                    @Override
-                    public void mouseMoved(MouseEvent mouseEvent) {
-                        jMenuItemSettings.setToolTipText("Enter the " +
-                                "pomodoro settings");
-                    }
-                });
-        jMenuItemQuit.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {
-                jMenuItemQuit.setToolTipText("Quit the application");
-            }
-        });
     }
 
     private void startPomodoroTimer() {
@@ -380,11 +296,11 @@ final class JFrameTomatoMain extends JFrame {
             timerStart.setTime(timerPause);
         }
         timer = new Timer();
-        createTarefaPomodoro();
+        initTaskPomodoro();
         timer.scheduleAtFixedRate(timerTaskPomodoro, 0, 1000);
     }
 
-    private void createTarefaPomodoro() {
+    private void initTaskPomodoro() {
         timerTaskPomodoro = new TimerTask() {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
@@ -462,11 +378,11 @@ final class JFrameTomatoMain extends JFrame {
             timerStart.setTime(timerPause);
         }
         timer = new Timer();
-        createTarefaShortBreak();
+        initTaskShortBreak();
         timer.scheduleAtFixedRate(timerTaskShortBreak, 0, 1000);
     }
 
-    private void createTarefaShortBreak() {
+    private void initTaskShortBreak() {
         timerTaskShortBreak = new TimerTask() {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
@@ -504,11 +420,11 @@ final class JFrameTomatoMain extends JFrame {
             timerStart.setTime(timerPause);
         }
         timer = new Timer();
-        createTarefaLongBreak();
+        initTaskLongBreak();
         timer.scheduleAtFixedRate(timerTaskLongBreak, 0, 1000);
     }
 
-    private void createTarefaLongBreak() {
+    private void initTaskLongBreak() {
         timerTaskLongBreak = new TimerTask() {
             public void run() {
                 setTimerStartAndJlabelTimeCounter();
@@ -534,18 +450,6 @@ final class JFrameTomatoMain extends JFrame {
         return ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0));
     }
 
-    private void setButtonsActionListeners() {
-        jButtonStart.addActionListener(new JButtonStartListener());
-        jButtonPause.addActionListener(new JButtonPauseListener());
-        jButtonReset.addActionListener(new JButtonResetListener());
-    }
-
-    private void setMenusComponentsActionListeners() {
-        jMenuItemSettings.addActionListener(new JMenuItemSettingsListener());
-        jMenuItemQuit.addActionListener(new JMenuItemQuitListener());
-        jMenuItemAbout.addActionListener(new JMenuItemAboutListener());
-    }
-
     private ImageIcon getImageWork() {
         return imageWork;
     }
@@ -562,7 +466,7 @@ final class JFrameTomatoMain extends JFrame {
         return imagePrepared;
     }
 
-    private class JButtonPauseListener implements ActionListener{
+    private class JButtonPauseListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -577,7 +481,7 @@ final class JFrameTomatoMain extends JFrame {
         }
     }
 
-    private class JButtonStartListener implements ActionListener{
+    private class JButtonStartListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -591,7 +495,8 @@ final class JFrameTomatoMain extends JFrame {
 
         }
     }
-    private class JButtonResetListener implements ActionListener{
+
+    private class JButtonResetListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -642,7 +547,7 @@ final class JFrameTomatoMain extends JFrame {
         }
     }
 
-    private class RadioButtonMenuItemPT_BRListener implements ActionListener{
+    private class RadioButtonMenuItemPT_BRListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -654,7 +559,7 @@ final class JFrameTomatoMain extends JFrame {
         }
     }
 
-    private class RadioButtonMenuItemEN_USListener implements ActionListener{
+    private class RadioButtonMenuItemEN_USListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -666,7 +571,7 @@ final class JFrameTomatoMain extends JFrame {
         }
     }
 
-    private class RadioButtonMenuItemKlingonListener implements ActionListener{
+    private class RadioButtonMenuItemKlingonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -676,6 +581,83 @@ final class JFrameTomatoMain extends JFrame {
             resourceBundle.keySet();
             refreshLanguage();
 
+        }
+    }
+
+    private class JMenuItemSettingsMotionListener implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            jMenuFile.setToolTipText("Configurar intervalos de tempo");
+        }
+    }
+
+    private class JButtonStartMotionListener implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            jButtonStart.setToolTipText("Iniciar pomodoro");
+        }
+    }
+
+    private class JButtonPauseMotionListener implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            jButtonPause.setToolTipText("Pausa pomodoro");
+        }
+    }
+
+    private class JButtonResetMotionListener implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+            jButtonReset.setToolTipText("Reininiando");
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            jButtonReset.setToolTipText("Reiniciar pomodoro");
+        }
+    }
+
+    private class JMenuItemQuitMotionListener implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            jMenuItemQuit.setToolTipText("Quit the application");
+        }
+    }
+
+    private static class HoraThread implements Runnable {
+
+        private static DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+
+        @Override
+        public void run() {
+            while (JFrameTomatoMain.isShowTimeView()) {
+                JFrameTomatoMain.jLabelHora.setLayout(new FlowLayout(FlowLayout.TRAILING));
+                JFrameTomatoMain.jLabelHora.setText(dateFormat.format(new Date()));
+                JFrameTomatoMain.jLabelHora.setForeground(Color.DARK_GRAY);
+            }
         }
     }
 }
