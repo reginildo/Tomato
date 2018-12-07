@@ -62,9 +62,10 @@ final class JFrameTomatoMain extends JFrame {
     JFrameTomatoMain() {
         setImageIcons();
         setLookAndFeel();
+
+        setJRadioButtonMenus();
         setJMenuItens();
         setJMenus();
-        setJRadioButtonMenus();
         setJButtons();
         setJLabelsForJFrameMain();
         setJPanels();
