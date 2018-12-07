@@ -44,7 +44,7 @@ class JFrameSettings extends JFrame {
         setLocation(600, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle(JFrameGui.resourceBundle
+        setTitle(JFrameTomatoMain.resourceBundle
                 .getString("stringTomatoSettingTitle"));
         setVisible(true);
     }
@@ -70,29 +70,29 @@ class JFrameSettings extends JFrame {
     private void setActionListenerTojButtonSairSettings() {
         jButtonSairSettings.addActionListener(actionEvent -> {
             setTomatoTimeValues();
-            JFrameGui.jLabel.setIcon(Main.jFrameGui.getImagePrepared());
+            JFrameTomatoMain.jLabelToImageIconSmileys.setIcon(Main.jFrameTomatoMain.getImagePrepared());
             setVisible(false);
             setTimeStartValue();
-            JFrameGui.timerPause = null;
-            if (JFrameGui.timer != null) {
-                JFrameGui.timer.cancel();
+            JFrameTomatoMain.timerPause = null;
+            if (JFrameTomatoMain.timer != null) {
+                JFrameTomatoMain.timer.cancel();
             }
             setButtonsOnExit();
-            JFrameGui.jLabelTimeCounter.setText(JFrameGui.format.format(JFrameGui.timerStart.getTime()));
+            JFrameTomatoMain.jLabelTimeCounter.setText(JFrameTomatoMain.format.format(JFrameTomatoMain.timerStart.getTime()));
             setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         });
     }
 
     private void setButtonsOnExit() {
-        JFrameGui.jButtonStart.setText(JFrameGui.resourceBundle.getString("buttonStart"));
-        JFrameGui.jButtonPause.setEnabled(false);
-        JFrameGui.jButtonStart.setEnabled(true);
-        JFrameGui.jButtonReset.setEnabled(false);
+        JFrameTomatoMain.jButtonStart.setText(JFrameTomatoMain.resourceBundle.getString("buttonStart"));
+        JFrameTomatoMain.jButtonPause.setEnabled(false);
+        JFrameTomatoMain.jButtonStart.setEnabled(true);
+        JFrameTomatoMain.jButtonReset.setEnabled(false);
     }
 
     private void setTimeStartValue() {
-        JFrameGui.timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
-        JFrameGui.timerStart.set(Calendar.SECOND, 0);
+        JFrameTomatoMain.timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
+        JFrameTomatoMain.timerStart.set(Calendar.SECOND, 0);
     }
 
     private void setTomatoTimeValues() {
@@ -258,11 +258,11 @@ class JFrameSettings extends JFrame {
 
     private void setJSliderLongBreakChangeListener() {
         jSliderLongBreak.addChangeListener(changeEvent -> {
-            JFrameGui.stringValorLongBreak = stringIntervaloLongo
+            JFrameTomatoMain.stringValorLongBreak = stringIntervaloLongo
                     + String.valueOf(jSliderLongBreak.getValue()
                     + " " + resourceBundle.getString("minutos"));
             Tomato.setLongBreakTime(jSliderLongBreak.getValue());
-            jLabelSettingsLongBreak.setText(JFrameGui.stringValorLongBreak);
+            jLabelSettingsLongBreak.setText(JFrameTomatoMain.stringValorLongBreak);
         });
     }
 

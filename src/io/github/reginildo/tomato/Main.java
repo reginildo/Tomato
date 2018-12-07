@@ -17,10 +17,10 @@
 package io.github.reginildo.tomato;
 
 class Main {
-    static JFrameGui jFrameGui;
+    static JFrameTomatoMain jFrameTomatoMain;
     public static void main(String[] args) {
 
-        jFrameGui = new JFrameGui();
+        jFrameTomatoMain = new JFrameTomatoMain();
     }
     
 }

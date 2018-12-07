@@ -40,7 +40,7 @@ class JFrameAbout extends JFrame{
         setSize(300, 300);
         setLocation(600, 300);
         setResizable(false);
-        setTitle(JFrameGui.resourceBundle
+        setTitle(JFrameTomatoMain.resourceBundle
                 .getString("stringTomatoSettingTitle"));
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setVisible(true);
