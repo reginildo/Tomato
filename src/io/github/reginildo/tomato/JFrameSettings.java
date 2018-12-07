@@ -2,9 +2,7 @@ package io.github.reginildo.tomato;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 
@@ -68,19 +66,7 @@ class JFrameSettings extends JFrame {
     }
 
     private void setActionListenerTojButtonSairSettings() {
-        jButtonSairSettings.addActionListener(actionEvent -> {
-            setTomatoTimeValues();
-            JFrameTomatoMain.jLabelToImageIconSmileys.setIcon(Main.jFrameTomatoMain.getImagePrepared());
-            setVisible(false);
-            setTimeStartValue();
-            JFrameTomatoMain.timerPause = null;
-            if (JFrameTomatoMain.timer != null) {
-                JFrameTomatoMain.timer.cancel();
-            }
-            setButtonsOnExit();
-            JFrameTomatoMain.jLabelTimeCounter.setText(JFrameTomatoMain.format.format(JFrameTomatoMain.timerStart.getTime()));
-            setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        });
+        jButtonSairSettings.addActionListener(new JButtonSairSettingsLintener());
     }
 
     private void setButtonsOnExit() {
@@ -293,6 +279,26 @@ class JFrameSettings extends JFrame {
                 resourceBundle.getString("intervaloLongo"));
         jLabelSettingsShortBreak = new JLabel(
                 resourceBundle.getString("intervaloCurto"));
+    }
+
+
+    private class JButtonSairSettingsLintener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setTomatoTimeValues();
+            JFrameTomatoMain.jLabelToImageIconSmileys.setIcon(Main.jFrameTomatoMain.getImagePrepared());
+            setVisible(false);
+            setTimeStartValue();
+            JFrameTomatoMain.timerPause = null;
+            if (JFrameTomatoMain.timer != null) {
+                JFrameTomatoMain.timer.cancel();
+            }
+            setButtonsOnExit();
+            JFrameTomatoMain.jLabelTimeCounter.setText(JFrameTomatoMain.format.format(JFrameTomatoMain.timerStart.getTime()));
+            setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
+        }
     }
 
 

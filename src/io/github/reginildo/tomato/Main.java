@@ -16,8 +16,8 @@
  */
 package io.github.reginildo.tomato;
 
-class Main {
-    static JFrameTomatoMain jFrameTomatoMain;
+public class Main {
+    public static JFrameTomatoMain jFrameTomatoMain;
     public static void main(String[] args) {
 
         jFrameTomatoMain = new JFrameTomatoMain();

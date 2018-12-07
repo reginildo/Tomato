@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Timer;
@@ -89,7 +88,6 @@ final class JFrameTomatoMain extends JFrame {
 
     private void createHourForm() {
         new Thread(new HoraThread()).start();
-
     }
 
     private void setAllImageIcons() {
@@ -255,27 +253,10 @@ final class JFrameTomatoMain extends JFrame {
     }
 
     private void setActionListenersToRadioButtonMenuItens() {
-        radioButtonMenuItemPT_BR.addActionListener(e -> {
-            resourceBundle = ResourceBundle.
-                    getBundle("io.github.reginildo.tomato/Labels",
-                            Locales.locale_pt_BR);
-            resourceBundle.keySet();
-            refreshLanguage();
-        });
-        radioButtonMenuItemEN_US.addActionListener(e -> {
-            resourceBundle = ResourceBundle.
-                    getBundle("io.github.reginildo.tomato/Labels", Locales.locale_en_US);
-            resourceBundle.keySet();
-            refreshLanguage();
-        });
+        radioButtonMenuItemPT_BR.addActionListener(new RadioButtonMenuItemPT_BRListener());
+        radioButtonMenuItemEN_US.addActionListener(new RadioButtonMenuItemEN_USListener());
 
-        radioButtonMenuItemKlingon.addActionListener(e -> {
-            resourceBundle = ResourceBundle.
-                    getBundle("io.github.reginildo.tomato/Labels",
-                            Locales.locale_tlh);
-            resourceBundle.keySet();
-            refreshLanguage();
-        });
+        radioButtonMenuItemKlingon.addActionListener(new RadioButtonMenuItemKlingonListener());
     }
 
     private void refreshLanguage() {
@@ -554,16 +535,37 @@ final class JFrameTomatoMain extends JFrame {
     }
 
     private void setButtonsActionListeners() {
-        jButtonStart.addActionListener(actionEvent -> {
-            if (jButtonStart.isEnabled()) {
-                Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
-                jLabelToImageIconSmileys.setIcon(getImageWork());
-                jButtonStart.setEnabled(false);
-                jButtonPause.setEnabled(true);
-                startPomodoroTimer();
-            }
-        });
-        jButtonPause.addActionListener(actionEvent -> {
+        jButtonStart.addActionListener(new JButtonStartListener());
+        jButtonPause.addActionListener(new JButtonPauseListener());
+        jButtonReset.addActionListener(new JButtonResetListener());
+    }
+
+    private void setMenusComponentsActionListeners() {
+        jMenuItemSettings.addActionListener(new JMenuItemSettingsListener());
+        jMenuItemQuit.addActionListener(new JMenuItemQuitListener());
+        jMenuItemAbout.addActionListener(new JMenuItemAboutListener());
+    }
+
+    private ImageIcon getImageWork() {
+        return imageWork;
+    }
+
+    private ImageIcon getImageEnjoy() {
+        return imageEnjoy;
+    }
+
+    private ImageIcon getImageSuccess() {
+        return imageSuccess;
+    }
+
+    ImageIcon getImagePrepared() {
+        return imagePrepared;
+    }
+
+    private class JButtonPauseListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
             if (jButtonPause.isEnabled()) {
                 timerPause = timerStart.getTime();
                 timer.cancel();
@@ -571,8 +573,28 @@ final class JFrameTomatoMain extends JFrame {
                 jButtonReset.setEnabled(true);
                 jButtonStart.setEnabled(true);
             }
-        });
-        jButtonReset.addActionListener(actionEvent -> {
+
+        }
+    }
+
+    private class JButtonStartListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (jButtonStart.isEnabled()) {
+                Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
+                jLabelToImageIconSmileys.setIcon(getImageWork());
+                jButtonStart.setEnabled(false);
+                jButtonPause.setEnabled(true);
+                startPomodoroTimer();
+            }
+
+        }
+    }
+    private class JButtonResetListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
             jLabelToImageIconSmileys.setIcon(getImagePrepared());
             if (isTimeToShortBreak()) {
                 timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
@@ -590,37 +612,70 @@ final class JFrameTomatoMain extends JFrame {
             jButtonReset.setEnabled(false);
             jLabelTimeCounter.setText(format.format(
                     timerStart.getTime()));
-        });
+
+        }
     }
 
-    private void setMenusComponentsActionListeners() {
-        jMenuItemSettings.addActionListener(actionEvent -> {
+    private class JMenuItemSettingsListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             if (jFrameSettings == null) {
                 jFrameSettings = new JFrameSettings();
             } else {
                 jFrameSettings.setVisible(true);
             }
-        });
-        jMenuItemQuit.addActionListener(actionEvent -> {
-                    System.exit(0);
-                }
-        );
-        jMenuItemAbout.addActionListener(e -> new JFrameAbout());
+        }
     }
 
-    private ImageIcon getImageWork() {
-        return imageWork;
+    private class JMenuItemQuitListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
     }
 
-    private ImageIcon getImageEnjoy() {
-        return imageEnjoy;
+    private class JMenuItemAboutListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new JFrameAbout();
+        }
     }
 
-    private ImageIcon getImageSuccess() {
-        return imageSuccess;
+    private class RadioButtonMenuItemPT_BRListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            resourceBundle = ResourceBundle.
+                    getBundle("io.github.reginildo.tomato/Labels",
+                            Locales.locale_pt_BR);
+            resourceBundle.keySet();
+            refreshLanguage();
+        }
     }
 
-    ImageIcon getImagePrepared() {
-        return imagePrepared;
+    private class RadioButtonMenuItemEN_USListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            resourceBundle = ResourceBundle.
+                    getBundle("io.github.reginildo.tomato/Labels", Locales.locale_en_US);
+            resourceBundle.keySet();
+            refreshLanguage();
+
+        }
+    }
+
+    private class RadioButtonMenuItemKlingonListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            resourceBundle = ResourceBundle.
+                    getBundle("io.github.reginildo.tomato/Labels",
+                            Locales.locale_tlh);
+            resourceBundle.keySet();
+            refreshLanguage();
+
+        }
     }
 }
