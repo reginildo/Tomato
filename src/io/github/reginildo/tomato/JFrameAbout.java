@@ -5,35 +5,16 @@ import java.awt.*;
 
 class JFrameAbout extends JFrame{
     private JPanel jPanelAboutMain;
-    private JLabel jLabelTitle, jLabelName,jLabelEmail,jLabelSite;
+    private JLabel jLabelTitle, jLabelName,jLabelEmail,jLabelSite, labelIcon;
     private final Font fontLabelTitle = new Font("Arial", Font.BOLD, 18);
     private final Font fontLabelDetails = new Font("Arial", Font.PLAIN, 12);
-    private ImageIcon icon;
-    private JLabel labelIcon;
-
-    JFrameAbout(){
-        setJPanelAboutMain();
-        addComponentsToJFrameAbout();
-        setJFrameAbout();
-    }
-
-    private void setJLabelIcon() {
-        createIcon();
-        labelIcon = new JLabel();
-        labelIcon.setIcon(icon);
-    }
-
-    private void createIcon() {
-        icon = new ImageIcon(getClass().getResource(
+    private final ImageIcon icon = new ImageIcon(getClass().getResource(
                 "/io/github/reginildo/" +
                         "tomato/images/icon.png"));
-    }
 
-    private void addComponentsToJFrameAbout() {
+    JFrameAbout(){
+        setJPanels();
         add(jPanelAboutMain);
-    }
-
-    private void setJFrameAbout() {
         setJLabelIcon();
         setContentPane(jPanelAboutMain);
         add(labelIcon);
@@ -46,34 +27,27 @@ class JFrameAbout extends JFrame{
         setVisible(true);
     }
 
-    private void addComponentsToJPanelAboutMain() {
+    private void setJLabelIcon() {
+        labelIcon = new JLabel();
+        labelIcon.setIcon(icon);
+    }
+
+    private void setJPanels() {
+        setJLabels();
+        jPanelAboutMain = new JPanel();
         jPanelAboutMain.add(jLabelTitle);
         jPanelAboutMain.add(jLabelName);
         jPanelAboutMain.add(jLabelEmail);
         jPanelAboutMain.add(jLabelSite);
     }
 
-    private void setJLabelDetails() {
-        jLabelName.setFont(fontLabelDetails);
-    }
-
-    private void setJLabelTitle() {
-        createJLabels();
+    private void setJLabels() {
+        jLabelTitle = new JLabel("Tomato - Pomodoro Timer");
         jLabelTitle.setText("Tomato - Pomodoro Timer");
         jLabelTitle.setFont(fontLabelTitle);
-    }
-
-    private void createJLabels() {
-        jLabelTitle = new JLabel("Tomato - Pomodoro Timer");
         jLabelName = new JLabel("Developer: Reginildo Sousa");
+        jLabelName.setFont(fontLabelDetails);
         jLabelEmail = new JLabel("Email: reginildosousa01@gmail.com");
         jLabelSite = new JLabel("Website: https://reginildo.github.io");
-    }
-
-    private void setJPanelAboutMain() {
-        setJLabelTitle();
-        setJLabelDetails();
-        jPanelAboutMain = new JPanel();
-        addComponentsToJPanelAboutMain();
     }
 }
