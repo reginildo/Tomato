@@ -3,8 +3,8 @@
 ### Free and multi-platform Software to use with the Pomodoro technique.
 
 #### Screeshot
-![Tomato main](images/projetc_tomato1.png)
-![Tomato settings](images/projetc_tomato2.png)
+![Tomato main](/images/projetc_tomato1.png)
+![Tomato settings](/images/projetc_tomato2.png)
 
 #### Platforms:
 - Windows XP or higher
