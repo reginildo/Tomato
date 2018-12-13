@@ -2,6 +2,10 @@
 
 ### Free and multi-platform Software to use with the Pomodoro technique.
 
+#### Screeshot
+![Tomato main](projetc_tomato1.png)
+![Tomato settings](projetc_tomato2.png)
+
 #### Platforms:
 - Windows XP or higher
 - GNU/Linux.
