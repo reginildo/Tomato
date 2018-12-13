@@ -22,7 +22,7 @@
 - Spanish
 - Klingon
 #### Download
-Click here[Download Tomato](https://drive.google.com/file/d/1lXL2nGChXw0VZUHi_pm6jmKKnsJw94se/view?usp=sharing) to download.
+Click [here](https://drive.google.com/file/d/1lXL2nGChXw0VZUHi_pm6jmKKnsJw94se/view?usp=sharing) to download.
 
 ### Licence
 ![GPLv3](gplv3-with-text-136x68.png) 
