@@ -18,11 +18,14 @@ package io.github.reginildo.tomato;
 
 class Tomato {
 
+    private static int defaultCiclosTime = 4;
     private static int defaultLongBreakTime = 15;
     private static int defaultPomodoroTime = 25;
     private static int defaultShortBreakTime = 5;
-    private static int longBreakTime, pomodoroTime, shortBreakTime;
-    private static int ciclosTime = 4;
+    private static int ciclosTime;
+    private static int longBreakTime;
+    private static int pomodoroTime;
+    private static int shortBreakTime;
 
     static int getDefaultLongBreakTime() {
         return defaultLongBreakTime;
@@ -48,10 +51,11 @@ class Tomato {
         Tomato.defaultShortBreakTime = defaultShortBreakTime;
     }
 
-    Tomato(int pomodo, int shortBreakTime, int longBreak) {
-        setLongBreakTime(longBreak);
-        setPomodoroTime(pomodo);
-        setShortBreakTime(shortBreakTime);
+    Tomato(int pCiclosTime, int pPomodo, int pShortBreakTime, int pLongBreak) {
+        setCiclosTime(pCiclosTime);
+        setLongBreakTime(pLongBreak);
+        setPomodoroTime(pPomodo);
+        setShortBreakTime(pShortBreakTime);
     }
 
     static int getLongBreakTime() {
@@ -78,11 +82,19 @@ class Tomato {
         shortBreakTime = timeOfShortBreak;
     }
 
+    public static int getDefaultCiclosTime() {
+        return defaultCiclosTime;
+    }
+
+    public static void setDefaultCiclosTime(int timeOfCiclos) {
+        defaultCiclosTime = timeOfCiclos;
+    }
+
     public static int getCiclosTime() {
         return ciclosTime;
     }
 
-    public static void setCiclosTime(int timeOfCiclos) {
-        ciclosTime = timeOfCiclos;
+    public static void setCiclosTime(int ciclosTime) {
+        Tomato.ciclosTime = ciclosTime;
     }
 }
