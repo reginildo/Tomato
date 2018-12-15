@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.reginildo.tomato;
+package io.github.reginildo.tomato.main;
+
+import io.github.reginildo.tomato.view.JFrameTomatoMain;
 
 import javax.swing.*;
 

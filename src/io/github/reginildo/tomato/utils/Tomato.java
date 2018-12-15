@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.reginildo.tomato;
+package io.github.reginildo.tomato.utils;
 
-class Tomato {
+public class Tomato {
 
     private static int defaultCiclosTime = 4;
     private static int defaultLongBreakTime = 15;
@@ -27,58 +27,58 @@ class Tomato {
     private static int pomodoroTime;
     private static int shortBreakTime;
 
-    static int getDefaultLongBreakTime() {
+    public static int getDefaultLongBreakTime() {
         return defaultLongBreakTime;
     }
 
-    static void setDefaultLongBreakTime(int defaultLongBreakTime) {
+    public static void setDefaultLongBreakTime(int defaultLongBreakTime) {
         Tomato.defaultLongBreakTime = defaultLongBreakTime;
     }
 
-    static int getDefaultPomodoroTime() {
+    public static int getDefaultPomodoroTime() {
         return defaultPomodoroTime;
     }
 
-    static void setDefaultPomodoroTime(int defaultPomodoroTime) {
+    public static void setDefaultPomodoroTime(int defaultPomodoroTime) {
         Tomato.defaultPomodoroTime = defaultPomodoroTime;
     }
 
-    static int getDefaultShortBreakTime() {
+    public static int getDefaultShortBreakTime() {
         return defaultShortBreakTime;
     }
 
-    static void setDefaultShortBreakTime(int defaultShortBreakTime) {
+    public static void setDefaultShortBreakTime(int defaultShortBreakTime) {
         Tomato.defaultShortBreakTime = defaultShortBreakTime;
     }
 
-    Tomato(int pCiclosTime, int pPomodo, int pShortBreakTime, int pLongBreak) {
+    public Tomato(int pCiclosTime, int pPomodo, int pShortBreakTime, int pLongBreak) {
         setCiclosTime(pCiclosTime);
         setLongBreakTime(pLongBreak);
         setPomodoroTime(pPomodo);
         setShortBreakTime(pShortBreakTime);
     }
 
-    static int getLongBreakTime() {
+    public static int getLongBreakTime() {
         return longBreakTime;
     }
 
-    static void setLongBreakTime(int timeOfLongBreak) {
+    public static void setLongBreakTime(int timeOfLongBreak) {
         longBreakTime = timeOfLongBreak;
     }
 
-    static int getPomodoroTime() {
+    public static int getPomodoroTime() {
         return pomodoroTime;
     }
 
-    static void setPomodoroTime(int timeOfPomodoro) {
+    public static void setPomodoroTime(int timeOfPomodoro) {
         pomodoroTime = timeOfPomodoro;
     }
 
-    static int getShortBreakTime() {
+    public static int getShortBreakTime() {
         return shortBreakTime;
     }
 
-    static void setShortBreakTime(int timeOfShortBreak) {
+    public static void setShortBreakTime(int timeOfShortBreak) {
         shortBreakTime = timeOfShortBreak;
     }
 

@@ -14,8 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.reginildo.tomato;
+package io.github.reginildo.tomato.view;
 
+import io.github.reginildo.tomato.utils.Locales;
+import io.github.reginildo.tomato.main.Main;
+import io.github.reginildo.tomato.utils.Tomato;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -30,7 +33,7 @@ import java.util.Timer;
  * JFrame pricipal do aplicativo.
  * */
 
-final class JFrameTomatoMain extends JFrame {
+public final class JFrameTomatoMain extends JFrame {
 
     private Font fontTahoma = new Font("Tahoma", Font.PLAIN, 18);
     private Font fontArial = new Font("Arial", Font.BOLD, 85);
@@ -39,7 +42,7 @@ final class JFrameTomatoMain extends JFrame {
     private static boolean showTimeView;
     private static JLabel jLabelHora;
     static ResourceBundle resourceBundle = ResourceBundle
-            .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
+            .getBundle("io.github.reginildo.tomato/Labels", Locales.getLocaleDefault());
     private JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
     private int confirmDialog;
     private int startOver;
@@ -61,7 +64,7 @@ final class JFrameTomatoMain extends JFrame {
     static JPanel jPanelButtons, jPanelTimer, jPanelMainInfo, jPanelDetails;
     private ImageIcon imageWork, imageEnjoy, imageSuccess, imagePrepared;
 
-    JFrameTomatoMain() {
+    public JFrameTomatoMain() {
         initThreadHour();
         setInitTimerStart(); // todo this
         setImageIcons();
@@ -141,7 +144,7 @@ final class JFrameTomatoMain extends JFrame {
     }
 
     @Contract(pure = true)
-    static boolean isShowTimeView() {
+    private static boolean isShowTimeView() {
         return showTimeView;
     }
 
@@ -220,7 +223,6 @@ final class JFrameTomatoMain extends JFrame {
         buttonGroupLanguages.add(radioButtonMenuItemEN_US);
         buttonGroupLanguages.add(radioButtonMenuItemKlingon);
     }
-
 
 
     private void setJRadioButtonMenuItens() {
@@ -358,18 +360,22 @@ final class JFrameTomatoMain extends JFrame {
         return ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0));
     }
 
+    @Contract(pure = true)
     private ImageIcon getImageWork() {
         return imageWork;
     }
 
+    @Contract(pure = true)
     private ImageIcon getImageEnjoy() {
         return imageEnjoy;
     }
 
+    @Contract(pure = true)
     private ImageIcon getImageSuccess() {
         return imageSuccess;
     }
 
+    @Contract(pure = true)
     ImageIcon getImagePrepared() {
         return imagePrepared;
     }
@@ -466,7 +472,7 @@ final class JFrameTomatoMain extends JFrame {
         public void actionPerformed(ActionEvent e) {
             resourceBundle = ResourceBundle.
                     getBundle("io.github.reginildo.tomato/Labels",
-                            Locales.locale_pt_BR);
+                            Locales.getLocale_pt_BR());
             resourceBundle.keySet();
             refreshLanguage();
         }
@@ -476,7 +482,7 @@ final class JFrameTomatoMain extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             resourceBundle = ResourceBundle.
-                    getBundle("io.github.reginildo.tomato/Labels", Locales.locale_en_US);
+                    getBundle("io.github.reginildo.tomato/Labels", Locales.getLocale_en_US());
             resourceBundle.keySet();
             refreshLanguage();
         }
@@ -487,7 +493,7 @@ final class JFrameTomatoMain extends JFrame {
         public void actionPerformed(ActionEvent e) {
             resourceBundle = ResourceBundle.
                     getBundle("io.github.reginildo.tomato/Labels",
-                            Locales.locale_tlh);
+                            Locales.getLocale_tlh());
             resourceBundle.keySet();
             refreshLanguage();
         }
@@ -580,7 +586,7 @@ final class JFrameTomatoMain extends JFrame {
                 timer.cancel();
                 if (isTheLastOneCiclo()) {
                     startOver = JOptionPane.showConfirmDialog(null,
-                            String.format("\nParabéns!!! Você concluiu! \niniciar um novo ciclo?"));
+                            "\nParabéns!!! Você concluiu! \niniciar um novo ciclo?");
                     if (startOver == JOptionPane.YES_OPTION) {
                         Tomato.setCiclosTime(JFrameSettings.getjSliderCiclos().getValue());
                         Tomato.setLongBreakTime(JFrameSettings.getjSliderLongBreak().getValue());
@@ -608,8 +614,8 @@ final class JFrameTomatoMain extends JFrame {
         }
     }
 
+    @Contract(pure = true)
     private boolean isTheLastOneCiclo() {
-
         return Tomato.getCiclosTime() == 1;
     }
 

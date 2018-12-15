@@ -1,9 +1,9 @@
-package io.github.reginildo.tomato;
+package io.github.reginildo.tomato.view;
 
 import javax.swing.*;
 import java.awt.*;
 
-class JFrameAbout extends JFrame{
+final class JFrameAbout extends JFrame{
     private JPanel jPanelAboutMain;
     private JLabel jLabelTitle, jLabelName,jLabelEmail,jLabelSite, labelIcon;
     private final Font fontLabelTitle = new Font("Arial", Font.BOLD, 18);

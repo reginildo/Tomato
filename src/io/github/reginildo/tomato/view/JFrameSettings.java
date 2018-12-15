@@ -1,4 +1,9 @@
-package io.github.reginildo.tomato;
+package io.github.reginildo.tomato.view;
+
+import io.github.reginildo.tomato.utils.Locales;
+import io.github.reginildo.tomato.main.Main;
+import io.github.reginildo.tomato.utils.Tomato;
+import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -8,10 +13,10 @@ import java.awt.event.*;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 
-class JFrameSettings extends JFrame {
+final class JFrameSettings extends JFrame {
 
     private static ResourceBundle resourceBundle = ResourceBundle
-            .getBundle("io.github.reginildo.tomato/Labels", Locales.localeDefault);
+            .getBundle("io.github.reginildo.tomato/Labels", Locales.getLocaleDefault());
     private JPanel jPanelSettings;
     private static JButton jButtonSairSettings;
     static Tomato tomato = new Tomato(Tomato.getDefaultCiclosTime(),
@@ -47,19 +52,19 @@ class JFrameSettings extends JFrame {
         setVisible(false);
     }
 
-    public static JSlider getjSliderCiclos() {
+    public final static JSlider getjSliderCiclos() {
         return jSliderCiclos;
     }
 
-    public static JSlider getjSliderTomato() {
+    public final static JSlider getjSliderTomato() {
         return jSliderTomato;
     }
 
-    public static JSlider getjSliderLongBreak() {
+    public final static JSlider getjSliderLongBreak() {
         return jSliderLongBreak;
     }
 
-    public static JSlider getjSliderShortBreak() {
+    public final static JSlider getjSliderShortBreak() {
         return jSliderShortBreak;
     }
 
@@ -92,7 +97,7 @@ class JFrameSettings extends JFrame {
 
     private void setJPanels() {
         jPanelSettings = new JPanel();
-        jPanelSettings.setBounds(20,20,300,300);
+        jPanelSettings.setBounds(20, 20, 300, 300);
         jPanelSettings.setLayout(new BoxLayout(jPanelSettings,
                 BoxLayout.Y_AXIS));
         jPanelSettings.add(jLabelInfo);
@@ -109,7 +114,7 @@ class JFrameSettings extends JFrame {
 
     private void setJSliders() {
         jSliderCiclos = new JSlider(
-                SwingConstants.HORIZONTAL,1,8,4);
+                SwingConstants.HORIZONTAL, 1, 8, 4);
         getjSliderCiclos().setMajorTickSpacing(1);
         getjSliderCiclos().setMinorTickSpacing(1);
         getjSliderCiclos().setPaintTicks(true);
@@ -159,17 +164,17 @@ class JFrameSettings extends JFrame {
         jLabelInfo.setFont(fontInfoSettings);
     }
 
-    private class JButtonSairSettingsLintener implements ActionListener{
+    private class JButtonSairSettingsLintener implements ActionListener {
         //todo nao permitir valores zerados
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if ((JFrameSettings.jSliderTomato.getValue() == 0)||
+            if ((JFrameSettings.jSliderTomato.getValue() == 0) ||
                     (JFrameSettings.getjSliderLongBreak().getValue() == 0)
-                    || (JFrameSettings.getjSliderShortBreak().getValue() == 0)){
+                    || (JFrameSettings.getjSliderShortBreak().getValue() == 0)) {
                 JOptionPane.showMessageDialog(null, "Insira algum valor acima de zero.");
 
-            }else {
+            } else {
                 JFrameSettings.setTomatoTimeValues();
                 JFrameTomatoMain.jLabelToImageIconSmileys.setIcon(Main.jFrameTomatoMain.getImagePrepared());
                 setVisible(false);
@@ -188,7 +193,7 @@ class JFrameSettings extends JFrame {
         }
     }
 
-    private class JButtonSairSettingsMotionListener implements MouseMotionListener{
+    private class JButtonSairSettingsMotionListener implements MouseMotionListener {
 
         @Override
         public void mouseDragged(MouseEvent e) {
@@ -203,7 +208,7 @@ class JFrameSettings extends JFrame {
         }
     }
 
-    private class JSliderLongBreakMotionListener implements MouseMotionListener{
+    private class JSliderLongBreakMotionListener implements MouseMotionListener {
 
         @Override
         public void mouseDragged(MouseEvent e) {
@@ -220,7 +225,7 @@ class JFrameSettings extends JFrame {
         }
     }
 
-    private class JSliderShortBreakMotionListener implements MouseMotionListener{
+    private class JSliderShortBreakMotionListener implements MouseMotionListener {
 
         @Override
         public void mouseDragged(MouseEvent e) {
@@ -236,7 +241,7 @@ class JFrameSettings extends JFrame {
         }
     }
 
-    private class JSliderTomatoMotionListener implements MouseMotionListener{
+    private class JSliderTomatoMotionListener implements MouseMotionListener {
 
         @Override
         public void mouseDragged(MouseEvent e) {
@@ -252,7 +257,7 @@ class JFrameSettings extends JFrame {
         }
     }
 
-    private class JSliderTomatoChangeListener implements ChangeListener{
+    private class JSliderTomatoChangeListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
             String valorTomato = resourceBundle.getString("stringTempoPomodoro")
@@ -263,7 +268,7 @@ class JFrameSettings extends JFrame {
         }
     }
 
-    private class JSliderShortBreakChangeListener implements ChangeListener{
+    private class JSliderShortBreakChangeListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
             JFrameSettings.stringValorShortBreak = JFrameSettings.stringIntervaloCurto
@@ -287,7 +292,7 @@ class JFrameSettings extends JFrame {
         }
     }
 
-    private class JSliderCiclosChangeListener implements ChangeListener{
+    private class JSliderCiclosChangeListener implements ChangeListener {
 
         @Override
         public void stateChanged(ChangeEvent e) {
