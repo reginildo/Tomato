@@ -32,6 +32,7 @@ class JFrameSettings extends JFrame {
             Font.BOLD, 26);
 
     JFrameSettings() {
+        Main.setLookAndFeel();
         setJLabels();
         setJSliders();
         setJButtonSair();
@@ -178,6 +179,7 @@ class JFrameSettings extends JFrame {
                     JFrameTomatoMain.timer.cancel();
                 }
                 setButtonsOnExit();
+                JFrameTomatoMain.jPanelDetails.setVisible(false);
                 JFrameTomatoMain.jLabelTimeCounterView.setText(
                         JFrameTomatoMain.format.format(JFrameTomatoMain.timerStart.getTime()));
                 setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
