@@ -16,14 +16,19 @@
  */
 package io.github.reginildo.tomato.view;
 
+import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
 import io.github.reginildo.tomato.utils.Locales;
-import io.github.reginildo.tomato.main.Main;
 import io.github.reginildo.tomato.utils.Tomato;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import org.jetbrains.annotations.Contract;
+import com.alee.laf.WebLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,11 +39,27 @@ import java.util.Timer;
  * */
 
 public final class JFrameTomatoMain extends JFrame {
+    public static final String LOOK_AND_FELL_NIMBUS = "Nimbus";
+    public static final String LOOK_AND_FEEL_METAL = "Metal";
+    public static final String LOOK_AND_FEEL_MOTIF = "Motif";
+    public static final String LOOK_AND_FEEL_SYSTEM = "System";
+    public static final String LOOK_AND_FEEL_GTK = "GTK";
+    public static final String LOOK_AND_FEEL_WebLaf = "WebLaf";
+
+    // Specify the look and feel to use by defining the LOOKANDFEEL constant
+    // Valid values are: null (use the default), "Metal", "System", "Motif",
+    // and "GTK"
+    final static String LOOKANDFEEL = "WebLaf";
+
+    // If you choose the Metal L&F, you can also choose a theme.
+    // Specify the theme to use by defining the THEME constant
+    // Valid values are: "DefaultMetal", "Ocean",  and "Test"
+    final static String THEME = "Test";
 
     private Font fontTahoma = new Font("Tahoma", Font.PLAIN, 18);
     private Font fontArial = new Font("Arial", Font.BOLD, 85);
 
-    static JLabel jLabelToImageIconSmileys, jLabelTimeCounterView, jLabelShowCiclos, jLabelFoco;
+    static WebLabel jLabelToImageIconSmileys, jLabelTimeCounterView, jLabelShowCiclos, jLabelFoco;
     private static boolean showTimeView;
     private static JLabel jLabelHora;
     static ResourceBundle resourceBundle = ResourceBundle
@@ -51,7 +72,7 @@ public final class JFrameTomatoMain extends JFrame {
     private boolean timeToLongBreak;
     private boolean timeToPomodoro;
     static Timer timer = null;
-    static JButton jButtonStart, jButtonPause, jButtonReset;
+    static WebButton jButtonStart, jButtonPause, jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout;
     private static JFrameSettings jFrameSettings = new JFrameSettings();
     static String stringValorLongBreak;
@@ -63,12 +84,14 @@ public final class JFrameTomatoMain extends JFrame {
     private JMenuBar jMenuBar;
     static JPanel jPanelButtons, jPanelTimer, jPanelMainInfo, jPanelDetails;
     private ImageIcon imageWork, imageEnjoy, imageSuccess, imagePrepared;
+    private Player player;
+
 
     public JFrameTomatoMain() {
+        invokeAndShow();
         initThreadHour();
-        setInitTimerStart(); // todo this
+        setInitTimerStart();
         setImageIcons();
-        Main.setLookAndFeel();
         setJLabels();
         setJPanels();
         setThisJMenuBar();
@@ -88,7 +111,22 @@ public final class JFrameTomatoMain extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void setThisJMenuBar() {
+    private void invokeAndShow() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    //UIManager.setLookAndFeel(new MetalLookAndFeel());
+                    //UIManager.setLookAndFeel(new WindowsLookAndFeel());
+                    UIManager.setLookAndFeel(new WebLookAndFeel());
+                } catch (UnsupportedLookAndFeelException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+        private void setThisJMenuBar() {
         setJMenus();
         jMenuBar = new JMenuBar();
         jMenuBar.setBackground(Color.orange);
@@ -102,17 +140,17 @@ public final class JFrameTomatoMain extends JFrame {
     private void setJLabels() {
 
         jLabelHora = new JLabel();
-        jLabelToImageIconSmileys = new JLabel();
+        jLabelToImageIconSmileys = new WebLabel();
         jLabelToImageIconSmileys.setIcon(getImagePrepared());
         jLabelToImageIconSmileys.setVisible(true);
-        jLabelTimeCounterView = new JLabel("00:00");
+        jLabelTimeCounterView = new WebLabel("00:00");
         jLabelTimeCounterView.setFont(fontArial);
         jLabelTimeCounterView.setText(format.format(timerStart.getTime()));
         jLabelTimeCounterView.setForeground(Color.RED);
-        jLabelShowCiclos = new JLabel();
+        jLabelShowCiclos = new WebLabel();
         jLabelShowCiclos.setFont(fontTahoma);
         jLabelShowCiclos.setVisible(false);
-        jLabelFoco = new JLabel("Mantenha o foco!");
+        jLabelFoco = new WebLabel("Mantenha o foco!");
         jLabelFoco.setFont(fontTahoma);
         jLabelFoco.setVisible(false);
     }
@@ -181,15 +219,15 @@ public final class JFrameTomatoMain extends JFrame {
     }
 
     private void setJButtons() {
-        jButtonStart = new JButton(resourceBundle.getString("buttonStart"));
+        jButtonStart = new WebButton(resourceBundle.getString("buttonStart"));
         jButtonStart.addActionListener(new JButtonStartListener());
         jButtonStart.setMnemonic(KeyEvent.VK_S);
         jButtonStart.addMouseMotionListener(new JButtonStartMotionListener());
-        jButtonPause = new JButton(resourceBundle.getString("buttonPause"));
+        jButtonPause = new WebButton(resourceBundle.getString("buttonPause"));
         jButtonPause.addActionListener(new JButtonPauseListener());
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.addMouseMotionListener(new JButtonPauseMotionListener());
-        jButtonReset = new JButton(resourceBundle.getString("buttonReset"));
+        jButtonReset = new WebButton(resourceBundle.getString("buttonReset"));
         jButtonReset.addActionListener(new JButtonResetListener());
         jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonReset.addMouseMotionListener(new JButtonResetMotionListener());
@@ -202,10 +240,12 @@ public final class JFrameTomatoMain extends JFrame {
         jMenuItemSettings.addMouseMotionListener(new JMenuItemSettingsMotionListener());
         jMenuItemSettings.addActionListener(new JMenuItemSettingsListener());
         jMenuItemSettings.setMnemonic(KeyEvent.VK_E);
+
         jMenuItemQuit = new JMenuItem("Quit");
         jMenuItemQuit.addActionListener(new JMenuItemQuitListener());
         jMenuItemQuit.addMouseMotionListener(new JMenuItemQuitMotionListener());
         jMenuItemQuit.setMnemonic(KeyEvent.VK_Q);
+
         jMenuItemAbout = new JMenuItem("About");
         jMenuItemAbout.addActionListener(new JMenuItemAboutListener());
     }
@@ -214,6 +254,7 @@ public final class JFrameTomatoMain extends JFrame {
         setVisible(false);
         repaint();
         setVisible(true);
+        //Swing
     }
 
     private void setButtonGroupLanguages() {
@@ -255,6 +296,8 @@ public final class JFrameTomatoMain extends JFrame {
         jMenuHelp.add(jMenuItemAbout);
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
+
+
     }
 
     private void startPomodoroTimer() {
@@ -409,7 +452,10 @@ public final class JFrameTomatoMain extends JFrame {
     private class JButtonStartListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+//            TickTackThread tickTackThread = new TickTackThread();
+//            tickTackThread.start();
             if (jButtonStart.isEnabled()) {
+
                 Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
                 jLabelToImageIconSmileys.setIcon(getImageWork());
                 jButtonStart.setEnabled(false);
@@ -448,7 +494,6 @@ public final class JFrameTomatoMain extends JFrame {
     private class JMenuItemSettingsListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // todo mostrar visivel aqui e construir antes
             jFrameSettings.setVisible(true);
         }
     }
@@ -581,33 +626,41 @@ public final class JFrameTomatoMain extends JFrame {
         public void run() {
             setTimerStartAndTimeCounterView();
             if (isTheEnd()) {
-                playAlarm();
+                RingThread ringThread = new RingThread();
+                ringThread.start();
                 countInterations++;
                 timer.cancel();
                 if (isTheLastOneCiclo()) {
                     startOver = JOptionPane.showConfirmDialog(null,
                             "\nParabéns!!! Você concluiu! \niniciar um novo ciclo?");
                     if (startOver == JOptionPane.YES_OPTION) {
+                        player.close();
                         Tomato.setCiclosTime(JFrameSettings.getjSliderCiclos().getValue());
                         Tomato.setLongBreakTime(JFrameSettings.getjSliderLongBreak().getValue());
                         Tomato.setShortBreakTime(JFrameSettings.getjSliderShortBreak().getValue());
                         JFrameTomatoMain.countInterations = 1;
                         startPomodoroTimer();
+                    } else {
+                        player.close();
                     }
                 } else {
                     confirmDialog = JOptionPane.showConfirmDialog(
                             null, "Hora de relaxar.\nIniciar o intervalo curto?");
                     if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToShortBreak())) {
+                        player.close();
                         jLabelToImageIconSmileys.setIcon(getImageEnjoy());
                         Tomato.setCiclosTime(Tomato.getCiclosTime() - 1);
                         setTimeToLongBreak(false);
                         setTimeToPomodoro(false);
                         startShortBreakTimer();
                     } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                        player.close();
                         jLabelToImageIconSmileys.setIcon(getImageSuccess());
                         setTimeToShortBreak(false);
                         setTimeToPomodoro(false);
                         startLongBreakTimer();
+                    } else {
+                        player.close();
                     }
                 }
             }
@@ -625,17 +678,21 @@ public final class JFrameTomatoMain extends JFrame {
         public void run() {
             setTimerStartAndTimeCounterView();
             if (isTheEnd()) {
-                playAlarm();
+                RingThread ringThread = new RingThread();
+                ringThread.start();
+                //playAlarm();
                 countInterations++;
                 timer.cancel();
                 confirmDialog = JOptionPane.showConfirmDialog(
                         null, "Fim do short break.\nIniciar o novo pomodoro?");
                 if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())) {
+                    player.close();
                     jLabelToImageIconSmileys.setIcon(getImageWork());
                     setTimeToShortBreak(false);
                     setTimeToLongBreak(false);
                     startPomodoroTimer();
                 } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                    player.close();
                     jLabelToImageIconSmileys.setIcon(getImageSuccess());
                     setTimeToShortBreak(false);
                     setTimeToPomodoro(false);
@@ -651,18 +708,49 @@ public final class JFrameTomatoMain extends JFrame {
         public void run() {
             setTimerStartAndTimeCounterView();
             if (isTheEnd()) {
-                playAlarm();
+                RingThread ringThread = new RingThread();
+                ringThread.start();
+                //playAlarm();
                 countInterations++;
                 timer.cancel();
                 confirmDialog = JOptionPane.showConfirmDialog(
                         null, "Fim do Long Break.\nIniciar um novo ciclo?");
                 if (confirmDialog == JOptionPane.YES_OPTION) {
+                    player.close();
                     jLabelToImageIconSmileys.setIcon(getImageWork());
                     countInterations = 1;
                     setTimeToLongBreak(false);
                     setTimeToShortBreak(false);
                     startPomodoroTimer();
                 }
+            }
+        }
+    }
+
+    class TickTackThread extends Thread {
+        public void run() {
+            try {
+                String audioTickTack = "ticking-noise.mp3";
+                InputStream inputStream = this.getClass().getResourceAsStream(
+                        "/io/github/reginildo/tomato/audio/" + audioTickTack);
+                player = new Player(inputStream);
+                player.play();
+            } catch (JavaLayerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class RingThread extends Thread {
+        public void run() {
+            try {
+                String audioRing = "clock-ringing.mp3";
+                InputStream inputStream = this.getClass().getResourceAsStream(
+                        "/io/github/reginildo/tomato/audio/" + audioRing);
+                player = new Player(inputStream);
+                player.play();
+            } catch (JavaLayerException e) {
+                e.printStackTrace();
             }
         }
     }
