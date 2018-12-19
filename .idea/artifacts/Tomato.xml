@@ -7,6 +7,7 @@
       </element>
       <element id="module-output" name="tomato-master" />
       <element id="extracted-dir" path="$USER_HOME$/Desktop/jlayer1.0.1/JLayer1.0.1/jl1.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/weblaf-complete-1.29.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

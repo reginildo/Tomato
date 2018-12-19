@@ -16,17 +16,16 @@
  */
 package io.github.reginildo.tomato.view;
 
-import io.github.reginildo.tomato.test.TestTheme;
+import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
 import io.github.reginildo.tomato.utils.Locales;
 import io.github.reginildo.tomato.utils.Tomato;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.jetbrains.annotations.Contract;
+import com.alee.laf.WebLookAndFeel;
 
 import javax.swing.*;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.OceanTheme;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
@@ -40,26 +39,27 @@ import java.util.Timer;
  * */
 
 public final class JFrameTomatoMain extends JFrame {
+    public static final String LOOK_AND_FELL_NIMBUS = "Nimbus";
+    public static final String LOOK_AND_FEEL_METAL = "Metal";
+    public static final String LOOK_AND_FEEL_MOTIF = "Motif";
+    public static final String LOOK_AND_FEEL_SYSTEM = "System";
+    public static final String LOOK_AND_FEEL_GTK = "GTK";
+    public static final String LOOK_AND_FEEL_WebLaf = "WebLaf";
+
     // Specify the look and feel to use by defining the LOOKANDFEEL constant
     // Valid values are: null (use the default), "Metal", "System", "Motif",
     // and "GTK"
-    final static String LOOKANDFEEL = "GTK";
+    final static String LOOKANDFEEL = "WebLaf";
 
     // If you choose the Metal L&F, you can also choose a theme.
     // Specify the theme to use by defining the THEME constant
     // Valid values are: "DefaultMetal", "Ocean",  and "Test"
     final static String THEME = "Test";
 
-    public static final String LOOK_AND_FELL_NIMBUS = "Nimbus";
-    public static final String LOOK_AND_FEEL_METAL = "Metal";
-    public static final String LOOK_AND_FEEL_MOTIF = "Motif";
-    public static final String LOOK_AND_FEEL_SYSTEM = "System";
-    public static final String LOOK_AND_FEEL_GTK = "GTK";
-
     private Font fontTahoma = new Font("Tahoma", Font.PLAIN, 18);
     private Font fontArial = new Font("Arial", Font.BOLD, 85);
 
-    static JLabel jLabelToImageIconSmileys, jLabelTimeCounterView, jLabelShowCiclos, jLabelFoco;
+    static WebLabel jLabelToImageIconSmileys, jLabelTimeCounterView, jLabelShowCiclos, jLabelFoco;
     private static boolean showTimeView;
     private static JLabel jLabelHora;
     static ResourceBundle resourceBundle = ResourceBundle
@@ -72,16 +72,15 @@ public final class JFrameTomatoMain extends JFrame {
     private boolean timeToLongBreak;
     private boolean timeToPomodoro;
     static Timer timer = null;
-    static JButton jButtonStart, jButtonPause, jButtonReset;
-    private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout,
-            jMenuItemLAFMetal,jMenuItemLAFNimbus, jMenuItemLAFMotif;
+    static WebButton jButtonStart, jButtonPause, jButtonReset;
+    private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout;
     private static JFrameSettings jFrameSettings = new JFrameSettings();
     static String stringValorLongBreak;
     static Calendar timerStart = Calendar.getInstance();
     static Date timerPause;
     static final SimpleDateFormat format = new SimpleDateFormat(
             "mm:ss");
-    private JMenu jMenuFile, jMenuLanguage, jMenuLookAndFeel, jMenuHelp;
+    private JMenu jMenuFile, jMenuLanguage, jMenuHelp;
     private JMenuBar jMenuBar;
     static JPanel jPanelButtons, jPanelTimer, jPanelMainInfo, jPanelDetails;
     private ImageIcon imageWork, imageEnjoy, imageSuccess, imagePrepared;
@@ -93,7 +92,6 @@ public final class JFrameTomatoMain extends JFrame {
         initThreadHour();
         setInitTimerStart();
         setImageIcons();
-        //setLookAndFeel(aplicationLookAndFeelNimbus);
         setJLabels();
         setJPanels();
         setThisJMenuBar();
@@ -116,15 +114,17 @@ public final class JFrameTomatoMain extends JFrame {
     private void invokeAndShow() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI();
+                try {
+                    //UIManager.setLookAndFeel(new MetalLookAndFeel());
+                    //UIManager.setLookAndFeel(new WindowsLookAndFeel());
+                    UIManager.setLookAndFeel(new WebLookAndFeel());
+                } catch (UnsupportedLookAndFeelException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    private static void createAndShowGUI() {
-        //Set the look and feel.
-        initLookAndFeel();
-    }
 
         private void setThisJMenuBar() {
         setJMenus();
@@ -134,24 +134,23 @@ public final class JFrameTomatoMain extends JFrame {
         jMenuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         jMenuBar.add(jMenuFile);
         jMenuBar.add(jMenuLanguage);
-        jMenuBar.add(jMenuLookAndFeel);
         jMenuBar.add(jMenuHelp);
     }
 
     private void setJLabels() {
 
         jLabelHora = new JLabel();
-        jLabelToImageIconSmileys = new JLabel();
+        jLabelToImageIconSmileys = new WebLabel();
         jLabelToImageIconSmileys.setIcon(getImagePrepared());
         jLabelToImageIconSmileys.setVisible(true);
-        jLabelTimeCounterView = new JLabel("00:00");
+        jLabelTimeCounterView = new WebLabel("00:00");
         jLabelTimeCounterView.setFont(fontArial);
         jLabelTimeCounterView.setText(format.format(timerStart.getTime()));
         jLabelTimeCounterView.setForeground(Color.RED);
-        jLabelShowCiclos = new JLabel();
+        jLabelShowCiclos = new WebLabel();
         jLabelShowCiclos.setFont(fontTahoma);
         jLabelShowCiclos.setVisible(false);
-        jLabelFoco = new JLabel("Mantenha o foco!");
+        jLabelFoco = new WebLabel("Mantenha o foco!");
         jLabelFoco.setFont(fontTahoma);
         jLabelFoco.setVisible(false);
     }
@@ -220,15 +219,15 @@ public final class JFrameTomatoMain extends JFrame {
     }
 
     private void setJButtons() {
-        jButtonStart = new JButton(resourceBundle.getString("buttonStart"));
+        jButtonStart = new WebButton(resourceBundle.getString("buttonStart"));
         jButtonStart.addActionListener(new JButtonStartListener());
         jButtonStart.setMnemonic(KeyEvent.VK_S);
         jButtonStart.addMouseMotionListener(new JButtonStartMotionListener());
-        jButtonPause = new JButton(resourceBundle.getString("buttonPause"));
+        jButtonPause = new WebButton(resourceBundle.getString("buttonPause"));
         jButtonPause.addActionListener(new JButtonPauseListener());
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.addMouseMotionListener(new JButtonPauseMotionListener());
-        jButtonReset = new JButton(resourceBundle.getString("buttonReset"));
+        jButtonReset = new WebButton(resourceBundle.getString("buttonReset"));
         jButtonReset.addActionListener(new JButtonResetListener());
         jButtonReset.setMnemonic(KeyEvent.VK_R);
         jButtonReset.addMouseMotionListener(new JButtonResetMotionListener());
@@ -249,13 +248,6 @@ public final class JFrameTomatoMain extends JFrame {
 
         jMenuItemAbout = new JMenuItem("About");
         jMenuItemAbout.addActionListener(new JMenuItemAboutListener());
-
-        jMenuItemLAFMetal = new JMenuItem("Metal");
-        jMenuItemLAFMetal.addActionListener(new JMenuItemLAFMetalListener());
-        jMenuItemLAFMotif = new JMenuItem("Motif");
-        jMenuItemLAFMotif.addActionListener(new JMenuItemLAFMotifListener());
-        jMenuItemLAFNimbus = new JMenuItem("Nimbus");
-        jMenuItemLAFNimbus.addActionListener(new JMenuItemLAFNimbusListener());
     }
 
     private void refreshLanguage() {
@@ -305,10 +297,7 @@ public final class JFrameTomatoMain extends JFrame {
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
 
-        jMenuLookAndFeel = new JMenu("Look and Feel");
-        jMenuLookAndFeel.add(jMenuItemLAFMetal);
-        jMenuLookAndFeel.add(jMenuItemLAFMotif);
-        jMenuLookAndFeel.add(jMenuItemLAFNimbus);
+
     }
 
     private void startPomodoroTimer() {
@@ -445,77 +434,6 @@ public final class JFrameTomatoMain extends JFrame {
     private void setTimeToPomodoro(boolean timePomodoro) {
         this.timeToPomodoro = timePomodoro;
     }
-
-    private static void initLookAndFeel(/*lookAndFell*/) {
-        String lookAndFeel = null;
-        if (LOOKANDFEEL != null) {
-            if (LOOKANDFEEL.equals("Metal")) {
-                lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
-            } else if (LOOKANDFEEL.equals("System")) {
-                lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-            } else if (LOOKANDFEEL.equals("Motif")) {
-                lookAndFeel = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-            } else if (LOOKANDFEEL.equals("GTK")) {
-                lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-            } else {
-                System.err.println("Unexpected value of LOOKANDFEEL specified: "
-                        + LOOKANDFEEL);
-                lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
-            }
-            try {
-                UIManager.setLookAndFeel(lookAndFeel);
-                // If L&F = "Metal", set the theme
-                if (LOOKANDFEEL.equals("Metal")) {
-                    if (THEME.equals("DefaultMetal"))
-                        MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-                    else if (THEME.equals("Ocean"))
-                        MetalLookAndFeel.setCurrentTheme(new OceanTheme());
-                    else
-                        MetalLookAndFeel.setCurrentTheme(new TestTheme());
-                    UIManager.setLookAndFeel(new MetalLookAndFeel());
-                }
-            } catch (ClassNotFoundException e) {
-                System.err.println("Couldn't find class for specified look and feel:"
-                        + lookAndFeel);
-                System.err.println("Did you include the L&F library in the class path?");
-                System.err.println("Using the default look and feel.");
-            } catch (UnsupportedLookAndFeelException e) {
-                System.err.println("Can't use the specified look and feel ("
-                        + lookAndFeel
-                        + ") on this platform.");
-                System.err.println("Using the default look and feel.");
-            } catch (Exception e) {
-                System.err.println("Couldn't get specified look and feel ("
-                        + lookAndFeel
-                        + "), for some reason.");
-                System.err.println("Using the default look and feel.");
-                e.printStackTrace();
-            }
-        }
-    }
-
-//            for (UIManager.LookAndFeelInfo info :
-//                    UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }else if ("Metal".equals(info.getName())) {
-//                    UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }else if ("Motif".equals(info.getClassName())){
-//                    UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (Exception e) {
-//            // If Nimbus is not available, you can set the GUI to another look and feel.
-//            e.printStackTrace();
-//        }
-////        SwingUtilities.updateComponentTreeUI(this);
-//
-
-
-
 
     private class JButtonPauseListener implements ActionListener {
 
@@ -836,29 +754,4 @@ public final class JFrameTomatoMain extends JFrame {
             }
         }
     }
-
-    class JMenuItemLAFMetalListener implements ActionListener{
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            initLookAndFeel(/*aplicationLookAndFeelMetal*/);
-        }
-    }
-
-    class JMenuItemLAFMotifListener implements ActionListener{
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            initLookAndFeel(/*aplicationLookAndFeelMotif*/);
-        }
-    }
-    class JMenuItemLAFNimbusListener implements ActionListener{
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            initLookAndFeel(/*aplicationLookAndFeelNimbus*/);
-        }
-    }
-
-
 }

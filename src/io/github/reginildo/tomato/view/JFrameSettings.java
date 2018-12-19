@@ -1,5 +1,9 @@
 package io.github.reginildo.tomato.view;
 
+import com.alee.laf.WebLookAndFeel;
+import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
+import com.alee.laf.slider.WebSlider;
 import io.github.reginildo.tomato.utils.Locales;
 import io.github.reginildo.tomato.main.Main;
 import io.github.reginildo.tomato.utils.Tomato;
@@ -17,7 +21,7 @@ final class JFrameSettings extends JFrame {
     private static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.getLocaleDefault());
     private JPanel jPanelSettings;
-    private static JButton jButtonSairSettings;
+    private static WebButton jButtonSairSettings;
     static Tomato tomato = new Tomato(Tomato.getDefaultCiclosTime(),
             Tomato.getDefaultPomodoroTime(),
             Tomato.getDefaultShortBreakTime(),
@@ -27,15 +31,16 @@ final class JFrameSettings extends JFrame {
     private static String stringIntervaloLongo = resourceBundle.getString("intervaloLongo");
     private static String stringValorShortBreak;
     private JLabel jLabelInfo = new JLabel("Ajuste os tempos:");
-    private static JLabel jLabelSettingsCiclos, jLabelSettingsTomato, jLabelSettingsLongBreak, jLabelSettingsShortBreak;
-    private static JSlider jSliderCiclos;
-    private static JSlider jSliderTomato;
-    private static JSlider jSliderLongBreak;
-    private static JSlider jSliderShortBreak;
+    private static WebLabel jLabelSettingsCiclos, jLabelSettingsTomato, jLabelSettingsLongBreak, jLabelSettingsShortBreak;
+    private static WebSlider jSliderCiclos;
+    private static WebSlider jSliderTomato;
+    private static WebSlider jSliderLongBreak;
+    private static WebSlider jSliderShortBreak;
     private Font fontInfoSettings = new Font("Arial",
             Font.BOLD, 26);
 
     JFrameSettings() {
+        invokeAndShow();
         setJLabels();
         setJSliders();
         setJButtonSair();
@@ -48,6 +53,20 @@ final class JFrameSettings extends JFrame {
         setTitle(JFrameTomatoMain.resourceBundle
                 .getString("stringTomatoSettingTitle"));
         setVisible(false);
+    }
+
+    private void invokeAndShow() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    //UIManager.setLookAndFeel(new MetalLookAndFeel());
+                    //UIManager.setLookAndFeel(new WindowsLookAndFeel());
+                    UIManager.setLookAndFeel(new WebLookAndFeel());
+                } catch (UnsupportedLookAndFeelException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public final static JSlider getjSliderCiclos() {
@@ -67,7 +86,7 @@ final class JFrameSettings extends JFrame {
     }
 
     private void setJButtonSair() {
-        jButtonSairSettings = new JButton(resourceBundle.getString("buttonExit"));
+        jButtonSairSettings = new WebButton(resourceBundle.getString("buttonExit"));
         jButtonSairSettings.setMnemonic(KeyEvent.VK_S);
         jButtonSairSettings.addActionListener(new JButtonSairSettingsLintener());
         jButtonSairSettings.addMouseMotionListener(new JButtonSairSettingsMotionListener());
@@ -111,7 +130,7 @@ final class JFrameSettings extends JFrame {
     }
 
     private void setJSliders() {
-        jSliderCiclos = new JSlider(
+        jSliderCiclos = new WebSlider(
                 SwingConstants.HORIZONTAL, 1, 8, 4);
         getjSliderCiclos().setMajorTickSpacing(1);
         getjSliderCiclos().setMinorTickSpacing(1);
@@ -120,7 +139,7 @@ final class JFrameSettings extends JFrame {
         getjSliderCiclos().setValue(Tomato.getDefaultCiclosTime());
         getjSliderCiclos().addChangeListener(new JSliderCiclosChangeListener());
 
-        jSliderTomato = new JSlider(
+        jSliderTomato = new WebSlider(
                 SwingConstants.HORIZONTAL, 0, 50, 25);
         getjSliderTomato().setMajorTickSpacing(10);
         getjSliderTomato().setMinorTickSpacing(1);
@@ -131,7 +150,7 @@ final class JFrameSettings extends JFrame {
         getjSliderTomato().addChangeListener(new JSliderTomatoChangeListener());
         getjSliderTomato().addMouseMotionListener(new JSliderTomatoMotionListener());
 
-        jSliderShortBreak = new JSlider(
+        jSliderShortBreak = new WebSlider(
                 SwingConstants.HORIZONTAL, 0, 50, 5);
         getjSliderShortBreak().addMouseMotionListener(new JSliderShortBreakMotionListener());
         getjSliderShortBreak().setMajorTickSpacing(10);
@@ -141,7 +160,7 @@ final class JFrameSettings extends JFrame {
         getjSliderShortBreak().setValue(Tomato.getShortBreakTime());
         getjSliderShortBreak().addChangeListener(new JSliderShortBreakChangeListener());
 
-        jSliderLongBreak = new JSlider(
+        jSliderLongBreak = new WebSlider(
                 SwingConstants.HORIZONTAL, 0, 50, 15);
         getjSliderLongBreak().setMajorTickSpacing(10);
         getjSliderLongBreak().setMinorTickSpacing(1);
@@ -153,11 +172,11 @@ final class JFrameSettings extends JFrame {
     }
 
     private void setJLabels() {
-        jLabelSettingsCiclos = new JLabel();
-        jLabelSettingsTomato = new JLabel(resourceBundle.getString("stringTempoPomodoro"));
-        jLabelSettingsLongBreak = new JLabel(
+        jLabelSettingsCiclos = new WebLabel();
+        jLabelSettingsTomato = new WebLabel(resourceBundle.getString("stringTempoPomodoro"));
+        jLabelSettingsLongBreak = new WebLabel(
                 resourceBundle.getString("intervaloLongo"));
-        jLabelSettingsShortBreak = new JLabel(
+        jLabelSettingsShortBreak = new WebLabel(
                 resourceBundle.getString("intervaloCurto"));
         jLabelInfo.setFont(fontInfoSettings);
     }
