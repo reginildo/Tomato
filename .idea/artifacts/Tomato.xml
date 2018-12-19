@@ -6,6 +6,7 @@
         <element id="file-copy" path="$PROJECT_DIR$/manifest.mf" output-file-name="MANIFEST.MF" />
       </element>
       <element id="module-output" name="tomato-master" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/jlayer1.0.1/JLayer1.0.1/jl1.0.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

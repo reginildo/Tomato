@@ -16,14 +16,20 @@
  */
 package io.github.reginildo.tomato.view;
 
+import io.github.reginildo.tomato.test.TestTheme;
 import io.github.reginildo.tomato.utils.Locales;
-import io.github.reginildo.tomato.main.Main;
 import io.github.reginildo.tomato.utils.Tomato;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
+import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.OceanTheme;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,6 +40,21 @@ import java.util.Timer;
  * */
 
 public final class JFrameTomatoMain extends JFrame {
+    // Specify the look and feel to use by defining the LOOKANDFEEL constant
+    // Valid values are: null (use the default), "Metal", "System", "Motif",
+    // and "GTK"
+    final static String LOOKANDFEEL = "GTK";
+
+    // If you choose the Metal L&F, you can also choose a theme.
+    // Specify the theme to use by defining the THEME constant
+    // Valid values are: "DefaultMetal", "Ocean",  and "Test"
+    final static String THEME = "Test";
+
+    public static final String LOOK_AND_FELL_NIMBUS = "Nimbus";
+    public static final String LOOK_AND_FEEL_METAL = "Metal";
+    public static final String LOOK_AND_FEEL_MOTIF = "Motif";
+    public static final String LOOK_AND_FEEL_SYSTEM = "System";
+    public static final String LOOK_AND_FEEL_GTK = "GTK";
 
     private Font fontTahoma = new Font("Tahoma", Font.PLAIN, 18);
     private Font fontArial = new Font("Arial", Font.BOLD, 85);
@@ -52,23 +73,27 @@ public final class JFrameTomatoMain extends JFrame {
     private boolean timeToPomodoro;
     static Timer timer = null;
     static JButton jButtonStart, jButtonPause, jButtonReset;
-    private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout;
+    private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout,
+            jMenuItemLAFMetal,jMenuItemLAFNimbus, jMenuItemLAFMotif;
     private static JFrameSettings jFrameSettings = new JFrameSettings();
     static String stringValorLongBreak;
     static Calendar timerStart = Calendar.getInstance();
     static Date timerPause;
     static final SimpleDateFormat format = new SimpleDateFormat(
             "mm:ss");
-    private JMenu jMenuFile, jMenuLanguage, jMenuHelp;
+    private JMenu jMenuFile, jMenuLanguage, jMenuLookAndFeel, jMenuHelp;
     private JMenuBar jMenuBar;
     static JPanel jPanelButtons, jPanelTimer, jPanelMainInfo, jPanelDetails;
     private ImageIcon imageWork, imageEnjoy, imageSuccess, imagePrepared;
+    private Player player;
+
 
     public JFrameTomatoMain() {
+        invokeAndShow();
         initThreadHour();
-        setInitTimerStart(); // todo this
+        setInitTimerStart();
         setImageIcons();
-        Main.setLookAndFeel();
+        //setLookAndFeel(aplicationLookAndFeelNimbus);
         setJLabels();
         setJPanels();
         setThisJMenuBar();
@@ -88,7 +113,20 @@ public final class JFrameTomatoMain extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void setThisJMenuBar() {
+    private void invokeAndShow() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+
+    private static void createAndShowGUI() {
+        //Set the look and feel.
+        initLookAndFeel();
+    }
+
+        private void setThisJMenuBar() {
         setJMenus();
         jMenuBar = new JMenuBar();
         jMenuBar.setBackground(Color.orange);
@@ -96,6 +134,7 @@ public final class JFrameTomatoMain extends JFrame {
         jMenuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         jMenuBar.add(jMenuFile);
         jMenuBar.add(jMenuLanguage);
+        jMenuBar.add(jMenuLookAndFeel);
         jMenuBar.add(jMenuHelp);
     }
 
@@ -202,18 +241,28 @@ public final class JFrameTomatoMain extends JFrame {
         jMenuItemSettings.addMouseMotionListener(new JMenuItemSettingsMotionListener());
         jMenuItemSettings.addActionListener(new JMenuItemSettingsListener());
         jMenuItemSettings.setMnemonic(KeyEvent.VK_E);
+
         jMenuItemQuit = new JMenuItem("Quit");
         jMenuItemQuit.addActionListener(new JMenuItemQuitListener());
         jMenuItemQuit.addMouseMotionListener(new JMenuItemQuitMotionListener());
         jMenuItemQuit.setMnemonic(KeyEvent.VK_Q);
+
         jMenuItemAbout = new JMenuItem("About");
         jMenuItemAbout.addActionListener(new JMenuItemAboutListener());
+
+        jMenuItemLAFMetal = new JMenuItem("Metal");
+        jMenuItemLAFMetal.addActionListener(new JMenuItemLAFMetalListener());
+        jMenuItemLAFMotif = new JMenuItem("Motif");
+        jMenuItemLAFMotif.addActionListener(new JMenuItemLAFMotifListener());
+        jMenuItemLAFNimbus = new JMenuItem("Nimbus");
+        jMenuItemLAFNimbus.addActionListener(new JMenuItemLAFNimbusListener());
     }
 
     private void refreshLanguage() {
         setVisible(false);
         repaint();
         setVisible(true);
+        //Swing
     }
 
     private void setButtonGroupLanguages() {
@@ -255,6 +304,11 @@ public final class JFrameTomatoMain extends JFrame {
         jMenuHelp.add(jMenuItemAbout);
         jMenuFile.add(jMenuItemSettings);
         jMenuFile.add(jMenuItemQuit);
+
+        jMenuLookAndFeel = new JMenu("Look and Feel");
+        jMenuLookAndFeel.add(jMenuItemLAFMetal);
+        jMenuLookAndFeel.add(jMenuItemLAFMotif);
+        jMenuLookAndFeel.add(jMenuItemLAFNimbus);
     }
 
     private void startPomodoroTimer() {
@@ -392,6 +446,77 @@ public final class JFrameTomatoMain extends JFrame {
         this.timeToPomodoro = timePomodoro;
     }
 
+    private static void initLookAndFeel(/*lookAndFell*/) {
+        String lookAndFeel = null;
+        if (LOOKANDFEEL != null) {
+            if (LOOKANDFEEL.equals("Metal")) {
+                lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
+            } else if (LOOKANDFEEL.equals("System")) {
+                lookAndFeel = UIManager.getSystemLookAndFeelClassName();
+            } else if (LOOKANDFEEL.equals("Motif")) {
+                lookAndFeel = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+            } else if (LOOKANDFEEL.equals("GTK")) {
+                lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+            } else {
+                System.err.println("Unexpected value of LOOKANDFEEL specified: "
+                        + LOOKANDFEEL);
+                lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
+            }
+            try {
+                UIManager.setLookAndFeel(lookAndFeel);
+                // If L&F = "Metal", set the theme
+                if (LOOKANDFEEL.equals("Metal")) {
+                    if (THEME.equals("DefaultMetal"))
+                        MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+                    else if (THEME.equals("Ocean"))
+                        MetalLookAndFeel.setCurrentTheme(new OceanTheme());
+                    else
+                        MetalLookAndFeel.setCurrentTheme(new TestTheme());
+                    UIManager.setLookAndFeel(new MetalLookAndFeel());
+                }
+            } catch (ClassNotFoundException e) {
+                System.err.println("Couldn't find class for specified look and feel:"
+                        + lookAndFeel);
+                System.err.println("Did you include the L&F library in the class path?");
+                System.err.println("Using the default look and feel.");
+            } catch (UnsupportedLookAndFeelException e) {
+                System.err.println("Can't use the specified look and feel ("
+                        + lookAndFeel
+                        + ") on this platform.");
+                System.err.println("Using the default look and feel.");
+            } catch (Exception e) {
+                System.err.println("Couldn't get specified look and feel ("
+                        + lookAndFeel
+                        + "), for some reason.");
+                System.err.println("Using the default look and feel.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+//            for (UIManager.LookAndFeelInfo info :
+//                    UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }else if ("Metal".equals(info.getName())) {
+//                    UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }else if ("Motif".equals(info.getClassName())){
+//                    UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (Exception e) {
+//            // If Nimbus is not available, you can set the GUI to another look and feel.
+//            e.printStackTrace();
+//        }
+////        SwingUtilities.updateComponentTreeUI(this);
+//
+
+
+
+
     private class JButtonPauseListener implements ActionListener {
 
         @Override
@@ -409,7 +534,10 @@ public final class JFrameTomatoMain extends JFrame {
     private class JButtonStartListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+//            TickTackThread tickTackThread = new TickTackThread();
+//            tickTackThread.start();
             if (jButtonStart.isEnabled()) {
+
                 Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
                 jLabelToImageIconSmileys.setIcon(getImageWork());
                 jButtonStart.setEnabled(false);
@@ -448,7 +576,6 @@ public final class JFrameTomatoMain extends JFrame {
     private class JMenuItemSettingsListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // todo mostrar visivel aqui e construir antes
             jFrameSettings.setVisible(true);
         }
     }
@@ -581,33 +708,41 @@ public final class JFrameTomatoMain extends JFrame {
         public void run() {
             setTimerStartAndTimeCounterView();
             if (isTheEnd()) {
-                playAlarm();
+                RingThread ringThread = new RingThread();
+                ringThread.start();
                 countInterations++;
                 timer.cancel();
                 if (isTheLastOneCiclo()) {
                     startOver = JOptionPane.showConfirmDialog(null,
                             "\nParabéns!!! Você concluiu! \niniciar um novo ciclo?");
                     if (startOver == JOptionPane.YES_OPTION) {
+                        player.close();
                         Tomato.setCiclosTime(JFrameSettings.getjSliderCiclos().getValue());
                         Tomato.setLongBreakTime(JFrameSettings.getjSliderLongBreak().getValue());
                         Tomato.setShortBreakTime(JFrameSettings.getjSliderShortBreak().getValue());
                         JFrameTomatoMain.countInterations = 1;
                         startPomodoroTimer();
+                    } else {
+                        player.close();
                     }
                 } else {
                     confirmDialog = JOptionPane.showConfirmDialog(
                             null, "Hora de relaxar.\nIniciar o intervalo curto?");
                     if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToShortBreak())) {
+                        player.close();
                         jLabelToImageIconSmileys.setIcon(getImageEnjoy());
                         Tomato.setCiclosTime(Tomato.getCiclosTime() - 1);
                         setTimeToLongBreak(false);
                         setTimeToPomodoro(false);
                         startShortBreakTimer();
                     } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                        player.close();
                         jLabelToImageIconSmileys.setIcon(getImageSuccess());
                         setTimeToShortBreak(false);
                         setTimeToPomodoro(false);
                         startLongBreakTimer();
+                    } else {
+                        player.close();
                     }
                 }
             }
@@ -625,17 +760,21 @@ public final class JFrameTomatoMain extends JFrame {
         public void run() {
             setTimerStartAndTimeCounterView();
             if (isTheEnd()) {
-                playAlarm();
+                RingThread ringThread = new RingThread();
+                ringThread.start();
+                //playAlarm();
                 countInterations++;
                 timer.cancel();
                 confirmDialog = JOptionPane.showConfirmDialog(
                         null, "Fim do short break.\nIniciar o novo pomodoro?");
                 if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())) {
+                    player.close();
                     jLabelToImageIconSmileys.setIcon(getImageWork());
                     setTimeToShortBreak(false);
                     setTimeToLongBreak(false);
                     startPomodoroTimer();
                 } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                    player.close();
                     jLabelToImageIconSmileys.setIcon(getImageSuccess());
                     setTimeToShortBreak(false);
                     setTimeToPomodoro(false);
@@ -651,12 +790,15 @@ public final class JFrameTomatoMain extends JFrame {
         public void run() {
             setTimerStartAndTimeCounterView();
             if (isTheEnd()) {
-                playAlarm();
+                RingThread ringThread = new RingThread();
+                ringThread.start();
+                //playAlarm();
                 countInterations++;
                 timer.cancel();
                 confirmDialog = JOptionPane.showConfirmDialog(
                         null, "Fim do Long Break.\nIniciar um novo ciclo?");
                 if (confirmDialog == JOptionPane.YES_OPTION) {
+                    player.close();
                     jLabelToImageIconSmileys.setIcon(getImageWork());
                     countInterations = 1;
                     setTimeToLongBreak(false);
@@ -666,4 +808,57 @@ public final class JFrameTomatoMain extends JFrame {
             }
         }
     }
+
+    class TickTackThread extends Thread {
+        public void run() {
+            try {
+                String audioTickTack = "ticking-noise.mp3";
+                InputStream inputStream = this.getClass().getResourceAsStream(
+                        "/io/github/reginildo/tomato/audio/" + audioTickTack);
+                player = new Player(inputStream);
+                player.play();
+            } catch (JavaLayerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class RingThread extends Thread {
+        public void run() {
+            try {
+                String audioRing = "clock-ringing.mp3";
+                InputStream inputStream = this.getClass().getResourceAsStream(
+                        "/io/github/reginildo/tomato/audio/" + audioRing);
+                player = new Player(inputStream);
+                player.play();
+            } catch (JavaLayerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class JMenuItemLAFMetalListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            initLookAndFeel(/*aplicationLookAndFeelMetal*/);
+        }
+    }
+
+    class JMenuItemLAFMotifListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            initLookAndFeel(/*aplicationLookAndFeelMotif*/);
+        }
+    }
+    class JMenuItemLAFNimbusListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            initLookAndFeel(/*aplicationLookAndFeelNimbus*/);
+        }
+    }
+
+
 }

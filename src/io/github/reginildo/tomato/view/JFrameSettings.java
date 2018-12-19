@@ -3,7 +3,6 @@ package io.github.reginildo.tomato.view;
 import io.github.reginildo.tomato.utils.Locales;
 import io.github.reginildo.tomato.main.Main;
 import io.github.reginildo.tomato.utils.Tomato;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -37,7 +36,6 @@ final class JFrameSettings extends JFrame {
             Font.BOLD, 26);
 
     JFrameSettings() {
-        Main.setLookAndFeel();
         setJLabels();
         setJSliders();
         setJButtonSair();
