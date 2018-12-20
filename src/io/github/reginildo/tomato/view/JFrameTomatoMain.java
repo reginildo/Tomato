@@ -16,14 +16,21 @@
  */
 package io.github.reginildo.tomato.view;
 
+import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.menu.MenuBarStyle;
+import com.alee.laf.menu.WebMenuBar;
+import com.alee.laf.menu.WebRadioButtonMenuItem;
+import com.alee.laf.optionpane.WebOptionPane;
+import com.alee.laf.panel.WebPanel;
+import com.alee.laf.rootpane.WebFrame;
+import io.github.reginildo.tomato.main.Main;
 import io.github.reginildo.tomato.utils.Locales;
 import io.github.reginildo.tomato.utils.Tomato;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.jetbrains.annotations.Contract;
-import com.alee.laf.WebLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +45,7 @@ import java.util.Timer;
  * JFrame pricipal do aplicativo.
  * */
 
-public final class JFrameTomatoMain extends JFrame {
+public final class JFrameTomatoMain extends WebFrame {
     public static final String LOOK_AND_FELL_NIMBUS = "Nimbus";
     public static final String LOOK_AND_FEEL_METAL = "Metal";
     public static final String LOOK_AND_FEEL_MOTIF = "Motif";
@@ -59,12 +66,12 @@ public final class JFrameTomatoMain extends JFrame {
     private Font fontTahoma = new Font("Tahoma", Font.PLAIN, 18);
     private Font fontArial = new Font("Arial", Font.BOLD, 85);
 
-    static WebLabel jLabelToImageIconSmileys, jLabelTimeCounterView, jLabelShowCiclos, jLabelFoco;
+    static WebLabel webLabelToImageIconSmileys, webLabelTimeCounterView, webLabelShowCiclos, webLabelFoco;
     private static boolean showTimeView;
-    private static JLabel jLabelHora;
+    private static WebLabel webLabelHora;
     static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.getLocaleDefault());
-    private JRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
+    private WebRadioButtonMenuItem radioButtonMenuItemPT_BR, radioButtonMenuItemEN_US, radioButtonMenuItemKlingon;
     private int confirmDialog;
     private int startOver;
     private static int countInterations = 1;
@@ -74,21 +81,22 @@ public final class JFrameTomatoMain extends JFrame {
     static Timer timer = null;
     static WebButton jButtonStart, jButtonPause, jButtonReset;
     private JMenuItem jMenuItemSettings, jMenuItemQuit, jMenuItemAbout;
-    private static JFrameSettings jFrameSettings = new JFrameSettings();
+    private static JFrameSettings jFrameSettings;
     static String stringValorLongBreak;
     static Calendar timerStart = Calendar.getInstance();
     static Date timerPause;
     static final SimpleDateFormat format = new SimpleDateFormat(
             "mm:ss");
     private JMenu jMenuFile, jMenuLanguage, jMenuHelp;
-    private JMenuBar jMenuBar;
-    static JPanel jPanelButtons, jPanelTimer, jPanelMainInfo, jPanelDetails;
+    private WebMenuBar jMenuBar;
+    static WebPanel jPanelButtons, jPanelTomatoMain, jPanelTomatoInfo, jPanelDetails, jPanelTimer;
     private ImageIcon imageWork, imageEnjoy, imageSuccess, imagePrepared;
     private Player player;
 
 
     public JFrameTomatoMain() {
         invokeAndShow();
+        jFrameSettings = new JFrameSettings();
         initThreadHour();
         setInitTimerStart();
         setImageIcons();
@@ -96,11 +104,11 @@ public final class JFrameTomatoMain extends JFrame {
         setJPanels();
         setThisJMenuBar();
         setJMenuBar(jMenuBar);
-        setContentPane(jPanelTimer);
-        add(jPanelButtons);
-        add(jPanelMainInfo);
+        setContentPane(jPanelTomatoMain);
+        //add(jPanelButtons);
+        //add(jPanelTomatoInfo);
 
-        add(jPanelDetails);
+        //add(jPanelDetails);
         setTitle("Pomodoro tempo");
         setSize(300, 400);
         setResizable(true);
@@ -111,13 +119,13 @@ public final class JFrameTomatoMain extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void invokeAndShow() {
+    public static void invokeAndShow() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
                     //UIManager.setLookAndFeel(new MetalLookAndFeel());
                     //UIManager.setLookAndFeel(new WindowsLookAndFeel());
-                    UIManager.setLookAndFeel(new WebLookAndFeel());
+                    UIManager.setLookAndFeel(Main.webLookAndFeel);
                 } catch (UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
@@ -128,7 +136,8 @@ public final class JFrameTomatoMain extends JFrame {
 
         private void setThisJMenuBar() {
         setJMenus();
-        jMenuBar = new JMenuBar();
+        jMenuBar = new WebMenuBar();
+        jMenuBar.setMenuBarStyle(MenuBarStyle.standalone);
         jMenuBar.setBackground(Color.orange);
         jMenuBar.setBorderPainted(false);
         jMenuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -139,46 +148,66 @@ public final class JFrameTomatoMain extends JFrame {
 
     private void setJLabels() {
 
-        jLabelHora = new JLabel();
-        jLabelToImageIconSmileys = new WebLabel();
-        jLabelToImageIconSmileys.setIcon(getImagePrepared());
-        jLabelToImageIconSmileys.setVisible(true);
-        jLabelTimeCounterView = new WebLabel("00:00");
-        jLabelTimeCounterView.setFont(fontArial);
-        jLabelTimeCounterView.setText(format.format(timerStart.getTime()));
-        jLabelTimeCounterView.setForeground(Color.RED);
-        jLabelShowCiclos = new WebLabel();
-        jLabelShowCiclos.setFont(fontTahoma);
-        jLabelShowCiclos.setVisible(false);
-        jLabelFoco = new WebLabel("Mantenha o foco!");
-        jLabelFoco.setFont(fontTahoma);
-        jLabelFoco.setVisible(false);
+        webLabelHora = new WebLabel();
+        webLabelToImageIconSmileys = new WebLabel();
+        webLabelToImageIconSmileys.setIcon(getImagePrepared());
+        webLabelToImageIconSmileys.setVisible(true);
+        webLabelTimeCounterView = new WebLabel("00:00");
+        webLabelTimeCounterView.setDrawShade(true);
+        webLabelTimeCounterView.setFont(fontArial);
+        webLabelTimeCounterView.setText(format.format(timerStart.getTime()));
+        webLabelTimeCounterView.setForeground(Color.orange);
+        webLabelTimeCounterView.setShadeColor(Color.BLACK);
+        webLabelShowCiclos = new WebLabel();
+        webLabelShowCiclos.setFont(fontTahoma);
+        webLabelShowCiclos.setVisible(false);
+        webLabelFoco = new WebLabel("Mantenha o foco!");
+        webLabelFoco.setFont(fontTahoma);
+        webLabelFoco.setVisible(false);
     }
 
     private void setJPanels() {
-        jPanelButtons = new JPanel();
-        jPanelButtons.setBackground(Color.YELLOW);
-        jPanelTimer = new JPanel();
-        jPanelTimer.setLayout(new FlowLayout());
-        jPanelTimer.setBackground(Color.YELLOW);
-        jPanelTimer.add(jLabelTimeCounterView);
-        jPanelMainInfo = new JPanel();
-        jPanelMainInfo.setLayout(new BoxLayout(jPanelMainInfo, BoxLayout.Y_AXIS));
-        jPanelMainInfo.setBackground(Color.YELLOW);
-        jPanelMainInfo.add(jLabelToImageIconSmileys);
-
-        jPanelDetails = new JPanel();
-        jPanelDetails.setBackground(Color.YELLOW);
-        jPanelDetails.setForeground(Color.darkGray);
-        jPanelDetails.setLayout(new BoxLayout(jPanelDetails, BoxLayout.Y_AXIS));
-        jPanelDetails.add(jLabelShowCiclos);
-        jPanelDetails.add(jLabelFoco);
-        jPanelDetails.add(jLabelHora);
-
         setJButtons();
+        jPanelButtons = new WebPanel(new FlowLayout());
+        jPanelButtons.setUndecorated(false);
+        jPanelButtons.setMargin(10,10,10,10);
+        jPanelButtons.setRound ( StyleConstants.largeRound );
+
         jPanelButtons.add(jButtonStart);
         jPanelButtons.add(jButtonPause);
         jPanelButtons.add(jButtonReset);
+        jPanelTomatoInfo = new WebPanel();
+        jPanelTomatoInfo.setLayout(new BoxLayout(jPanelTomatoInfo, BoxLayout.Y_AXIS));
+        jPanelDetails = new WebPanel();
+        //jPanelDetails.setBackground(Color.YELLOW);
+        jPanelDetails.setForeground(Color.darkGray);
+        //jPanelDetails.setLayout(new GridBagLayout());
+        jPanelDetails.setLayout(new GridLayout());
+        //jPanelDetails.setLayout(new BoxLayout(jPanelDetails, BoxLayout.Y_AXIS));
+        jPanelTimer = new WebPanel();
+        jPanelTimer.add(webLabelTimeCounterView);
+        jPanelTimer.setUndecorated(false);
+        jPanelTimer.setMargin(10,10,10,10);
+        jPanelTimer.setRound ( StyleConstants.decorationRound );
+
+        jPanelDetails.add(webLabelShowCiclos);
+        jPanelDetails.add(webLabelFoco);
+        jPanelDetails.add(webLabelHora);
+
+        //jPanelTomatoInfo.setBackground(Color.YELLOW);
+        jPanelTomatoInfo.add(webLabelToImageIconSmileys);
+        jPanelTomatoMain = new WebPanel(new FlowLayout());
+        jPanelTomatoMain.setUndecorated(false);
+        jPanelTomatoMain.setMargin(20,20,20,20);
+        jPanelTomatoMain.setRound ( StyleConstants.bigRound );
+        //jPanelTomatoMain.setBackground(Color.YELLOW);
+
+        jPanelTomatoMain.add(jPanelTimer);
+        jPanelTomatoMain.add(jPanelButtons);
+        jPanelTomatoMain.add(jPanelTomatoInfo);
+        jPanelTomatoMain.add(jPanelDetails);
+
+
     }
 
     @Contract(pure = true)
@@ -223,10 +252,13 @@ public final class JFrameTomatoMain extends JFrame {
         jButtonStart.addActionListener(new JButtonStartListener());
         jButtonStart.setMnemonic(KeyEvent.VK_S);
         jButtonStart.addMouseMotionListener(new JButtonStartMotionListener());
+        //jButtonStart.setEnabled(true);
+
         jButtonPause = new WebButton(resourceBundle.getString("buttonPause"));
         jButtonPause.addActionListener(new JButtonPauseListener());
         jButtonPause.setMnemonic(KeyEvent.VK_P);
         jButtonPause.addMouseMotionListener(new JButtonPauseMotionListener());
+
         jButtonReset = new WebButton(resourceBundle.getString("buttonReset"));
         jButtonReset.addActionListener(new JButtonResetListener());
         jButtonReset.setMnemonic(KeyEvent.VK_R);
@@ -268,13 +300,13 @@ public final class JFrameTomatoMain extends JFrame {
 
     private void setJRadioButtonMenuItens() {
         radioButtonMenuItemPT_BR =
-                new JRadioButtonMenuItem(resourceBundle
+                new WebRadioButtonMenuItem(resourceBundle
                         .getString("radioButtonMenuItemPT_BR"));
         radioButtonMenuItemEN_US =
-                new JRadioButtonMenuItem(resourceBundle
+                new WebRadioButtonMenuItem(resourceBundle
                         .getString("radioButtonMenuItemEN_US"));
         radioButtonMenuItemKlingon =
-                new JRadioButtonMenuItem(resourceBundle
+                new WebRadioButtonMenuItem(resourceBundle
                         .getString("radioButtonMenuItemKlingon"));
         radioButtonMenuItemPT_BR.addActionListener(new RadioButtonMenuItemPT_BRListener());
         radioButtonMenuItemEN_US.addActionListener(new RadioButtonMenuItemEN_USListener());
@@ -323,20 +355,20 @@ public final class JFrameTomatoMain extends JFrame {
         try {
             timerStart.set(Calendar.SECOND, (
                     timerStart.get(Calendar.SECOND) - 1));
-            jLabelTimeCounterView.setText(format.format(timerStart.getTime()));
-            jLabelShowCiclos.setText("Ainda faltam " + Tomato.getCiclosTime() + " ciclos");
-            jLabelShowCiclos.setVisible(true);
-            jLabelFoco.setVisible(true);
+            webLabelTimeCounterView.setText(format.format(timerStart.getTime()));
+            webLabelShowCiclos.setText("Ainda faltam " + Tomato.getCiclosTime() + " ciclos");
+            webLabelShowCiclos.setVisible(true);
+            webLabelFoco.setVisible(true);
             if (isTheLastOneCiclo()) {
-                jLabelShowCiclos.setText("É o ultimo! Continue!");
+                webLabelShowCiclos.setText("É o ultimo! Continue!");
             }
 
             if (isTimeToShortBreak() || isTimeToLongBreak()) {
-                jLabelShowCiclos.setVisible(false);
-                jLabelFoco.setVisible(false);
+                webLabelShowCiclos.setVisible(false);
+                webLabelFoco.setVisible(false);
             } else {
-                jLabelShowCiclos.setVisible(true);
-                jLabelFoco.setVisible(true);
+                webLabelShowCiclos.setVisible(true);
+                webLabelFoco.setVisible(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -457,7 +489,7 @@ public final class JFrameTomatoMain extends JFrame {
             if (jButtonStart.isEnabled()) {
 
                 Tomato.setPomodoroTime(timerStart.get(Calendar.MINUTE));
-                jLabelToImageIconSmileys.setIcon(getImageWork());
+                webLabelToImageIconSmileys.setIcon(getImageWork());
                 jButtonStart.setEnabled(false);
                 jButtonPause.setEnabled(true);
                 jPanelDetails.setVisible(true);
@@ -469,7 +501,7 @@ public final class JFrameTomatoMain extends JFrame {
     private class JButtonResetListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            jLabelToImageIconSmileys.setIcon(getImagePrepared());
+            webLabelToImageIconSmileys.setIcon(getImagePrepared());
             if (isTimeToShortBreak()) {
                 timerStart.set(Calendar.MINUTE, Tomato.getShortBreakTime());
             } else if (isTimeToLongBreak()) {
@@ -477,8 +509,8 @@ public final class JFrameTomatoMain extends JFrame {
             } else {
                 timerStart.set(Calendar.MINUTE, Tomato.getPomodoroTime());
             }
-            jLabelShowCiclos.setVisible(false);
-            jLabelFoco.setVisible(false);
+            webLabelShowCiclos.setVisible(false);
+            webLabelFoco.setVisible(false);
             timerStart.set(Calendar.SECOND, 0);
             timerPause = null;
             timer.cancel();
@@ -486,7 +518,7 @@ public final class JFrameTomatoMain extends JFrame {
             jButtonPause.setEnabled(false);
             jButtonStart.setEnabled(true);
             jButtonReset.setEnabled(false);
-            jLabelTimeCounterView.setText(format.format(
+            webLabelTimeCounterView.setText(format.format(
                     timerStart.getTime()));
         }
     }
@@ -494,6 +526,7 @@ public final class JFrameTomatoMain extends JFrame {
     private class JMenuItemSettingsListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+
             jFrameSettings.setVisible(true);
         }
     }
@@ -614,9 +647,9 @@ public final class JFrameTomatoMain extends JFrame {
         @Override
         public void run() {
             while (JFrameTomatoMain.isShowTimeView()) {
-                JFrameTomatoMain.jLabelHora.setLayout(new FlowLayout(FlowLayout.TRAILING));
-                JFrameTomatoMain.jLabelHora.setText(dateFormat.format(new Date()));
-                JFrameTomatoMain.jLabelHora.setForeground(Color.DARK_GRAY);
+                JFrameTomatoMain.webLabelHora.setLayout(new FlowLayout(FlowLayout.TRAILING));
+                JFrameTomatoMain.webLabelHora.setText(dateFormat.format(new Date()));
+                JFrameTomatoMain.webLabelHora.setForeground(Color.DARK_GRAY);
             }
         }
     }
@@ -631,9 +664,9 @@ public final class JFrameTomatoMain extends JFrame {
                 countInterations++;
                 timer.cancel();
                 if (isTheLastOneCiclo()) {
-                    startOver = JOptionPane.showConfirmDialog(null,
+                    startOver = WebOptionPane.showConfirmDialog(null,
                             "\nParabéns!!! Você concluiu! \niniciar um novo ciclo?");
-                    if (startOver == JOptionPane.YES_OPTION) {
+                    if (startOver == WebOptionPane.YES_OPTION) {
                         player.close();
                         Tomato.setCiclosTime(JFrameSettings.getjSliderCiclos().getValue());
                         Tomato.setLongBreakTime(JFrameSettings.getjSliderLongBreak().getValue());
@@ -644,18 +677,18 @@ public final class JFrameTomatoMain extends JFrame {
                         player.close();
                     }
                 } else {
-                    confirmDialog = JOptionPane.showConfirmDialog(
+                    confirmDialog = WebOptionPane.showConfirmDialog(
                             null, "Hora de relaxar.\nIniciar o intervalo curto?");
-                    if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToShortBreak())) {
+                    if (confirmDialog == WebOptionPane.YES_OPTION && (isTimeToShortBreak())) {
                         player.close();
-                        jLabelToImageIconSmileys.setIcon(getImageEnjoy());
+                        webLabelToImageIconSmileys.setIcon(getImageEnjoy());
                         Tomato.setCiclosTime(Tomato.getCiclosTime() - 1);
                         setTimeToLongBreak(false);
                         setTimeToPomodoro(false);
                         startShortBreakTimer();
-                    } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                    } else if (confirmDialog == WebOptionPane.YES_OPTION && (isTimeToLongBreak())) {
                         player.close();
-                        jLabelToImageIconSmileys.setIcon(getImageSuccess());
+                        webLabelToImageIconSmileys.setIcon(getImageSuccess());
                         setTimeToShortBreak(false);
                         setTimeToPomodoro(false);
                         startLongBreakTimer();
@@ -683,17 +716,17 @@ public final class JFrameTomatoMain extends JFrame {
                 //playAlarm();
                 countInterations++;
                 timer.cancel();
-                confirmDialog = JOptionPane.showConfirmDialog(
+                confirmDialog = WebOptionPane.showConfirmDialog(
                         null, "Fim do short break.\nIniciar o novo pomodoro?");
-                if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToPomodoro())) {
+                if (confirmDialog == WebOptionPane.YES_OPTION && (isTimeToPomodoro())) {
                     player.close();
-                    jLabelToImageIconSmileys.setIcon(getImageWork());
+                    webLabelToImageIconSmileys.setIcon(getImageWork());
                     setTimeToShortBreak(false);
                     setTimeToLongBreak(false);
                     startPomodoroTimer();
-                } else if (confirmDialog == JOptionPane.YES_OPTION && (isTimeToLongBreak())) {
+                } else if (confirmDialog == WebOptionPane.YES_OPTION && (isTimeToLongBreak())) {
                     player.close();
-                    jLabelToImageIconSmileys.setIcon(getImageSuccess());
+                    webLabelToImageIconSmileys.setIcon(getImageSuccess());
                     setTimeToShortBreak(false);
                     setTimeToPomodoro(false);
                     startLongBreakTimer();
@@ -713,11 +746,11 @@ public final class JFrameTomatoMain extends JFrame {
                 //playAlarm();
                 countInterations++;
                 timer.cancel();
-                confirmDialog = JOptionPane.showConfirmDialog(
+                confirmDialog = WebOptionPane.showConfirmDialog(
                         null, "Fim do Long Break.\nIniciar um novo ciclo?");
-                if (confirmDialog == JOptionPane.YES_OPTION) {
+                if (confirmDialog == WebOptionPane.YES_OPTION) {
                     player.close();
-                    jLabelToImageIconSmileys.setIcon(getImageWork());
+                    webLabelToImageIconSmileys.setIcon(getImageWork());
                     countInterations = 1;
                     setTimeToLongBreak(false);
                     setTimeToShortBreak(false);

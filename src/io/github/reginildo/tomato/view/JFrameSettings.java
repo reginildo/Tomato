@@ -3,6 +3,7 @@ package io.github.reginildo.tomato.view;
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.slider.WebSlider;
 import io.github.reginildo.tomato.utils.Locales;
 import io.github.reginildo.tomato.main.Main;
@@ -16,7 +17,7 @@ import java.awt.event.*;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 
-final class JFrameSettings extends JFrame {
+final class JFrameSettings extends WebFrame {
 
     private static ResourceBundle resourceBundle = ResourceBundle
             .getBundle("io.github.reginildo.tomato/Labels", Locales.getLocaleDefault());
@@ -40,7 +41,7 @@ final class JFrameSettings extends JFrame {
             Font.BOLD, 26);
 
     JFrameSettings() {
-        invokeAndShow();
+        JFrameTomatoMain.invokeAndShow();
         setJLabels();
         setJSliders();
         setJButtonSair();
@@ -193,7 +194,7 @@ final class JFrameSettings extends JFrame {
 
             } else {
                 JFrameSettings.setTomatoTimeValues();
-                JFrameTomatoMain.jLabelToImageIconSmileys.setIcon(Main.jFrameTomatoMain.getImagePrepared());
+                JFrameTomatoMain.webLabelToImageIconSmileys.setIcon(Main.jFrameTomatoMain.getImagePrepared());
                 setVisible(false);
                 setTimeStartValue();
                 JFrameTomatoMain.timerPause = null;
@@ -202,7 +203,7 @@ final class JFrameSettings extends JFrame {
                 }
                 setButtonsOnExit();
                 JFrameTomatoMain.jPanelDetails.setVisible(false);
-                JFrameTomatoMain.jLabelTimeCounterView.setText(
+                JFrameTomatoMain.webLabelTimeCounterView.setText(
                         JFrameTomatoMain.format.format(JFrameTomatoMain.timerStart.getTime()));
                 setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             }
