@@ -16,12 +16,14 @@
  */
 package io.github.reginildo.tomato.main;
 
+import com.alee.laf.WebLookAndFeel;
 import io.github.reginildo.tomato.view.JFrameTomatoMain;
 
 import javax.swing.*;
 
 public class Main {
     public static JFrameTomatoMain jFrameTomatoMain;
+    public static WebLookAndFeel webLookAndFeel = new WebLookAndFeel();
 
 
     public static void main(String[] args) {
