@@ -41,12 +41,8 @@ final class JFrameSettings extends WebFrame {
             Font.BOLD, 26);
 
     JFrameSettings() {
-        JFrameTomatoMain.invokeAndShow();
-        setJLabels();
-        setJSliders();
-        setJButtonSair();
-        setJPanels();
-        setContentPane(jPanelSettings);
+        //JFrameTomatoMain.invokeAndShow();
+
         setSize(300, 400);
         setLocation(600, 300);
         setResizable(true);
@@ -86,18 +82,18 @@ final class JFrameSettings extends WebFrame {
         return jSliderShortBreak;
     }
 
-    private void setJButtonSair() {
-        jButtonSairSettings = new WebButton(resourceBundle.getString("buttonExit"));
+    private void setJButtonSairSettings() {
+        jButtonSairSettings = new WebButton(resourceBundle.getString("buttonSave"));
         jButtonSairSettings.setMnemonic(KeyEvent.VK_S);
         jButtonSairSettings.addActionListener(new JButtonSairSettingsLintener());
         jButtonSairSettings.addMouseMotionListener(new JButtonSairSettingsMotionListener());
     }
 
     private void setButtonsOnExit() {
-        JFrameTomatoMain.jButtonStart.setText(JFrameTomatoMain.resourceBundle.getString("buttonStart"));
-        JFrameTomatoMain.jButtonPause.setEnabled(false);
-        JFrameTomatoMain.jButtonStart.setEnabled(true);
-        JFrameTomatoMain.jButtonReset.setEnabled(false);
+        JFrameTomatoMain.webButtonStart.setText(JFrameTomatoMain.resourceBundle.getString("buttonStart"));
+        JFrameTomatoMain.webButtonPause.setEnabled(false);
+        JFrameTomatoMain.webButtonStart.setEnabled(true);
+        JFrameTomatoMain.webButtonReset.setEnabled(false);
     }
 
     private void setTimeStartValue() {
@@ -113,7 +109,7 @@ final class JFrameSettings extends WebFrame {
 
     }
 
-    private void setJPanels() {
+    private void setJPanelsSettings() {
         jPanelSettings = new JPanel();
         jPanelSettings.setBounds(20, 20, 300, 300);
         jPanelSettings.setLayout(new BoxLayout(jPanelSettings,
@@ -130,7 +126,7 @@ final class JFrameSettings extends WebFrame {
         jPanelSettings.add(jButtonSairSettings);
     }
 
-    private void setJSliders() {
+    private void setJSliderSettings() {
         jSliderCiclos = new WebSlider(
                 SwingConstants.HORIZONTAL, 1, 8, 4);
         getjSliderCiclos().setMajorTickSpacing(1);
@@ -172,7 +168,7 @@ final class JFrameSettings extends WebFrame {
         getjSliderLongBreak().addChangeListener(new JSliderLongBreakChangeListener());
     }
 
-    private void setJLabels() {
+    private void setJLabelsSettings() {
         jLabelSettingsCiclos = new WebLabel();
         jLabelSettingsTomato = new WebLabel(resourceBundle.getString("stringTempoPomodoro"));
         jLabelSettingsLongBreak = new WebLabel(
