@@ -118,7 +118,7 @@ public final class JFrameTomatoMain extends WebFrame {
         setWebPanels();
         setContentPane(webPanelSuper);
 
-        setTitle("Pomodoro tempo");
+        setTitle(resourceBundle.getString("stringTomatoTitle"));
         setSize(300, 460);
         setResizable(true);
         setLocationRelativeTo(null);
@@ -554,6 +554,7 @@ public final class JFrameTomatoMain extends WebFrame {
 
         @Override
         public void mouseMoved(MouseEvent e) {
+            // todo atualizar com resources
             jButtonSalvarSettings.setToolTipText(
                     "Desejar sair das configurações?");
 
