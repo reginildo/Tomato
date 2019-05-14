@@ -18,6 +18,7 @@ package io.github.reginildo.tomato.main;
 
 import com.alee.laf.WebLookAndFeel;
 import io.github.reginildo.tomato.view.JFrameTomatoMain;
+import io.github.reginildo.tomato.view.SplashScreen;
 
 import javax.swing.*;
 
@@ -27,6 +28,8 @@ public class Main {
 
 
     public static void main(String[] args) {
+        SplashScreen splash = new SplashScreen(3000);
+        splash.showSplashAndExit();
         jFrameTomatoMain = new JFrameTomatoMain();
         //setLookAndFeel(aplicationLookAndFeelMetal);
     }
