@@ -25,15 +25,14 @@ public class SplashScreen extends JWindow {
         JPanel content = (JPanel)getContentPane();
         content.setBackground(Color.white);
 
-        int width = 450;
-        int height =415;
+        int width = 519;
+        int height =520;
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width-width)/2;
         int y = (screen.height-height)/2;
         setBounds(x,y,width,height);
 
-        // Constrói o splash screen
-        JLabel label = new JLabel(new ImageIcon("io/github/reginildo/tomato/images/devcat.gif"));
+        JLabel label = new JLabel(new ImageIcon(getClass().getResource("/io/github/reginildo/tomato/images/devcat.gif")));
         JLabel copyrt = new JLabel
                 ("Copyright 2019, Reginildo Sousa", JLabel.CENTER);
         copyrt.setFont(new Font("Sans-Serif", Font.BOLD, 12));
