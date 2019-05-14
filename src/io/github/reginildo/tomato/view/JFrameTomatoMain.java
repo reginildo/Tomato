@@ -32,7 +32,6 @@ import io.github.reginildo.tomato.utils.Locales;
 import io.github.reginildo.tomato.utils.Tomato;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -201,8 +200,6 @@ public final class JFrameTomatoMain extends WebFrame {
 
 
     }
-
-    @Contract(pure = true)
     private static boolean isShowTimeView() {
         return showTimeView;
     }
@@ -354,23 +351,17 @@ public final class JFrameTomatoMain extends WebFrame {
     private boolean isTheEnd() {
         return ((timerStart.get(Calendar.MINUTE) == 0) && (timerStart.get(Calendar.SECOND) == 0));
     }
-
-    @Contract(pure = true)
     private ImageIcon getImageWork() {
         return imageWork;
     }
-
-    @Contract(pure = true)
     private ImageIcon getImageEnjoy() {
         return imageEnjoy;
     }
 
-    @Contract(pure = true)
     private ImageIcon getImageSuccess() {
         return imageSuccess;
     }
 
-    @Contract(pure = true)
     ImageIcon getImagePrepared() {
         return imagePrepared;
     }
@@ -825,7 +816,6 @@ public final class JFrameTomatoMain extends WebFrame {
         }
     }
 
-    @Contract(pure = true)
     private boolean isTheLastOneCiclo() {
         return Tomato.getCiclosTime() == 1;
     }
