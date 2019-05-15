@@ -6,6 +6,7 @@
 - Windows XP or higher
 - GNU/Linux.
 - MacOS
+
 #### Requirements:
 - JRE 7 or higher
 - No Internet required
