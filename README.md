@@ -9,6 +9,10 @@
 #### Requirements:
 - JRE 7 or higher
 - No Internet required
+
+### Dependencies:
+- [WebLaf](http://weblookandfeel.com/download/)
+- [JLayer](http://www.javazoom.net/javalayer/sources.html)
 #### Language support:
 - Portuguese
 #### Screenshot
