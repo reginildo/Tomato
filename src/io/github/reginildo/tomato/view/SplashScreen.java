@@ -34,7 +34,7 @@ public class SplashScreen extends JWindow {
 
         JLabel label = new JLabel(new ImageIcon(getClass().getResource("/io/github/reginildo/tomato/images/devcat.gif")));
         JLabel copyrt = new JLabel
-                ("Copyright 2019, Reginildo Sousa", JLabel.CENTER);
+                ("GNU General Public License v3.0 2019, Reginildo Sousa", JLabel.CENTER);
         copyrt.setFont(new Font("Sans-Serif", Font.BOLD, 12));
         content.add(label, BorderLayout.CENTER);
         content.add(copyrt, BorderLayout.SOUTH);
